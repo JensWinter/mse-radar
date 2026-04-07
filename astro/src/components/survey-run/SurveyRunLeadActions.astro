@@ -1,0 +1,50 @@
+---
+interface Props {
+  status: string;
+  surveyRunId: string;
+  hasOtherOpenSurveyRun: boolean;
+  actions: {
+    openSurveyRun: any;
+    closeSurveyRun: any;
+    reopenSurveyRun: any;
+  };
+}
+
+const { status, surveyRunId, hasOtherOpenSurveyRun, actions } = Astro.props;
+---
+
+<div>
+  {
+    status === 'pending' && (
+      <form method="POST" action={actions.openSurveyRun}>
+        <input type="hidden" name="surveyRunId" value={surveyRunId} />
+        <button type="submit" class="btn btn-soft gap-2">
+          <span class="iconify lucide--circle-play" />
+          Open Survey
+        </button>
+      </form>
+    )
+  }
+  {
+    status === 'open' && (
+      <form method="POST" action={actions.closeSurveyRun}>
+        <input type="hidden" name="surveyRunId" value={surveyRunId} />
+        <button type="submit" class="btn btn-soft gap-2">
+          <span class="iconify lucide--circle-stop" />
+          Close Survey
+        </button>
+      </form>
+    )
+  }
+  {
+    status === 'closed' && !hasOtherOpenSurveyRun && (
+      <form method="POST" action={actions.reopenSurveyRun}>
+        <input type="hidden" name="surveyRunId" value={surveyRunId} />
+        <button type="submit" class="btn btn-soft gap-2">
+          <span class="iconify lucide--repeat-2" />
+          Reopen Survey
+        </button>
+      </form>
+    )
+  }
+</div>

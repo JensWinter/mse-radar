@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+@plugin "daisyui" {
+  themes:
+    light --default,
+    dark --prefersdark;
+}
+
+@plugin "@iconify/tailwind4" {
+  prefixes: lucide;
+  scale: 1.2;
+}

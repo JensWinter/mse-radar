@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/astro/.idea/astro.iml" filepath="$PROJECT_DIR$/astro/.idea/astro.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/mse-survey-tool.iml" filepath="$PROJECT_DIR$/.idea/mse-survey-tool.iml" />
+    </modules>
+  </component>
+</project>

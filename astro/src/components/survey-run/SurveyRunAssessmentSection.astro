@@ -1,0 +1,71 @@
+---
+import Alert from '@components/ui/Alert.astro';
+import CapabilityScoreGrid from './CapabilityScoreGrid.astro';
+import SurveyRunSummary from '@components/survey-run/SurveyRunSummary.astro';
+import type { SurveyRun } from '@models/aggregates/survey-run.ts';
+import type { AssessmentResult } from '@models/aggregates/assessment-result.ts';
+
+interface Props {
+  surveyRun: SurveyRun;
+  assessmentError?: string;
+  assessmentResult: AssessmentResult | null;
+}
+
+const { surveyRun, assessmentError, assessmentResult } = Astro.props;
+
+const hasScores = assessmentResult?.doraCapabilityScores.some(
+  (s) => s.score !== null,
+);
+---
+
+<section
+  data-testid="assessment-results-section"
+  class="card bg-base-100 shadow-xl"
+>
+  <div class="card-body">
+    <h2 class="card-title text-2xl mb-6">Assessment Results</h2>
+
+    {
+      assessmentError && (
+        <Alert type="error" data-testid="results-error">
+          {assessmentError}
+        </Alert>
+      )
+    }
+
+    {
+      !assessmentError && !assessmentResult && (
+        <p
+          data-testid="no-results-message"
+          class="text-center py-8 text-base-content/60"
+        >
+          No assessment results available.
+        </p>
+      )
+    }
+
+    {
+      assessmentResult && !hasScores && (
+        <p
+          data-testid="no-responses-message"
+          class="text-center py-8 text-base-content/60"
+        >
+          No responses have been submitted for this survey run.
+        </p>
+      )
+    }
+
+    {
+      assessmentResult && hasScores && (
+        <>
+          <SurveyRunSummary surveyRun={surveyRun} />
+          <CapabilityScoreGrid
+            teamId={surveyRun.teamId}
+            surveyRunId={surveyRun.id}
+            assessmentResult={assessmentResult}
+          />
+        </>
+      )
+    }
+  </div>
+</section>

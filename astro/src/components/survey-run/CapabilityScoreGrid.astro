@@ -1,0 +1,30 @@
+---
+import CapabilityScoreCard from './CapabilityScoreCard.astro';
+import type { AssessmentResult } from '@models/aggregates/assessment-result.ts';
+
+interface Props {
+  teamId: string;
+  surveyRunId: string;
+  assessmentResult: AssessmentResult;
+}
+
+const { teamId, surveyRunId, assessmentResult } = Astro.props;
+---
+
+<div
+  data-testid="capability-scores-grid"
+  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+>
+  {
+    assessmentResult.doraCapabilityScores.map((capabilityScore) => (
+      <CapabilityScoreCard
+        capabilityScore={capabilityScore}
+        guidanceHref={
+          capabilityScore.score === null
+            ? null
+            : `/teams/${teamId}/guidance/${capabilityScore.doraCapabilityId}?surveyRunId=${surveyRunId}`
+        }
+      />
+    ))
+  }
+</div>

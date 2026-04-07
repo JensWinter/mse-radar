@@ -1,0 +1,95 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Alert from '@components/ui/Alert.astro';
+---
+
+<BaseLayout title="Log in">
+  <div class="flex-1 py-8">
+    <div class="container mx-auto px-4">
+      <div class="max-w-md mx-auto">
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h1 class="card-title text-2xl mb-4">Log in</h1>
+
+            <div id="error-message-container" class="hidden">
+              <Alert type="error" class="mb-4" messageClass="error-message">
+                <span id="error-message"></span>
+              </Alert>
+            </div>
+
+            <form id="login-form" class="space-y-4">
+              <div class="form-control w-full">
+                <label class="label" for="email">
+                  <span class="label-text font-medium">Email</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  class="input input-bordered w-full"
+                  placeholder="Enter your email"
+                />
+              </div>
+
+              <div class="form-control w-full">
+                <label class="label" for="password">
+                  <span class="label-text font-medium">Password</span>
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  required
+                  class="input input-bordered w-full"
+                  placeholder="Enter your password"
+                />
+              </div>
+
+              <div class="card-actions justify-end gap-2 pt-4">
+                <a href="/register" class="btn btn-ghost"> Need an account? </a>
+                <button type="submit" class="btn btn-primary"> Log in </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { signIn } from '../../lib/auth-client.ts';
+
+  const loginForm = document.querySelector('#login-form') as HTMLFormElement;
+  loginForm.onsubmit = async (event) => {
+    event.preventDefault();
+
+    const errorMessageContainer = document.querySelector(
+      '#error-message-container',
+    ) as HTMLDivElement;
+    errorMessageContainer.classList.add('hidden');
+
+    const emailElement = document.querySelector('#email') as HTMLInputElement;
+    const passwordElement = document.querySelector(
+      '#password',
+    ) as HTMLInputElement;
+    const loginUserResult = await signIn.email({
+      email: emailElement.value,
+      password: passwordElement.value,
+      callbackURL: '/',
+    });
+
+    if (loginUserResult.error) {
+      errorMessageContainer.classList.remove('hidden');
+      const errorMessage = errorMessageContainer.querySelector(
+        '#error-message',
+      ) as HTMLElement;
+      if (errorMessage) {
+        errorMessage.textContent =
+          loginUserResult.error.message ||
+          'Error logging in. Please try again.';
+      }
+    }
+  };
+</script>

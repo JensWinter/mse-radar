@@ -1,0 +1,116 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Alert from '@components/ui/Alert.astro';
+---
+
+<BaseLayout title="Register">
+  <div class="flex-1 py-8">
+    <div class="container mx-auto px-4">
+      <div class="max-w-md mx-auto">
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h1 class="card-title text-2xl mb-4">Register</h1>
+
+            <div id="success-message-container" class="hidden">
+              <Alert type="success" class="mb-4">
+                Registration successful!
+              </Alert>
+            </div>
+
+            <div id="error-message-container" class="hidden">
+              <Alert type="error" class="mb-4" messageClass="error-message">
+                <span id="error-message"></span>
+              </Alert>
+            </div>
+
+            <form id="register-form" class="space-y-4">
+              <div class="form-control w-full">
+                <label class="label" for="email">
+                  <span class="label-text font-medium">Email</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  class="input input-bordered w-full"
+                  placeholder="Enter your email"
+                />
+              </div>
+
+              <div class="form-control w-full">
+                <label class="label" for="password">
+                  <span class="label-text font-medium">Password</span>
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  required
+                  class="input input-bordered w-full"
+                  placeholder="Enter your password"
+                />
+              </div>
+
+              <div class="card-actions justify-end gap-2 pt-4">
+                <a href="/login" class="btn btn-ghost">
+                  Already have an account?
+                </a>
+                <button type="submit" class="btn btn-primary">
+                  Register
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { signUp } from '../../lib/auth-client.ts';
+
+  const registerForm = document.querySelector(
+    '#register-form',
+  ) as HTMLFormElement;
+  registerForm.onsubmit = async (event) => {
+    event.preventDefault();
+
+    const emailElement = document.querySelector('#email') as HTMLInputElement;
+    const passwordElement = document.querySelector(
+      '#password',
+    ) as HTMLInputElement;
+    const registerUserResult = await signUp.email({
+      name: emailElement.value,
+      email: emailElement.value,
+      password: passwordElement.value,
+      callbackURL: '/',
+    });
+
+    const errorMessageContainer = document.querySelector(
+      '#error-message-container',
+    ) as HTMLDivElement;
+    errorMessageContainer.classList.add('hidden');
+
+    const successMessageContainer = document.querySelector(
+      '#success-message-container',
+    ) as HTMLDivElement;
+    successMessageContainer.classList.add('hidden');
+
+    if (registerUserResult.error) {
+      errorMessageContainer.classList.remove('hidden');
+      const errorMessage = errorMessageContainer.querySelector(
+        '#error-message',
+      ) as HTMLElement;
+      if (errorMessage) {
+        errorMessage.textContent =
+          registerUserResult.error.message ||
+          'An error occurred during registration.';
+      }
+    } else {
+      successMessageContainer.classList.remove('hidden');
+      registerForm.classList.add('hidden');
+    }
+  };
+</script>

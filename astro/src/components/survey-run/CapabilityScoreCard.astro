@@ -1,0 +1,88 @@
+---
+import type { DoraCapabilityScore } from '@models/aggregates/assessment-result.ts';
+import 'charts.css';
+
+interface Props {
+  capabilityScore: DoraCapabilityScore;
+  guidanceHref: string | null;
+}
+
+const { capabilityScore, guidanceHref } = Astro.props;
+const CardTag = guidanceHref ? 'a' : 'div';
+
+const score = capabilityScore.score === null ? 0 : capabilityScore.score;
+const scoreBucket = score === 0 ? 0 : Math.max(1, Math.round(score));
+---
+
+<CardTag
+  href={guidanceHref ?? undefined}
+  data-testid="capability-score-card"
+  class:list={[
+    'card bg-base-200 border border-base-300 transition-all',
+    guidanceHref
+      ? 'hover:shadow-lg hover:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/30 cursor-pointer'
+      : 'opacity-80',
+  ]}
+>
+  <div class="card-body p-0">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-title" data-testid="capability-name">
+          {capabilityScore.doraCapabilityName}
+        </div>
+        <div class="stat-value" data-testid="capability-score">
+          {
+            capabilityScore.score !== null
+              ? capabilityScore.score.toFixed(1)
+              : '?'
+          }
+          <span class="text-sm font-normal text-base-content/60">/ 7</span>
+        </div>
+        <div class="stat-desc">
+          <div class="dora-capability-progress-bar grow flex items-center">
+            <table class="charts-css bar multiple stacked">
+              {
+                (
+                  <tr
+                    data-testid={`score-bucket-${scoreBucket}`}
+                    class={`score-bucket-${scoreBucket}`}
+                  >
+                    <td style={`--size: calc(${score} / 7);`} />
+                    <td style={`--size: calc(${7 - score} / 7);`} />
+                  </tr>
+                )
+              }
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</CardTag>
+
+<style>
+  .dora-capability-progress-bar .bar {
+    --color-2: #666666;
+  }
+  .dora-capability-progress-bar .bar .score-bucket-1 {
+    --color-1: #d43d51;
+  }
+  .dora-capability-progress-bar .bar .score-bucket-2 {
+    --color-1: #e4825d;
+  }
+  .dora-capability-progress-bar .bar .score-bucket-3 {
+    --color-1: #edbb85;
+  }
+  .dora-capability-progress-bar .bar .score-bucket-4 {
+    --color-1: #faeec4;
+  }
+  .dora-capability-progress-bar .bar .score-bucket-5 {
+    --color-1: #bacb98;
+  }
+  .dora-capability-progress-bar .bar .score-bucket-6 {
+    --color-1: #73a97b;
+  }
+  .dora-capability-progress-bar .bar .score-bucket-7 {
+    --color-1: #00876c;
+  }
+</style>

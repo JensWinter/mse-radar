@@ -1,0 +1,296 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Alert from '@components/ui/Alert.astro';
+import { actions } from 'astro:actions';
+import assert from 'node:assert';
+import { AuthorizationError } from '@services/authorization-service.ts';
+import type { TeamDto } from '@services/teams-service.ts';
+import { createTeamsService } from '@lib/composition.ts';
+
+const { user } = Astro.locals;
+assert(user, 'User must be logged in.');
+
+const { teamId } = Astro.params as { teamId: string };
+
+let team: TeamDto | null = null;
+let notAuthorized = false;
+
+try {
+  const teamsService = createTeamsService(Astro.locals);
+  team = await teamsService.getTeam(teamId);
+} catch (error) {
+  if (error instanceof AuthorizationError) {
+    notAuthorized = true;
+  } else {
+    return new Response('Not Found', { status: 404 });
+  }
+}
+
+const teamLeads = team?.members.filter((m) => m.role === 'team-lead') ?? [];
+const regularMembers =
+  team?.members.filter((m) => m.role !== 'team-lead') ?? [];
+const isTeamLead = teamLeads.some((m) => m.userId === user.id);
+
+const addTeamMemberResult = Astro.getActionResult(actions.addTeamMember);
+const removeTeamMemberResult = Astro.getActionResult(actions.removeTeamMember);
+const changeMemberRoleResult = Astro.getActionResult(actions.changeMemberRole);
+
+const breadcrumbs = team
+  ? [
+      { label: 'Home', href: '/' },
+      { label: team.name, href: `/teams/${teamId}` },
+      { label: 'Members' },
+    ]
+  : undefined;
+---
+
+<BaseLayout title="Team Members" breadcrumbs={breadcrumbs}>
+  <div class="flex-1 py-8">
+    <div class="container mx-auto px-4">
+      <div class="max-w-2xl mx-auto">
+        {
+          notAuthorized ? (
+            <div class="card bg-base-100 shadow-xl">
+              <div class="card-body">
+                <h1 class="card-title text-2xl">Access Denied</h1>
+                <Alert type="warning">
+                  You do not have permission to view team members. Only team
+                  members can access this page.
+                </Alert>
+                <div class="card-actions justify-end">
+                  <a href="/" class="btn btn-primary">
+                    Back to Home
+                  </a>
+                </div>
+              </div>
+            </div>
+          ) : (
+            team && (
+              <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                  <h1 class="card-title text-2xl mb-4">Team Members</h1>
+
+                  {removeTeamMemberResult?.error && (
+                    <Alert
+                      type="error"
+                      class="mb-4"
+                      messageClass="error-message"
+                    >
+                      {removeTeamMemberResult.error.message}
+                    </Alert>
+                  )}
+                  {changeMemberRoleResult?.error && (
+                    <Alert
+                      type="error"
+                      class="mb-4"
+                      messageClass="error-message"
+                    >
+                      {changeMemberRoleResult.error.message}
+                    </Alert>
+                  )}
+
+                  <ul class="divide-y divide-base-300">
+                    {teamLeads.map((member) => (
+                      <li class="py-3 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                          <div class="avatar placeholder">
+                            <div class="bg-primary text-primary-content rounded-full w-10 flex items-center justify-center">
+                              <span class="text-sm">
+                                {member.userEmail.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                          </div>
+                          <div>
+                            <span class="font-medium">
+                              Team Lead: {member.userEmail}
+                            </span>
+                            <span class="badge badge-soft badge-info badge-sm ml-2">
+                              Team Lead
+                            </span>
+                          </div>
+                        </div>
+                        {isTeamLead && (
+                          <div class="flex gap-2">
+                            <form
+                              method="POST"
+                              action={actions.changeMemberRole}
+                              class="inline"
+                            >
+                              <input
+                                type="hidden"
+                                name="teamId"
+                                value={team.id}
+                              />
+                              <input
+                                type="hidden"
+                                name="memberEmail"
+                                value={member.userEmail}
+                              />
+                              <input
+                                type="hidden"
+                                name="newRole"
+                                value="regular-member"
+                              />
+                              <button
+                                type="submit"
+                                class="btn btn-ghost btn-xs"
+                                data-testid={`demote-member-${member.userEmail}`}
+                              >
+                                Demote
+                              </button>
+                            </form>
+                            <form
+                              method="POST"
+                              action={actions.removeTeamMember}
+                              class="inline"
+                            >
+                              <input
+                                type="hidden"
+                                name="teamId"
+                                value={team.id}
+                              />
+                              <input
+                                type="hidden"
+                                name="memberEmail"
+                                value={member.userEmail}
+                              />
+                              <button
+                                type="submit"
+                                class="btn btn-error btn-xs"
+                                data-testid={`remove-member-${member.userEmail}`}
+                              >
+                                Remove
+                              </button>
+                            </form>
+                          </div>
+                        )}
+                      </li>
+                    ))}
+
+                    {regularMembers.map((member) => (
+                      <li class="py-3 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                          <div class="avatar placeholder">
+                            <div class="bg-neutral text-neutral-content rounded-full w-10 flex items-center justify-center">
+                              <span class="text-sm">
+                                {member.userEmail.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                          </div>
+                          <div>
+                            <span class="font-medium">
+                              Regular Member: {member.userEmail}
+                            </span>
+                            <span class="badge badge-soft badge-info badge-sm ml-2">
+                              Member
+                            </span>
+                          </div>
+                        </div>
+                        {isTeamLead && (
+                          <div class="flex gap-2">
+                            <form
+                              method="POST"
+                              action={actions.changeMemberRole}
+                              class="inline"
+                            >
+                              <input
+                                type="hidden"
+                                name="teamId"
+                                value={team.id}
+                              />
+                              <input
+                                type="hidden"
+                                name="memberEmail"
+                                value={member.userEmail}
+                              />
+                              <input
+                                type="hidden"
+                                name="newRole"
+                                value="team-lead"
+                              />
+                              <button
+                                type="submit"
+                                class="btn btn-ghost btn-xs"
+                                data-testid={`promote-member-${member.userEmail}`}
+                              >
+                                Promote
+                              </button>
+                            </form>
+                            <form
+                              method="POST"
+                              action={actions.removeTeamMember}
+                              class="inline"
+                            >
+                              <input
+                                type="hidden"
+                                name="teamId"
+                                value={team.id}
+                              />
+                              <input
+                                type="hidden"
+                                name="memberEmail"
+                                value={member.userEmail}
+                              />
+                              <button
+                                type="submit"
+                                class="btn btn-error btn-xs"
+                                data-testid={`remove-member-${member.userEmail}`}
+                              >
+                                Remove
+                              </button>
+                            </form>
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {isTeamLead && (
+                    <div class="mt-6 pt-4 border-t border-base-300">
+                      <h3 class="text-sm font-medium mb-3">Add New Member</h3>
+                      {addTeamMemberResult?.error && (
+                        <Alert type="error" class="mb-4">
+                          {addTeamMemberResult.error.message}
+                        </Alert>
+                      )}
+                      <form
+                        method="POST"
+                        aria-label="Add Team Member Form"
+                        action={actions.addTeamMember}
+                        class="flex gap-3 items-end"
+                      >
+                        <input type="hidden" name="teamId" value={team.id} />
+                        <div class="form-control flex-1">
+                          <label class="label" for="teamMemberEmail">
+                            <span class="label-text">Member Email</span>
+                          </label>
+                          <input
+                            type="email"
+                            id="teamMemberEmail"
+                            name="teamMemberEmail"
+                            required
+                            class="input input-bordered w-full"
+                            placeholder="Enter email address"
+                          />
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                          Add
+                        </button>
+                      </form>
+                    </div>
+                  )}
+
+                  <div class="card-actions justify-end pt-4">
+                    <a href={`/teams/${teamId}`} class="btn btn-ghost">
+                      Back to Team
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )
+          )
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>

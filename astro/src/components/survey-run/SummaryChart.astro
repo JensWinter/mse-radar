@@ -1,0 +1,63 @@
+---
+import type { SurveyRunSummaryData } from './summary.ts';
+import 'charts.css';
+
+interface Props {
+  summary: SurveyRunSummaryData;
+}
+
+const { summary } = Astro.props;
+
+const scoreLabels = [
+  'Strongly Disagree',
+  'Disagree',
+  'Somewhat Disagree',
+  'Neutral',
+  'Somewhat Agree',
+  'Agree',
+  'Strongly Agree',
+];
+
+const { scoreCounts, totalScoredAnswers, maxCount } = summary;
+---
+
+<div id="my-chart">
+  {
+    totalScoredAnswers === 0 ? (
+      <p
+        class="text-center py-8 text-base-content/60"
+        data-testid="summary-chart-empty"
+      >
+        No scored answers.
+      </p>
+    ) : (
+      <table class="charts-css column show-labels">
+        <tbody>
+          {scoreCounts.map((num, index) => (
+            <tr>
+              <td style={`--size: ${(num + 0.5) / (maxCount + 0.5)}`}>
+                <span class="tooltip">
+                  {scoreLabels[index]}
+                  <br />
+                  <strong class="text-xl">{num}</strong>
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+</div>
+
+<style>
+  #my-chart .column {
+    --color-1: #d43d51;
+    --color-2: #e4825d;
+    --color-3: #edbb85;
+    --color-4: #faeec4;
+    --color-5: #bacb98;
+    --color-6: #73a97b;
+    --color-7: #00876c;
+  }
+</style>

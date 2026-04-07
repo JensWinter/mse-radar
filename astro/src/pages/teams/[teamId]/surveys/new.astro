@@ -1,0 +1,152 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Alert from '@components/ui/Alert.astro';
+import { actions } from 'astro:actions';
+import assert from 'node:assert';
+import { AuthorizationError } from '@services/authorization-service.ts';
+import type { TeamDto } from '@services/teams-service.ts';
+import type { SurveyModelDto } from '@services/survey-model-service.ts';
+import {
+  createSurveyModelService,
+  createTeamsService,
+} from '@lib/composition.ts';
+
+const { user } = Astro.locals;
+assert(user, 'User must be logged in.');
+
+const { teamId } = Astro.params as { teamId: string };
+
+const createSurveyRunResult = Astro.getActionResult(actions.createSurveyRun);
+if (createSurveyRunResult && !createSurveyRunResult.error) {
+  return Astro.redirect(`/teams/${teamId}`);
+}
+
+let team: TeamDto | null = null;
+let surveyModels: SurveyModelDto[] = [];
+let notAuthorized = false;
+
+try {
+  const teamsService = createTeamsService(Astro.locals);
+  team = await teamsService.getTeam(teamId);
+  if (!team) {
+    return new Response('Not Found', { status: 404 });
+  }
+
+  const isTeamLead = team.members.some(
+    (m) => m.userId === user.id && m.role === 'team-lead',
+  );
+  if (!isTeamLead) {
+    notAuthorized = true;
+  } else {
+    const surveyModelService = createSurveyModelService(Astro.locals);
+    surveyModels = await surveyModelService.getAllSurveyModels();
+  }
+} catch (error) {
+  if (error instanceof AuthorizationError) {
+    notAuthorized = true;
+  } else {
+    return new Response('Not Found', { status: 404 });
+  }
+}
+
+const breadcrumbs = team
+  ? [
+      { label: 'Home', href: '/' },
+      { label: team.name, href: `/teams/${teamId}` },
+      { label: 'New Survey' },
+    ]
+  : undefined;
+---
+
+<BaseLayout title="New Survey" breadcrumbs={breadcrumbs}>
+  <div class="flex-1 py-8">
+    <div class="container mx-auto px-4">
+      <div class="max-w-2xl mx-auto space-y-6">
+        {
+          notAuthorized ? (
+            <>
+              <h1 class="text-3xl font-bold">Access Denied</h1>
+
+              <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                  <Alert type="warning">
+                    You do not have permission to create surveys for this team.
+                    Only team leads can create surveys.
+                  </Alert>
+                  <div class="card-actions justify-end pt-4">
+                    <a href={`/teams/${teamId}`} class="btn btn-primary">
+                      Back to Team
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div class="card bg-base-100 shadow-xl">
+              <div class="card-body">
+                <h1 class="text-2xl font-semibold mb-2">New Survey</h1>
+                <p class="text-base-content/70 mb-6">
+                  Create a new survey run for your team to assess their
+                  capabilities using the DORA framework. Team members will be
+                  able to respond once the survey is opened.
+                </p>
+
+                {createSurveyRunResult?.error && (
+                  <Alert type="error" class="mb-4" messageClass="error-message">
+                    {createSurveyRunResult.error.message}
+                  </Alert>
+                )}
+
+                <form method="POST" action={actions.createSurveyRun}>
+                  <input type="hidden" name="teamId" value={teamId} />
+
+                  <div class="space-y-4">
+                    <div class="form-control w-full">
+                      <label class="label" for="title">
+                        <span class="label-text font-medium">
+                          Survey Title <span class="text-error">*</span>
+                        </span>
+                      </label>
+                      <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        class="input input-bordered w-full"
+                        required
+                        maxlength="200"
+                      />
+                    </div>
+
+                    <div class="form-control w-full">
+                      <label class="label" for="surveyModelId">
+                        <span class="label-text font-medium">Survey Model</span>
+                      </label>
+                      <select
+                        id="surveyModelId"
+                        name="surveyModelId"
+                        class="select select-bordered w-full"
+                      >
+                        {surveyModels.map((model) => (
+                          <option value={model.id}>{model.version}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="card-actions justify-end gap-2 pt-4 border-t border-base-300 mt-6">
+                    <a href={`/teams/${teamId}`} class="btn btn-ghost">
+                      Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                      Create
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>

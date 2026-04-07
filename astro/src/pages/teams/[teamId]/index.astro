@@ -1,0 +1,162 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Alert from '@components/ui/Alert.astro';
+import EmptyState from '@components/ui/EmptyState.astro';
+import assert from 'node:assert';
+import { AuthorizationError } from '@services/authorization-service.ts';
+import { createGetTeamOverviewUseCase } from '@lib/composition.ts';
+import {
+  type TeamOverview,
+  TeamOverviewNotFoundError,
+} from '@use-cases/get-team-overview.ts';
+
+const { user } = Astro.locals;
+assert(user, 'User must be logged in.');
+
+const { teamId } = Astro.params as { teamId: string };
+
+let teamOverview: TeamOverview | null = null;
+let notAuthorized = false;
+
+try {
+  teamOverview = await createGetTeamOverviewUseCase(Astro.locals).execute(
+    teamId,
+    user.id,
+  );
+} catch (error) {
+  if (error instanceof AuthorizationError) {
+    notAuthorized = true;
+  } else if (error instanceof TeamOverviewNotFoundError) {
+    return new Response('Not Found', { status: 404 });
+  } else {
+    return new Response('Not Found', { status: 404 });
+  }
+}
+
+const team = teamOverview?.team ?? null;
+const surveyRuns = teamOverview?.surveyRuns ?? [];
+const isTeamLead = teamOverview?.isTeamLead ?? false;
+
+const breadcrumbs = team
+  ? [{ label: 'Home', href: '/' }, { label: team.name }]
+  : undefined;
+---
+
+<BaseLayout title="Team Details" breadcrumbs={breadcrumbs}>
+  <div class="flex-1 py-8">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto space-y-6">
+        {
+          notAuthorized ? (
+            <div class="card bg-base-100 shadow-xl">
+              <div class="card-body">
+                <h1 class="card-title text-2xl">Access Denied</h1>
+                <Alert type="warning">
+                  You do not have permission to view this team. Only team
+                  members can access this page.
+                </Alert>
+                <div class="card-actions justify-end">
+                  <a href="/" class="btn btn-primary">
+                    Back to Home
+                  </a>
+                </div>
+              </div>
+            </div>
+          ) : (
+            team && (
+              <>
+                <div class="flex items-start justify-between gap-4 mb-6">
+                  <div class="flex-1">
+                    <h1 class="text-3xl font-bold mb-2">{team.name}</h1>
+                    {team.description && (
+                      <p class="text-lg text-base-content/70">
+                        {team.description}
+                      </p>
+                    )}
+                  </div>
+                  <div class="dropdown dropdown-end">
+                    <div
+                      tabindex="0"
+                      role="button"
+                      class="btn btn-ghost btn-square"
+                      data-testid="team-options-button"
+                    >
+                      <span class="iconify lucide--menu h-5 w-5" />
+                    </div>
+                    <ul
+                      tabindex="0"
+                      class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-xl"
+                    >
+                      {isTeamLead && (
+                        <li>
+                          <a href={`/teams/${team.id}/edit`} class="gap-2">
+                            <span class="iconify lucide--edit" />
+                            Edit team details
+                          </a>
+                        </li>
+                      )}
+                      <li>
+                        <a href={`/teams/${team.id}/members`} class="gap-2">
+                          <span class="iconify lucide--users" />
+                          {isTeamLead ? 'Manage members' : 'View members'}
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="card bg-base-100 shadow-xl">
+                  <div class="card-body">
+                    <div class="flex items-center justify-between mb-4">
+                      <h2 class="card-title text-xl">Surveys</h2>
+                      {isTeamLead && (
+                        <a
+                          href={`/teams/${team.id}/surveys/new`}
+                          class="btn btn-primary btn-sm gap-2"
+                        >
+                          <span class="iconify lucide--plus" />
+                          New Survey
+                        </a>
+                      )}
+                    </div>
+
+                    {surveyRuns.length === 0 ? (
+                      <EmptyState
+                        icon="survey"
+                        title="No surveys yet"
+                        message={
+                          isTeamLead
+                            ? 'Create your first survey to get started'
+                            : undefined
+                        }
+                      />
+                    ) : (
+                      <ul class="divide-y divide-base-300">
+                        {surveyRuns.map((run) => (
+                          <li class="py-3">
+                            <a
+                              href={`/teams/${team.id}/surveys/${run.id}`}
+                              data-testid="survey-run-link"
+                              class="flex items-center justify-between hover:bg-base-200 -mx-4 px-4 py-2 rounded-lg transition-colors"
+                            >
+                              <div class="flex items-center gap-3">
+                                <span>{run.title}</span>
+                              </div>
+                              <span class="badge badge-soft badge-info">
+                                {run.status}
+                              </span>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              </>
+            )
+          )
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,25 @@
+---
+import OpenSurveyQuestionCard from './OpenSurveyQuestionCard.astro';
+import type { QuestionAnswer } from './types.ts';
+
+interface Props {
+  surveyRunId: string;
+  questionAnswers: QuestionAnswer[];
+}
+
+const { surveyRunId, questionAnswers } = Astro.props;
+const totalQuestions = questionAnswers.length;
+---
+
+<div class="grid grid-cols-1 gap-4">
+  {
+    questionAnswers.map((question, index) => (
+      <OpenSurveyQuestionCard
+        surveyRunId={surveyRunId}
+        questionIndex={index}
+        question={question}
+        totalQuestions={totalQuestions}
+      />
+    ))
+  }
+</div>

@@ -1,0 +1,28 @@
+---
+type BreadcrumbItem = {
+  label: string;
+  href?: string;
+};
+
+type Props = {
+  items: BreadcrumbItem[];
+};
+
+const { items } = Astro.props;
+---
+
+<div class="breadcrumbs text-sm">
+  <ul>
+    {
+      items.map((item) => (
+        <li>
+          {item.href ? (
+            <a href={item.href}>{item.label}</a>
+          ) : (
+            <span>{item.label}</span>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</div>

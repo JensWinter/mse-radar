@@ -1,0 +1,716 @@
+[
+  {
+    "slug": "ai-accessible-internal-data",
+    "name": "AI-accessible Internal Data",
+    "description": "Connecting AI to your internal documentation and codebases moves it from a generic assistant to a specialized expert.",
+    "dora_reference": "https://dora.dev/capabilities/ai-accessible-internal-data/",
+    "tags": ["AI"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "clear-and-communicated-ai-stance",
+    "name": "Clear and communicated AI stance",
+    "description": "Ambiguity creates risk. A clear policy provides the psychological safety needed for effective experimentation.",
+    "dora_reference": "https://dora.dev/capabilities/clear-and-communicated-ai-stance/",
+    "tags": ["AI"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "code-maintainability",
+    "name": "Code maintainability",
+    "description": "Make it easy for developers to find, reuse, and change code, and keep dependencies up-to-date.",
+    "dora_reference": "https://dora.dev/capabilities/code-maintainability/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "continuous-delivery",
+    "name": "Continuous delivery",
+    "description": "Make deploying software a reliable, low-risk process that can be performed on demand at any time.",
+    "dora_reference": "https://dora.dev/capabilities/continuous-delivery/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "continuous-integration",
+    "name": "Continuous integration",
+    "description": "Learn about common mistakes, ways to measure, and how to improve on your continuous integration efforts.",
+    "dora_reference": "https://dora.dev/capabilities/continuous-integration/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "customer-feedback",
+    "name": "Customer feedback",
+    "description": "Drive better organizational outcomes by gathering customer feedback and incorporating it into product and feature design.",
+    "dora_reference": "https://dora.dev/capabilities/customer-feedback/",
+    "tags": [],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "database-change-management",
+    "name": "Database change management",
+    "description": "Make sure database changes don't cause problems or slow you down.",
+    "dora_reference": "https://dora.dev/capabilities/database-change-management/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "deployment-automation",
+    "name": "Deployment automation",
+    "description": "Best practices and approaches for deployment automation and reducing manual intervention in the release process.",
+    "dora_reference": "https://dora.dev/capabilities/deployment-automation/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "documentation-quality",
+    "name": "Documentation quality",
+    "description": "Maintain accurate, well-organized, user-centric internal documentation to empower teams throughout the software development process.",
+    "dora_reference": "https://dora.dev/capabilities/documentation-quality/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "empowering-teams-to-choose-tools",
+    "name": "Empowering teams to choose tools",
+    "description": "Empower teams to make informed decisions on tools and technologies. Learn how these decisions drive more effective software delivery.",
+    "dora_reference": "https://dora.dev/capabilities/teams-empowered-to-choose-tools/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "flexible-infrastructure",
+    "name": "Flexible infrastructure",
+    "description": "Find out how to manage cloud infrastructure effectively so you can achieve higher levels of agility, availability, and cost visibility.",
+    "dora_reference": "https://dora.dev/capabilities/flexible-infrastructure/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "generative-organizational-culture",
+    "name": "Generative organizational culture",
+    "description": "Discover how growing a generative, high-trust culture drives better organizational and software delivery performance.",
+    "dora_reference": "https://dora.dev/capabilities/generative-organizational-culture/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "healthy-data-ecosystems",
+    "name": "Healthy data ecosystems",
+    "description": "The benefits of AI are significantly amplified by high-quality, accessible, and unified internal data.",
+    "dora_reference": "https://dora.dev/capabilities/healthy-data-ecosystems/",
+    "tags": ["AI"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "job-satisfaction",
+    "name": "Job satisfaction",
+    "description": "Find out about the importance of ensuring your people have the tools and resources to do their job, and of making good use of their skills and abilities.",
+    "dora_reference": "https://dora.dev/capabilities/job-satisfaction/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "learning-culture",
+    "name": "Learning culture",
+    "description": "Grow a learning culture and understand its impact on your organizational performance.",
+    "dora_reference": "https://dora.dev/capabilities/learning-culture/",
+    "tags": [],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "loosely-coupled-teams",
+    "name": "Loosely coupled teams",
+    "description": "Learn about moving from a tightly coupled architecture to service-oriented and microservice architectures without re-architecting everything at once",
+    "dora_reference": "https://dora.dev/capabilities/loosely-coupled-teams/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "monitoring-and-observability",
+    "name": "Monitoring and observability",
+    "description": "Learn how to build tooling to help you understand and debug your production systems.",
+    "dora_reference": "https://dora.dev/capabilities/monitoring-and-observability/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "monitoring-systems-to-inform-business-decisions",
+    "name": "Monitoring systems to inform business decisions",
+    "description": "Improve monitoring across infrastructure platforms, middleware, and the application tier, so you can provide fast feedback to developers.",
+    "dora_reference": "https://dora.dev/capabilities/monitoring-systems/",
+    "tags": [],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "pervasive-security",
+    "name": "Pervasive security",
+    "description": "Build security into the software development lifecycle without compromising delivery speed.",
+    "dora_reference": "https://dora.dev/capabilities/pervasive-security/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "platform-engineering",
+    "name": "Platform engineering",
+    "description": "A platform provides the automated, secure pathways that allow AI’s benefits to scale across the organization.",
+    "dora_reference": "https://dora.dev/capabilities/platform-engineering/",
+    "tags": ["AI"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "proactive-failure-notification",
+    "name": "Proactive failure notification",
+    "description": "Set proactive failure notifications to identify critical issues and act on problems before they arise.",
+    "dora_reference": "https://dora.dev/capabilities/proactive-failure-notification/",
+    "tags": [],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "streamlining-change-approval",
+    "name": "Streamlining change approval",
+    "description": "Replace heavyweight change-approval processes with peer review, to get the benefits of a more reliable, compliant release process without sacrificing speed.",
+    "dora_reference": "https://dora.dev/capabilities/streamlining-change-approval/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "team-experimentation",
+    "name": "Team experimentation",
+    "description": "Innovate faster by building empowered teams that can try out new ideas without approval from people outside the team.",
+    "dora_reference": "https://dora.dev/capabilities/team-experimentation/",
+    "tags": [],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "test-automation",
+    "name": "Test automation",
+    "description": "Improve software quality by building reliable automated test suites and performing all kinds of testing throughout the software delivery lifecycle.",
+    "dora_reference": "https://dora.dev/capabilities/test-automation/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "test-data-management",
+    "name": "Test data management",
+    "description": "Understand the right strategies for managing test data effectively along with approaches to provide fast, secure data access for testing.",
+    "dora_reference": "https://dora.dev/capabilities/test-data-management/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "transformational-leadership",
+    "name": "Transformational leadership",
+    "description": "Learn how effective leaders influence software delivery performance by driving the adoption of technical and product management capabilities.",
+    "dora_reference": "https://dora.dev/capabilities/transformational-leadership/",
+    "tags": [],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "trunk-based-development",
+    "name": "Trunk-based development",
+    "description": "Prevent merge-conflict hassles with trunk-based development practices.",
+    "dora_reference": "https://dora.dev/capabilities/trunk-based-development/",
+    "tags": [],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "user-centric-focus",
+    "name": "User-centric focus",
+    "description": "A focus on user needs is essential to ensure that AI-accelerated teams are moving quickly in the right direction.",
+    "dora_reference": "https://dora.dev/capabilities/user-centric-focus/",
+    "tags": ["AI"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "version-control",
+    "name": "Version control",
+    "description": "Version control ensures reproducibility and traceability, serving as a critical safety net as AI accelerates the velocity of change.",
+    "dora_reference": "https://dora.dev/capabilities/version-control/",
+    "tags": ["core", "AI"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "visibility-of-work-in-the-value-stream",
+    "name": "Visibility of work in the value stream",
+    "description": "Understand and visualize the flow of work from idea to customer outcome in order to drive higher performance.",
+    "dora_reference": "https://dora.dev/capabilities/work-visibility-in-value-stream/",
+    "tags": [],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "visual-management",
+    "name": "Visual management",
+    "description": "Learn about the principles of visual management to promote information sharing, get a common understanding of where the team is, and how to improve.",
+    "dora_reference": "https://dora.dev/capabilities/visual-management/",
+    "tags": [],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "well-being",
+    "name": "Well-being",
+    "description": "A focus on employee happiness and work environment can improve organizational performance while helping retain talent.",
+    "dora_reference": "https://dora.dev/capabilities/well-being/",
+    "tags": ["core"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "work-in-process-limits",
+    "name": "Work in process limits",
+    "description": "Prioritize work, limit the amount of things that people are working on, and focus on getting a small number of high-priority tasks done.",
+    "dora_reference": "https://dora.dev/capabilities/wip-limits/",
+    "tags": [],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  },
+  {
+    "slug": "working-in-small-batches",
+    "name": "Working in small batches",
+    "description": "Create shorter lead times and faster feedback loops by working in small batches, counteracting the risk of instability as AI accelerates development.",
+    "dora_reference": "https://dora.dev/capabilities/working-in-small-batches/",
+    "tags": ["core", "AI"],
+    "guidance": [
+      {
+        "tier": "beginning",
+        "actionText": "TODO: add action text for beginning tier"
+      },
+      {
+        "tier": "developing",
+        "actionText": "TODO: add action text for developing tier"
+      },
+      {
+        "tier": "mature",
+        "actionText": "TODO: add action text for mature tier"
+      }
+    ]
+  }
+]

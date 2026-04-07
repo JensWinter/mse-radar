@@ -1,0 +1,109 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import assert from 'node:assert';
+import {
+  createDoraCapabilitiesService,
+  createSurveyModelService,
+} from '@lib/composition.ts';
+
+const { user } = Astro.locals;
+assert(user, 'User must be logged in.');
+
+const { surveyModelId } = Astro.params as { surveyModelId: string };
+
+const surveyModelService = createSurveyModelService(Astro.locals);
+const surveyModel = await surveyModelService.getSurveyModel(surveyModelId);
+
+if (!surveyModel) {
+  return new Response('Survey model not found', { status: 404 });
+}
+
+const doraCapabilitiesService = createDoraCapabilitiesService(Astro.locals);
+const doraCapabilities = await doraCapabilitiesService.getAllDoraCapabilities();
+const doraCapabilityMap = new Map(doraCapabilities.map((c) => [c.id, c]));
+
+const questionsWithDoraCapabilities = surveyModel.questions.map((question) => {
+  const doraCapability = doraCapabilityMap.get(question.doraCapabilityId);
+  return {
+    id: question.id,
+    questionText: question.questionText,
+    sortOrder: question.sortOrder,
+    doraCapability: doraCapability
+      ? {
+          id: doraCapability.id,
+          slug: doraCapability.slug,
+          name: doraCapability.name,
+          description: doraCapability.description,
+        }
+      : null,
+  };
+});
+---
+
+<BaseLayout title={`Survey Model ${surveyModel.version}`}>
+  <div class="flex-1 py-8">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <h1 class="text-3xl font-bold">Survey Model {surveyModel.version}</h1>
+          <a href="/survey-models" class="btn btn-ghost btn-sm gap-2">
+            <span class="iconify lucide--arrow-left"></span>
+            Back to Survey Models
+          </a>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-xl mb-4">Survey Questions</h2>
+            <div class="space-y-3">
+              {
+                questionsWithDoraCapabilities.map((question) => (
+                  <div
+                    class="card bg-base-200 hover:bg-base-300 transition-colors"
+                    data-question-id={question.id}
+                    data-testid="survey-question-item"
+                  >
+                    <div class="card-body p-4">
+                      <div class="flex items-start">
+                        <div class="flex-1 space-y-3">
+                          <p
+                            class="text-base font-medium"
+                            data-testid="survey-question-text"
+                          >
+                            {question.questionText}
+                          </p>
+
+                          {question.doraCapability && (
+                            <div class="dora-capability-info space-y-2">
+                              <div class="flex items-center gap-2 flex-wrap">
+                                <span class="text-sm text-base-content/70 font-medium">
+                                  DORA Capability:
+                                </span>
+                                <span
+                                  class="badge badge-info badge-sm"
+                                  data-testid="survey-question-capability-name"
+                                >
+                                  {question.doraCapability.name}
+                                </span>
+                              </div>
+                              <p
+                                class="text-sm text-base-content/80 pl-4 border-l-2 border-base-300"
+                                data-testid="survey-question-capability-description"
+                              >
+                                {question.doraCapability.description}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

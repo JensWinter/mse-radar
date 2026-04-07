@@ -1,0 +1,41 @@
+{
+  "name": "mse-radar",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "format": "prettier --config .prettierrc.mjs src/ --write",
+    "format:check": "prettier --config .prettierrc.mjs src/ --check",
+    "test": "vitest --run --passWithNoTests",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@astrojs/alpinejs": "^0.4.9",
+    "@astrojs/check": "^0.9.6",
+    "@astrojs/node": "^9.5.4",
+    "@astrojs/ts-plugin": "^1.10.6",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/alpinejs": "^3.13.11",
+    "alpinejs": "^3.15.2",
+    "astro": "^5.18.0",
+    "better-auth": "^1.4.19",
+    "better-sqlite3": "^12.6.0",
+    "charts.css": "^1.2.0",
+    "daisyui": "^5.5.19",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
+  },
+  "devDependencies": {
+    "@iconify-json/lucide": "^1.2.95",
+    "@iconify/tailwind4": "^1.2.1",
+    "@playwright/test": "^1.57.0",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^24.10.1",
+    "prettier": "^3.7.4",
+    "prettier-plugin-astro": "^0.14.1"
+  }
+}

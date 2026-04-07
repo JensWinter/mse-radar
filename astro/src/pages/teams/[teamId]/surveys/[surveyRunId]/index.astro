@@ -1,0 +1,118 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Alert from '@components/ui/Alert.astro';
+import { actions } from 'astro:actions';
+import assert from 'node:assert';
+import { AuthorizationError } from '@services/authorization-service.ts';
+import type { AssessmentResult } from '@models/aggregates/assessment-result.ts';
+import SurveyRunPageHeader from '@components/survey-run/SurveyRunPageHeader.astro';
+import SurveyRunLeadActions from '@components/survey-run/SurveyRunLeadActions.astro';
+import SurveyRunResponseSection from '@components/survey-run/SurveyRunResponseSection.astro';
+import SurveyRunAssessmentSection from '@components/survey-run/SurveyRunAssessmentSection.astro';
+import { createGetSurveyRunDetailsUseCase } from '@lib/composition.ts';
+import {
+  SurveyRunDetailsNotFoundError,
+  type SurveyRunDetails,
+} from '@use-cases/get-survey-run-details.ts';
+
+const { user } = Astro.locals;
+assert(user, 'User must be logged in.');
+
+const { teamId, surveyRunId } = Astro.params as {
+  teamId: string;
+  surveyRunId: string;
+};
+let surveyRunDetails: SurveyRunDetails | null = null;
+let notAuthorized = false;
+
+try {
+  surveyRunDetails = await createGetSurveyRunDetailsUseCase(
+    Astro.locals,
+  ).execute(teamId, surveyRunId, user.id);
+} catch (error) {
+  if (error instanceof AuthorizationError) {
+    notAuthorized = true;
+  } else if (error instanceof SurveyRunDetailsNotFoundError) {
+    return new Response('Not Found', { status: 404 });
+  } else {
+    return new Response('Not Found', { status: 404 });
+  }
+}
+
+const surveyRun = surveyRunDetails?.surveyRun ?? null;
+const team = surveyRunDetails?.team ?? null;
+const isTeamLead = surveyRunDetails?.isTeamLead ?? false;
+const hasOtherOpenSurveyRun = surveyRunDetails?.hasOtherOpenSurveyRun ?? false;
+const assessmentResult: AssessmentResult | null =
+  surveyRunDetails?.assessmentResult ?? null;
+const assessmentError = surveyRunDetails?.assessmentError;
+const questionAnswers = surveyRunDetails?.questionAnswers ?? [];
+
+const breadcrumbs = team
+  ? [
+      { label: 'Home', href: '/' },
+      { label: team.name, href: `/teams/${teamId}` },
+      { label: surveyRun?.title ?? 'Survey' },
+    ]
+  : undefined;
+---
+
+<BaseLayout title="Survey Details" breadcrumbs={breadcrumbs}>
+  <div class="flex-1 py-8">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto space-y-6">
+        {
+          notAuthorized ? (
+            <div class="card bg-base-100 shadow-xl">
+              <div class="card-body">
+                <h1 class="card-title text-2xl">Access Denied</h1>
+                <Alert type="warning">
+                  You do not have permission to view this survey run. Only team
+                  members can access this page.
+                </Alert>
+                <div class="card-actions justify-end">
+                  <a href="/" class="btn btn-primary">
+                    Back to Home
+                  </a>
+                </div>
+              </div>
+            </div>
+          ) : (
+            surveyRun && (
+              <>
+                <SurveyRunPageHeader
+                  title={surveyRun.title}
+                  status={surveyRun.status}
+                />
+
+                {isTeamLead && (
+                  <SurveyRunLeadActions
+                    status={surveyRun.status}
+                    surveyRunId={surveyRunId}
+                    hasOtherOpenSurveyRun={hasOtherOpenSurveyRun}
+                    actions={actions}
+                  />
+                )}
+
+                {surveyRun.status === 'open' && (
+                  <SurveyRunResponseSection
+                    surveyRunId={surveyRunId}
+                    questionAnswers={questionAnswers}
+                  />
+                )}
+
+                {surveyRun.status === 'closed' && (
+                  <SurveyRunAssessmentSection
+                    surveyRun={surveyRun}
+                    assessmentError={assessmentError}
+                    assessmentResult={assessmentResult}
+                  />
+                )}
+              </>
+            )
+          )
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>

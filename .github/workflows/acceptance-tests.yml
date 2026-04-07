@@ -1,0 +1,78 @@
+name: Acceptance tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Git ref (branch, tag, SHA) to run against. Leave empty for the default ref.'
+        required: false
+        default: ''
+
+env:
+  CI: true
+
+concurrency:
+  group: acceptance-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  acceptance:
+    name: Run acceptance tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: astro/package-lock.json
+
+      - name: Install Astro dependencies
+        working-directory: astro
+        run: npm ci
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+          cache: true
+
+      - name: Install Deno dependencies
+        run: deno install
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v5
+        id: playwright-cache
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-ms-playwright-${{ hashFiles('deno.lock') }}
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+
+      - name: Run acceptance tests
+        run: deno task test:acceptance
+
+      - name: Test Report
+        uses: dorny/test-reporter@v2
+        if: ${{ !cancelled() }}
+        with:
+          name: Acceptance tests
+          path: acceptance-tests-report.xml
+          reporter: jest-junit
+          fail-on-error: false
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v6
+        if: ${{ !cancelled() }}
+        with:
+          name: acceptance-tests-report
+          path: acceptance-tests-report.xml
+          retention-days: 30

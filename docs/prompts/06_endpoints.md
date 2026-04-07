@@ -1,0 +1,1 @@
+Given all the requirements, how should the endpoint urls of the application be? Suggest a route structure for the pages of Astro web application and the endpoints for a backend API. Explain the decision shortly. Also mention the requirement ids that are related to the respective endpoints. Save the result in a markdown file in "docs/endpoints.md".

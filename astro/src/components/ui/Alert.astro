@@ -1,0 +1,32 @@
+---
+type Props = {
+  type: 'error' | 'success' | 'warning' | 'info';
+  class?: string;
+  messageClass?: string;
+};
+
+const { type, class: className = '', messageClass = '' } = Astro.props;
+
+const alertClasses = {
+  error: 'alert-error',
+  success: 'alert-success',
+  warning: 'alert-warning',
+  info: 'alert-info',
+};
+
+const iconClasses = {
+  error: 'circle-alert',
+  success: 'circle-check',
+  warning: 'triangle-alert',
+  info: 'info',
+};
+
+const icon = iconClasses[type];
+---
+
+<div class={`alert ${alertClasses[type]} ${className}`}>
+  <span class=`iconify lucide--${icon}`></span>
+  <span class={messageClass}>
+    <slot />
+  </span>
+</div>

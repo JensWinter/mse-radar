@@ -1,0 +1,91 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import EmptyState from '@components/ui/EmptyState.astro';
+import assert from 'node:assert';
+import { createDoraCapabilitiesService } from '@lib/composition.ts';
+
+const { user } = Astro.locals;
+assert(user, 'User must be logged in.');
+
+const doraCapabilitiesService = createDoraCapabilitiesService(Astro.locals);
+const capabilities = await doraCapabilitiesService.getAllDoraCapabilities();
+---
+
+<BaseLayout title="DORA Capabilities">
+  <div class="flex-1 py-8">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto space-y-6">
+        <h1 class="text-3xl font-bold">DORA Capabilities</h1>
+
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <p class="text-base-content/80">
+              DORA (DevOps Research and Assessment) capabilities represent key
+              practices that drive software delivery performance. These
+              industry-standard capabilities help teams identify strengths and
+              areas for improvement in their development processes.
+            </p>
+          </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-xl mb-4">All Capabilities</h2>
+
+            {
+              capabilities.length === 0 ? (
+                <EmptyState
+                  icon="document"
+                  title="No DORA capabilities available"
+                  message="Please run database seeding"
+                />
+              ) : (
+                <div class="space-y-3">
+                  {capabilities.map((capability) => (
+                    <a
+                      href={`/dora-capabilities/${capability.id}`}
+                      data-testid="dora-capability-item"
+                      class="card bg-base-200 hover:bg-base-300 transition-colors"
+                    >
+                      <div class="card-body p-4">
+                        <div class="flex items-start gap-3">
+                          <div class="shrink-0 mt-1">
+                            <span class="iconify lucide--circle-check text-primary h-5 w-5" />
+                          </div>
+
+                          <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between gap-3 mb-2">
+                              <h3
+                                class="text-lg font-semibold"
+                                data-testid="dora-capability-name"
+                              >
+                                {capability.name}
+                              </h3>
+                              <span class="iconify lucide--chevron-right h-5 w-5 text-base-content/40" />
+                            </div>
+
+                            <p
+                              class="text-sm text-base-content/70 mb-3"
+                              data-testid="dora-capability-description"
+                            >
+                              {capability.description}
+                            </p>
+
+                            <div class="flex items-center gap-2 text-xs text-primary">
+                              <span class="iconify lucide--external-link" />
+                              <span>Learn more on DORA.dev</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

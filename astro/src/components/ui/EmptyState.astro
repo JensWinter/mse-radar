@@ -1,0 +1,31 @@
+---
+type Props = {
+  icon: 'team' | 'survey' | 'document';
+  title: string;
+  message?: string;
+  class?: string;
+};
+
+const { icon, title, message, class: className = '' } = Astro.props;
+---
+
+<div class={`text-center py-8 text-base-content/60 ${className}`}>
+  {
+    icon === 'team' && (
+      <span class="iconify lucide--users h-12 w-12 mb-3 opacity-50" />
+    )
+  }
+  {
+    icon === 'survey' && (
+      <span class="iconify lucide--clipboard h-12 w-12 mb-3 opacity-50" />
+    )
+  }
+  {
+    icon === 'document' && (
+      <span class="iconify lucide--file-text mx-auto h-12 w-12 mb-3 opacity-50" />
+    )
+  }
+  <h1 class="text-2xl font-bold mb-4">{title}</h1>
+  {message && <p class="text-base-content/60 mb-6">{message}</p>}
+  <slot />
+</div>

@@ -1,0 +1,90 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import assert from 'node:assert';
+import { createDoraCapabilitiesService } from '@lib/composition.ts';
+
+const { user } = Astro.locals;
+assert(user, 'User must be logged in.');
+
+type Params = {
+  doraCapabilityId: string;
+};
+
+const { doraCapabilityId } = Astro.params as Params;
+
+const doraCapabilitiesService = createDoraCapabilitiesService(Astro.locals);
+const capability =
+  await doraCapabilitiesService.getDoraCapability(doraCapabilityId);
+
+if (!capability) {
+  return new Response('Not Found', { status: 404 });
+}
+---
+
+<BaseLayout title={capability.name}>
+  <div class="flex-1 py-8">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <h1 class="text-3xl font-bold">{capability.name}</h1>
+          <a href="/dora-capabilities" class="btn btn-ghost btn-sm gap-2">
+            <span class="iconify lucide--arrow-left"></span>
+            Back to Capabilities
+          </a>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <div class="flex items-start gap-4 mb-4">
+              <div class="shrink-0 mt-1">
+                <span
+                  class="iconify lucide--circle-check text-primary h-12 w-12"
+                ></span>
+              </div>
+              <div class="flex-1">
+                <h2 class="card-title text-xl mb-3">About This Capability</h2>
+                <p class="text-base-content/80 leading-relaxed">
+                  {capability.description}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-lg mb-4">Learn More</h2>
+
+            <div
+              class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between p-4 bg-base-200 rounded-lg"
+            >
+              <div class="flex items-start gap-3 flex-1">
+                <span
+                  class="iconify lucide--book-open text-primary h-6 w-6 shrink-0 mt-1"
+                ></span>
+                <div>
+                  <p class="font-medium text-base mb-1">
+                    Official DORA Documentation
+                  </p>
+                  <p class="text-sm text-base-content/70">
+                    Read the complete guide, research findings, and
+                    implementation strategies from the DORA team.
+                  </p>
+                </div>
+              </div>
+              <a
+                href={capability.doraReference}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-primary gap-2 shrink-0 w-full sm:w-auto"
+              >
+                <span>Visit DORA.dev</span>
+                <span class="iconify lucide--external-link"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

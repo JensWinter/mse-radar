@@ -1,0 +1,17 @@
+---
+interface Props {
+  title: string;
+  status: string;
+}
+
+const { title, status } = Astro.props;
+---
+
+<div class="flex flex-col gap-2">
+  <h1 class="text-3xl font-bold">{title}</h1>
+  <div>
+    <span data-testid="survey-run-status" class="badge badge-soft badge-info">
+      {status}
+    </span>
+  </div>
+</div>

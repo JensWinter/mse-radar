@@ -1,0 +1,77 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Alert from '@components/ui/Alert.astro';
+import { actions } from 'astro:actions';
+import assert from 'node:assert';
+
+const { user } = Astro.locals;
+assert(user, 'User must be logged in.');
+
+const createTeamResult = Astro.getActionResult(actions.createTeam);
+if (createTeamResult && !createTeamResult.error) {
+  return Astro.redirect(`/`);
+}
+---
+
+<BaseLayout title="New Team">
+  <div class="flex-1 py-8">
+    <div class="container mx-auto px-4">
+      <div class="max-w-2xl mx-auto">
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h1 class="card-title text-2xl mb-4">Create Team</h1>
+
+            {
+              createTeamResult?.error && (
+                <Alert type="error" class="mb-4" messageClass="error-message">
+                  {createTeamResult.error.message}
+                </Alert>
+              )
+            }
+
+            <form method="POST" action={actions.createTeam} class="space-y-4">
+              <div class="form-control w-full">
+                <label class="label" for="name">
+                  <span class="label-text font-medium">Team Name</span>
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  minlength="3"
+                  maxlength="100"
+                  class="input input-bordered w-full"
+                  placeholder="Enter team name"
+                />
+                <label class="label">
+                  <span class="label-text-alt">
+                    Minimum 3 characters, maximum 100
+                  </span>
+                </label>
+              </div>
+
+              <div class="form-control w-full">
+                <label class="label" for="description">
+                  <span class="label-text font-medium">Description</span>
+                </label>
+                <textarea
+                  id="description"
+                  name="description"
+                  class="textarea textarea-bordered w-full h-24"
+                  placeholder="Enter team description (optional)"></textarea>
+              </div>
+
+              <div class="card-actions justify-end gap-2 pt-4">
+                <a href="/" class="btn btn-ghost">Cancel</a>
+                <button type="submit" class="btn btn-primary">
+                  Create team
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

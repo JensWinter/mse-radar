@@ -1,0 +1,140 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import EmptyState from '@components/ui/EmptyState.astro';
+import { type TeamDto } from '@services/teams-service.ts';
+import { createTeamsService } from '@lib/composition.ts';
+
+const { user } = Astro.locals;
+
+let teams: TeamDto[] = [];
+if (user) {
+  const teamsService = createTeamsService(Astro.locals);
+  teams = await teamsService.getAllTeams(user.id);
+}
+---
+
+<BaseLayout title="Home">
+  <div class="flex-1 py-8">
+    <div class="container mx-auto px-4">
+      {
+        user ? (
+          <div class="max-w-4xl mx-auto space-y-6">
+            <h1 class="text-3xl font-bold">Home</h1>
+
+            <div class="card bg-base-100 shadow-xl">
+              <div class="card-body">
+                <div class="mb-4">
+                  <h2 class="card-title text-xl">My Teams</h2>
+                </div>
+
+                {teams.length === 0 ? (
+                  <EmptyState icon="team" title="No teams yet" />
+                ) : (
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {teams.map((team) => (
+                      <a
+                        href={`/teams/${team.id}`}
+                        class="card bg-base-200 hover:bg-base-300 transition-colors"
+                        data-testid={team.name}
+                      >
+                        <div class="card-body">
+                          <h3 class="card-title text-lg">{team.name}</h3>
+                          {team.description && (
+                            <p class="text-sm text-base-content/70 line-clamp-2">
+                              {team.description}
+                            </p>
+                          )}
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div class="max-w-5xl mx-auto space-y-8">
+            <h1 class="sr-only">Home</h1>
+
+            <div class="text-center pt-8 pb-4">
+              <div class="text-4xl md:text-5xl font-bold mb-4">MSE Radar</div>
+              <p class="text-xl text-base-content/70 mb-8">
+                Measure and improve your team's capabilities with DORA-based
+                surveys
+              </p>
+              <div class="flex gap-4 justify-center">
+                <a href="/login" class="btn btn-primary btn-lg gap-2">
+                  <span class="iconify lucide--log-in" />
+                  Sign In
+                </a>
+                <a href="/register" class="btn btn-outline btn-lg gap-2">
+                  <span class="iconify lucide--user-plus" />
+                  Create Account
+                </a>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                  <div class="flex justify-center mb-4">
+                    <span class="iconify lucide--chart-column-big text-primary h-12 w-12" />
+                  </div>
+                  <h2 class="card-title justify-center">DORA Capabilities</h2>
+                  <p class="text-center text-base-content/70">
+                    Assess your team's performance using industry-standard DORA
+                    metrics and capabilities
+                  </p>
+                </div>
+              </div>
+
+              <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                  <div class="flex justify-center mb-4">
+                    <span class="iconify lucide--users text-primary h-12 w-12" />
+                  </div>
+                  <h2 class="card-title justify-center">Team Collaboration</h2>
+                  <p class="text-center text-base-content/70">
+                    Create teams, invite members, and collaborate on capability
+                    assessments together
+                  </p>
+                </div>
+              </div>
+
+              <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                  <div class="flex justify-center mb-4">
+                    <span class="iconify lucide--chart-line text-primary h-12 w-12" />
+                  </div>
+                  <h2 class="card-title justify-center">Actionable Insights</h2>
+                  <p class="text-center text-base-content/70">
+                    Get aggregated results and visual capability profiles to
+                    identify improvement areas
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card bg-base-100 shadow-xl">
+              <div class="card-body">
+                <h2 class="card-title text-2xl mb-4">What is MSE Radar?</h2>
+                <div class="space-y-3 text-base-content/80">
+                  <p>
+                    MSE Radar helps software development teams measure and
+                    improve their capabilities using the DORA (DevOps Research
+                    and Assessment) framework.
+                  </p>
+                  <p>
+                    By regularly assessing your team's strengths and weaknesses,
+                    you can make data-driven decisions about where to focus
+                    improvement efforts and track progress over time.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</BaseLayout>

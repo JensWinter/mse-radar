@@ -1,0 +1,75 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import EmptyState from '@components/ui/EmptyState.astro';
+import assert from 'node:assert';
+import { createSurveyModelService } from '@lib/composition.ts';
+
+const { user } = Astro.locals;
+assert(user, 'User must be logged in.');
+
+const surveyModelService = createSurveyModelService(Astro.locals);
+const surveyModels = await surveyModelService.getAllSurveyModels();
+---
+
+<BaseLayout title="Survey Models">
+  <div class="flex-1 py-8">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto space-y-6">
+        <h1 class="text-3xl font-bold">Survey Models</h1>
+
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <p class="text-base-content/80">
+              Survey models define the structure and questions for DORA
+              capability assessments. Each version corresponds to a specific set
+              of capabilities and questions used to evaluate your team's
+              performance.
+            </p>
+          </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title text-xl mb-4">Available Versions</h2>
+
+            {
+              surveyModels.length === 0 ? (
+                <EmptyState
+                  icon="document"
+                  title="No survey models available"
+                  message="Survey models need to be created and seeded"
+                />
+              ) : (
+                <div class="space-y-3">
+                  {surveyModels.map((model) => (
+                    <a
+                      href={`/survey-models/${model.id}`}
+                      class="card bg-base-200 hover:bg-base-300 transition-colors"
+                    >
+                      <div class="card-body p-4">
+                        <div class="flex items-center justify-between">
+                          <div class="flex-1">
+                            <h3 class="text-lg font-semibold">
+                              Version {model.version}
+                            </h3>
+                            <p class="text-sm text-base-content/70 mt-1">
+                              {model.questions.length}{' '}
+                              {model.questions.length === 1
+                                ? 'question'
+                                : 'questions'}
+                            </p>
+                          </div>
+                          <span class="iconify lucide--chevron-right h-5 w-5 text-base-content/40" />
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

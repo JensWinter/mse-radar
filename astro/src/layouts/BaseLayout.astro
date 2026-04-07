@@ -1,0 +1,111 @@
+---
+import Breadcrumb from '@components/navigation/Breadcrumb.astro';
+import '../styles/global.css';
+
+type BreadcrumbItem = {
+  label: string;
+  href?: string;
+};
+
+type Props = {
+  title: string;
+  breadcrumbs?: BreadcrumbItem[];
+};
+
+const { title, breadcrumbs } = Astro.props as Props;
+
+const { user } = Astro.locals;
+---
+
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+  </head>
+  <body class="h-full flex flex-col bg-base-300">
+    <div class="navbar bg-base-100 shadow-sm flex-none">
+      <div class="navbar-start">
+        <a class="btn btn-ghost text-xl" href="/" aria-label="Main page">MSE</a>
+      </div>
+      <div class="navbar-center hidden lg:flex"></div>
+      <div class="navbar-end">
+        <ul class="menu menu-horizontal px-1 gap-4">
+          {
+            !user && (
+              <>
+                <li>
+                  <a href="/login">Log in</a>
+                </li>
+                <li>
+                  <a href="/register">Register</a>
+                </li>
+              </>
+            )
+          }
+          {
+            user && (
+              <>
+                <li>
+                  <a href="/teams/new" aria-label="Add a team">
+                    <span class="iconify lucide--plus" />
+                    <span class="hidden sm:inline">New Team</span>
+                  </a>
+                </li>
+                <li data-testid="user-menu">
+                  <details>
+                    <summary>{user?.email}</summary>
+                    <ul class="bg-base-100 rounded-t-none p-2">
+                      <li>
+                        <a href="/account">Account</a>
+                      </li>
+                      <li>
+                        <button id="logout-button" type="button">
+                          Sign out
+                        </button>
+                      </li>
+                    </ul>
+                  </details>
+                </li>
+              </>
+            )
+          }
+        </ul>
+      </div>
+    </div>
+
+    {
+      breadcrumbs && breadcrumbs.length > 0 && (
+        <div class="bg-base-200 border-b border-base-100">
+          <div class="container mx-auto px-4 py-2">
+            <Breadcrumb items={breadcrumbs} />
+          </div>
+        </div>
+      )
+    }
+
+    <div class="flex-1 flex flex-col bg-base-300">
+      <slot />
+    </div>
+  </body>
+</html>
+
+<script>
+  import { signOut } from '../lib/auth-client.ts';
+
+  const logoutButton = document.querySelector(
+    '#logout-button',
+  ) as HTMLButtonElement;
+  if (logoutButton) {
+    logoutButton.onclick = async () => {
+      await signOut({
+        fetchOptions: {
+          onSuccess: async () => {
+            window.location.href = '/';
+          },
+        },
+      });
+    };
+  }
+</script>

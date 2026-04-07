@@ -1,0 +1,50 @@
+---
+import OpenSurveyResponseGrid from './OpenSurveyResponseGrid.astro';
+import SurveyAnswerAlpineScript from './SurveyAnswerAlpineScript.astro';
+import type { QuestionAnswer } from './types.ts';
+
+interface Props {
+  surveyRunId: string;
+  questionAnswers: QuestionAnswer[];
+}
+
+const { surveyRunId, questionAnswers } = Astro.props;
+---
+
+<div
+  x-data={`{
+    toastVisible: false,
+    toastMessage: '',
+    toastTimeoutId: null,
+    showSaveErrorToast(message = 'Failed to save. Please try again.') {
+      if (this.toastTimeoutId !== null) {
+        clearTimeout(this.toastTimeoutId);
+      }
+      this.toastMessage = message;
+      this.toastVisible = true;
+      this.toastTimeoutId = window.setTimeout(() => {
+        this.toastVisible = false;
+        this.toastTimeoutId = null;
+      }, 3000);
+    },
+  }`}
+  @survey-save-error.window="showSaveErrorToast($event.detail?.message)"
+>
+  <div class="toast toast-bottom toast-center z-50" x-show="toastVisible">
+    <div class="alert alert-error" data-testid="survey-save-error-toast">
+      <span x-text="toastMessage"></span>
+    </div>
+  </div>
+
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h2 class="card-title text-xl mb-4">Your Response</h2>
+      <OpenSurveyResponseGrid
+        surveyRunId={surveyRunId}
+        questionAnswers={questionAnswers}
+      />
+    </div>
+  </div>
+</div>
+
+<SurveyAnswerAlpineScript />

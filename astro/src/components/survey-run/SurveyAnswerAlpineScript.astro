@@ -1,0 +1,143 @@
+<script>
+  import Alpine from 'alpinejs';
+
+  Alpine.data(
+    'surveyAnswer',
+    (
+      surveyRunId,
+      questionIndex,
+      initialValue,
+      initialComment,
+      totalQuestions,
+    ) => ({
+      value: initialValue,
+      comment: initialComment ?? '',
+      isCommentVisible: (initialComment ?? '') !== '',
+      saving: false,
+      savingComment: false,
+      showCommentSaved: false,
+      hideCommentSavedTimeoutId: null as number | null,
+      commentDebounceTimeoutId: null as number | null,
+      pendingCommentSave: false,
+      lastSavedComment: initialComment ?? '',
+
+      emitSaveError(message = 'Failed to save. Please try again.') {
+        window.dispatchEvent(
+          new CustomEvent('survey-save-error', {
+            detail: { message },
+          }),
+        );
+      },
+
+      clearCommentSavedTimer() {
+        if (this.hideCommentSavedTimeoutId !== null) {
+          clearTimeout(this.hideCommentSavedTimeoutId);
+          this.hideCommentSavedTimeoutId = null;
+        }
+      },
+
+      scheduleHideCommentSaved() {
+        this.clearCommentSavedTimer();
+        this.showCommentSaved = true;
+        this.hideCommentSavedTimeoutId = window.setTimeout(() => {
+          this.showCommentSaved = false;
+          this.hideCommentSavedTimeoutId = null;
+        }, 3000);
+      },
+
+      clearCommentDebounceTimer() {
+        if (this.commentDebounceTimeoutId !== null) {
+          clearTimeout(this.commentDebounceTimeoutId);
+          this.commentDebounceTimeoutId = null;
+        }
+      },
+
+      scheduleCommentSave() {
+        this.clearCommentDebounceTimer();
+        this.showCommentSaved = false;
+        if (this.comment === this.lastSavedComment) return;
+
+        this.commentDebounceTimeoutId = window.setTimeout(() => {
+          this.commentDebounceTimeoutId = null;
+          void this.persistComment();
+        }, 700);
+      },
+
+      async flushCommentSave() {
+        this.clearCommentDebounceTimer();
+        await this.persistComment();
+      },
+
+      async saveAnswer(newValue: number | null) {
+        if (this.saving) return;
+        if (newValue === this.value) newValue = null;
+        this.value = newValue;
+        this.saving = true;
+        try {
+          const res = await fetch('/_actions/saveAnswer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              surveyRunId,
+              questionIndex,
+              totalQuestions,
+              type: 'answer',
+              answerValue: newValue ?? undefined,
+            }),
+          });
+          if (!res.ok) throw new Error('Save failed');
+          const data = await res.json();
+          if (data.error) throw new Error(data.error.message);
+        } catch {
+          this.emitSaveError();
+        } finally {
+          this.saving = false;
+        }
+      },
+
+      async persistComment() {
+        if (this.comment === this.lastSavedComment) return;
+        if (this.savingComment) {
+          this.pendingCommentSave = true;
+          return;
+        }
+
+        const commentToSave = this.comment;
+        this.savingComment = true;
+        this.showCommentSaved = false;
+        try {
+          const res = await fetch('/_actions/saveAnswer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              surveyRunId,
+              questionIndex,
+              totalQuestions,
+              type: 'comment',
+              comment: commentToSave,
+            }),
+          });
+          if (!res.ok) throw new Error('Save failed');
+          const data = await res.json();
+          if (data.error) throw new Error(data.error.message);
+          this.lastSavedComment = commentToSave;
+          this.scheduleHideCommentSaved();
+        } catch {
+          this.clearCommentSavedTimer();
+          this.showCommentSaved = false;
+          this.emitSaveError();
+        } finally {
+          this.savingComment = false;
+          if (this.pendingCommentSave) {
+            this.pendingCommentSave = false;
+            void this.persistComment();
+          }
+        }
+      },
+
+      showComment() {
+        this.isCommentVisible = true;
+      },
+    }),
+  );
+</script>
