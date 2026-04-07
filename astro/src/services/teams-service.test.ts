@@ -5,7 +5,6 @@ import {
   UserNotFoundError,
 } from '@services/teams-service.ts';
 import type { TeamsRepository } from '@database/teams-repository.ts';
-import type { UsersRepository } from '@database/users-repository.ts';
 import { User } from '@models/aggregates/user.ts';
 import {
   Team,
@@ -18,6 +17,7 @@ import {
   type IAuthorizationService,
   AuthorizationError,
 } from '@services/authorization-service.ts';
+import type { UsersService } from '@services/users-service.ts';
 
 suite('TeamsService', () => {
   suite('createTeam()', () => {
@@ -28,14 +28,14 @@ suite('TeamsService', () => {
         existsByName: vi.fn(),
         save: vi.fn(),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as UsersRepository;
+      const mockUsersService = {} as UsersService;
       const mockAuthorizationService = {
         currentUser,
       } as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -60,14 +60,14 @@ suite('TeamsService', () => {
         existsByName: vi.fn(),
         save: vi.fn(),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as UsersRepository;
+      const mockUsersService = {} as UsersService;
       const mockAuthorizationService = {
         currentUser,
       } as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -92,12 +92,12 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         existsByName: vi.fn().mockResolvedValue(true),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as UsersRepository;
+      const mockUsersService = {} as UsersService;
       const mockAuthorizationService = {} as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -119,14 +119,14 @@ suite('TeamsService', () => {
         existsByName: vi.fn(),
         save: vi.fn(),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as UsersRepository;
+      const mockUsersService = {} as UsersService;
       const mockAuthorizationService = {
         currentUser,
       } as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -163,14 +163,14 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(team),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {
         assertTeamMember: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -197,12 +197,12 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(null),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {} as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -230,14 +230,14 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(team),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {
         assertTeamMember: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -276,7 +276,7 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(team),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {
         assertTeamMember: vi
           .fn()
@@ -287,7 +287,7 @@ suite('TeamsService', () => {
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -331,12 +331,12 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getAllByMembership: vi.fn().mockResolvedValue([team1, team2]),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {} as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -380,12 +380,12 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getAllByMembership: vi.fn().mockResolvedValue([]),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {} as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -420,16 +420,16 @@ suite('TeamsService', () => {
         getById: vi.fn().mockResolvedValue(team),
         save: vi.fn(),
       } as any as TeamsRepository;
-      const mockUsersRepository = {
-        findByEmail: vi.fn().mockResolvedValue(newUser),
-      } as any as UsersRepository;
+      const mockUsersService = {
+        getUser: vi.fn().mockResolvedValue(newUser),
+      } as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -437,7 +437,7 @@ suite('TeamsService', () => {
 
       // Assert
       expect(mockTeamsRepository.getById).toHaveBeenCalledWith('team-id');
-      expect(mockUsersRepository.findByEmail).toHaveBeenCalledWith(
+      expect(mockUsersService.getUser).toHaveBeenCalledWith(
         'newuser@example.com',
       );
       expect(mockTeamsRepository.save).toHaveBeenCalledTimes(1);
@@ -459,12 +459,12 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(null),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {} as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -495,16 +495,16 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(team),
       } as any as TeamsRepository;
-      const mockUsersRepository = {
-        findByEmail: vi.fn().mockResolvedValue(null),
-      } as any as UsersRepository;
+      const mockUsersService = {
+        getUser: vi.fn().mockResolvedValue(null),
+      } as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -550,16 +550,16 @@ suite('TeamsService', () => {
         getById: vi.fn().mockResolvedValue(team),
         save: vi.fn(),
       } as any as TeamsRepository;
-      const mockUsersRepository = {
-        findByEmail: vi.fn().mockResolvedValue(existingUser),
-      } as any as UsersRepository;
+      const mockUsersService = {
+        getUser: vi.fn().mockResolvedValue(existingUser),
+      } as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -595,7 +595,7 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(team),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi
           .fn()
@@ -606,7 +606,7 @@ suite('TeamsService', () => {
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -644,14 +644,14 @@ suite('TeamsService', () => {
         existsByName: vi.fn().mockResolvedValue(false),
         save: vi.fn(),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -695,14 +695,14 @@ suite('TeamsService', () => {
         existsByName: vi.fn(),
         save: vi.fn(),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -738,14 +738,14 @@ suite('TeamsService', () => {
         existsByName: vi.fn().mockResolvedValue(false),
         save: vi.fn(),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -780,14 +780,14 @@ suite('TeamsService', () => {
         existsByName: vi.fn(),
         save: vi.fn(),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -820,7 +820,7 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(team),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi
           .fn()
@@ -831,7 +831,7 @@ suite('TeamsService', () => {
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -867,14 +867,14 @@ suite('TeamsService', () => {
         getById: vi.fn().mockResolvedValue(team),
         existsByName: vi.fn().mockResolvedValue(true),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -895,12 +895,12 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(null),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {} as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -934,14 +934,14 @@ suite('TeamsService', () => {
         existsByName: vi.fn(),
         save: vi.fn(),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -984,16 +984,16 @@ suite('TeamsService', () => {
         getById: vi.fn().mockResolvedValue(team),
         save: vi.fn(),
       } as any as TeamsRepository;
-      const mockUsersRepository = {
-        findByEmail: vi.fn().mockResolvedValue(memberUser),
-      } as any as UsersRepository;
+      const mockUsersService = {
+        getUser: vi.fn().mockResolvedValue(memberUser),
+      } as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -1005,7 +1005,7 @@ suite('TeamsService', () => {
 
       // Assert
       expect(mockTeamsRepository.getById).toHaveBeenCalledWith('team-id');
-      expect(mockUsersRepository.findByEmail).toHaveBeenCalledWith(
+      expect(mockUsersService.getUser).toHaveBeenCalledWith(
         'member@example.com',
       );
       expect(mockAuthorizationService.assertTeamLead).toHaveBeenCalledWith(
@@ -1055,16 +1055,16 @@ suite('TeamsService', () => {
         getById: vi.fn().mockResolvedValue(team),
         save: vi.fn(),
       } as any as TeamsRepository;
-      const mockUsersRepository = {
-        findByEmail: vi.fn().mockResolvedValue(leadUser2),
-      } as any as UsersRepository;
+      const mockUsersService = {
+        getUser: vi.fn().mockResolvedValue(leadUser2),
+      } as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -1093,12 +1093,12 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(null),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {} as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -1130,16 +1130,16 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(team),
       } as any as TeamsRepository;
-      const mockUsersRepository = {
-        findByEmail: vi.fn().mockResolvedValue(null),
-      } as any as UsersRepository;
+      const mockUsersService = {
+        getUser: vi.fn().mockResolvedValue(null),
+      } as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -1178,16 +1178,16 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(team),
       } as any as TeamsRepository;
-      const mockUsersRepository = {
-        findByEmail: vi.fn().mockResolvedValue(nonMemberUser),
-      } as any as UsersRepository;
+      const mockUsersService = {
+        getUser: vi.fn().mockResolvedValue(nonMemberUser),
+      } as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -1232,16 +1232,16 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(team),
       } as any as TeamsRepository;
-      const mockUsersRepository = {
-        findByEmail: vi.fn().mockResolvedValue(leadUser),
-      } as any as UsersRepository;
+      const mockUsersService = {
+        getUser: vi.fn().mockResolvedValue(leadUser),
+      } as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi.fn(),
       } as any as IAuthorizationService;
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act
@@ -1285,7 +1285,7 @@ suite('TeamsService', () => {
       const mockTeamsRepository = {
         getById: vi.fn().mockResolvedValue(team),
       } as any as TeamsRepository;
-      const mockUsersRepository = {} as any as UsersRepository;
+      const mockUsersService = {} as any as UsersService;
       const mockAuthorizationService = {
         assertTeamLead: vi
           .fn()
@@ -1296,7 +1296,7 @@ suite('TeamsService', () => {
       const teamsService = new TeamsService(
         mockAuthorizationService,
         mockTeamsRepository,
-        mockUsersRepository,
+        mockUsersService,
       );
 
       // Act

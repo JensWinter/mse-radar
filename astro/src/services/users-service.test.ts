@@ -4,6 +4,47 @@ import { type UsersRepository } from '@database/users-repository.ts';
 import { User } from '@models/aggregates/user.ts';
 
 suite('UserService', () => {
+  suite('getUser()', () => {
+    test('returns existing user for email', async () => {
+      // Arrange
+      const email = 'existing@example.com';
+      const user = new User('user-123', email);
+      const mockRepository: UsersRepository = {
+        save: vi.fn(),
+        findByEmail: vi.fn().mockResolvedValue(user),
+      };
+      const usersService = new UsersService(mockRepository);
+
+      // Act
+      const result = await usersService.getUser(email);
+
+      // Assert
+      expect(result).toBe(user);
+      expect(mockRepository.findByEmail).toHaveBeenCalledWith(email);
+      expect(mockRepository.findByEmail).toHaveBeenCalledTimes(1);
+      expect(mockRepository.save).not.toHaveBeenCalled();
+    });
+
+    test('returns null when user does not exist', async () => {
+      // Arrange
+      const email = 'missing@example.com';
+      const mockRepository: UsersRepository = {
+        save: vi.fn(),
+        findByEmail: vi.fn().mockResolvedValue(null),
+      };
+      const usersService = new UsersService(mockRepository);
+
+      // Act
+      const result = await usersService.getUser(email);
+
+      // Assert
+      expect(result).toBeNull();
+      expect(mockRepository.findByEmail).toHaveBeenCalledWith(email);
+      expect(mockRepository.findByEmail).toHaveBeenCalledTimes(1);
+      expect(mockRepository.save).not.toHaveBeenCalled();
+    });
+  });
+
   suite('getOrCreateUser()', () => {
     test('returns existing user if user already exists', async () => {
       // Arrange

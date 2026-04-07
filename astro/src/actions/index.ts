@@ -24,16 +24,21 @@ import {
   AuthorizationError,
 } from '@services/authorization-service.ts';
 import type { User } from '@models/aggregates/user.ts';
+import { UsersService } from '@services/users-service.ts';
 
 function createAuthorizationService(user: User): AuthorizationService {
   return new AuthorizationService(user, new SqliteTeamsRepository());
+}
+
+function createUsersService(): UsersService {
+  return new UsersService(new SqliteUsersRepository());
 }
 
 function createTeamsService(user: User) {
   return new TeamsService(
     createAuthorizationService(user),
     new SqliteTeamsRepository(),
-    new SqliteUsersRepository(),
+    createUsersService(),
   );
 }
 
