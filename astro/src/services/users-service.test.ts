@@ -12,9 +12,7 @@ suite('UserService', () => {
       const user = new User(userId, email);
       const mockRepository: UsersRepository = {
         save: vi.fn(),
-        existsByEmail: vi.fn(),
         findByEmail: vi.fn().mockResolvedValue(user),
-        findById: vi.fn(),
       };
       const usersService = new UsersService(mockRepository);
 
@@ -33,14 +31,12 @@ suite('UserService', () => {
 
       const mockRepository: UsersRepository = {
         save: vi.fn(),
-        existsByEmail: vi.fn(),
         findByEmail: vi
           .fn()
           .mockResolvedValueOnce(null)
           .mockImplementationOnce(
             async (_: string) => (mockRepository.save as any).mock.calls[0][0],
           ),
-        findById: vi.fn(),
       };
       const usersService = new UsersService(mockRepository);
 
@@ -62,9 +58,7 @@ suite('UserService', () => {
       // Arrange
       const mockRepository: UsersRepository = {
         save: vi.fn().mockResolvedValue(undefined),
-        existsByEmail: vi.fn().mockResolvedValue(false),
         findByEmail: vi.fn(),
-        findById: vi.fn(),
       };
       const usersService = new UsersService(mockRepository);
       const email = 'laura@example.com';
