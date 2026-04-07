@@ -95,7 +95,7 @@ export const server = {
     accept: 'form',
     input: z.object({
       teamId: z.string(),
-      teamMemberEmail: z.string().email(),
+      teamMemberEmail: z.email(),
     }),
     handler: async (input, context) => {
       if (!context.locals.user) {
@@ -140,7 +140,7 @@ export const server = {
     accept: 'form',
     input: z.object({
       teamId: z.string(),
-      memberEmail: z.string().email(),
+      memberEmail: z.email(),
     }),
     handler: async (input, context) => {
       if (!context.locals.user) {
@@ -194,7 +194,7 @@ export const server = {
     accept: 'form',
     input: z.object({
       teamId: z.string(),
-      memberEmail: z.string().email(),
+      memberEmail: z.email(),
       newRole: z.enum(['team-lead', 'regular-member']),
     }),
     handler: async (input, context) => {
