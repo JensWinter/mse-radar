@@ -17,7 +17,7 @@
     "@astrojs/check": "^0.9.8",
     "@astrojs/node": "^10.0.4",
     "@astrojs/ts-plugin": "^1.10.7",
-    "@tailwindcss/vite": "^4.1.18",
+    "@tailwindcss/vite": "^4.2.2",
     "@types/alpinejs": "^3.13.11",
     "alpinejs": "^3.15.2",
     "astro": "^6.1.4",
@@ -25,7 +25,7 @@
     "better-sqlite3": "^12.6.0",
     "charts.css": "^1.2.0",
     "daisyui": "^5.5.19",
-    "tailwindcss": "^4.2.1",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5.9.3",
     "vitest": "^4.0.15"
   },
@@ -37,5 +37,8 @@
     "@types/node": "^24.10.1",
     "prettier": "^3.7.4",
     "prettier-plugin-astro": "^0.14.1"
+  },
+  "overrides": {
+    "vite": "7.3.2"
   }
 }
