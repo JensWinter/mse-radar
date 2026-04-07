@@ -107,7 +107,7 @@ suite('TeamsService', () => {
       );
 
       // Assert
-      await expect(createTeamPromise).rejects.toThrowError(
+      await expect(createTeamPromise).rejects.toThrow(
         TeamNameAlreadyExistsError,
       );
     });
@@ -209,7 +209,7 @@ suite('TeamsService', () => {
       const getTeamPromise = teamsService.getTeam('nonexistent-id');
 
       // Assert
-      await expect(getTeamPromise).rejects.toThrowError('Team not found');
+      await expect(getTeamPromise).rejects.toThrow('Team not found');
       expect(mockTeamsRepository.getById).toHaveBeenCalledWith(
         'nonexistent-id',
       );
@@ -294,8 +294,8 @@ suite('TeamsService', () => {
       const getTeamPromise = teamsService.getTeam('team-id');
 
       // Assert
-      await expect(getTeamPromise).rejects.toThrowError(AuthorizationError);
-      await expect(getTeamPromise).rejects.toThrowError(
+      await expect(getTeamPromise).rejects.toThrow(AuthorizationError);
+      await expect(getTeamPromise).rejects.toThrow(
         'Access denied: not a team member',
       );
     });
@@ -474,7 +474,7 @@ suite('TeamsService', () => {
       );
 
       // Assert
-      await expect(addMemberPromise).rejects.toThrowError('Team not found');
+      await expect(addMemberPromise).rejects.toThrow('Team not found');
     });
 
     test('throws UserNotFoundError when user is not found', async () => {
@@ -514,8 +514,8 @@ suite('TeamsService', () => {
       );
 
       // Assert
-      await expect(addMemberPromise).rejects.toThrowError(UserNotFoundError);
-      await expect(addMemberPromise).rejects.toThrowError(
+      await expect(addMemberPromise).rejects.toThrow(UserNotFoundError);
+      await expect(addMemberPromise).rejects.toThrow(
         'No registered user found with email: nonexistent@example.com',
       );
     });
@@ -569,10 +569,10 @@ suite('TeamsService', () => {
       );
 
       // Assert
-      await expect(addMemberPromise).rejects.toThrowError(
+      await expect(addMemberPromise).rejects.toThrow(
         UserAlreadyTeamMemberError,
       );
-      await expect(addMemberPromise).rejects.toThrowError(
+      await expect(addMemberPromise).rejects.toThrow(
         'User existing@example.com is already a member of this team',
       );
     });
@@ -616,8 +616,8 @@ suite('TeamsService', () => {
       );
 
       // Assert
-      await expect(addMemberPromise).rejects.toThrowError(AuthorizationError);
-      await expect(addMemberPromise).rejects.toThrowError(
+      await expect(addMemberPromise).rejects.toThrow(AuthorizationError);
+      await expect(addMemberPromise).rejects.toThrow(
         'Access denied: team lead role required',
       );
     });
@@ -842,8 +842,8 @@ suite('TeamsService', () => {
       );
 
       // Assert
-      await expect(updateTeamPromise).rejects.toThrowError(AuthorizationError);
-      await expect(updateTeamPromise).rejects.toThrowError(
+      await expect(updateTeamPromise).rejects.toThrow(AuthorizationError);
+      await expect(updateTeamPromise).rejects.toThrow(
         'Access denied: team lead role required',
       );
     });
@@ -885,7 +885,7 @@ suite('TeamsService', () => {
       );
 
       // Assert
-      await expect(updateTeamPromise).rejects.toThrowError(
+      await expect(updateTeamPromise).rejects.toThrow(
         TeamNameAlreadyExistsError,
       );
     });
@@ -911,7 +911,7 @@ suite('TeamsService', () => {
       );
 
       // Assert
-      await expect(updateTeamPromise).rejects.toThrowError('Team not found');
+      await expect(updateTeamPromise).rejects.toThrow('Team not found');
     });
 
     test('does not check name uniqueness when name is unchanged', async () => {
@@ -1109,9 +1109,7 @@ suite('TeamsService', () => {
       );
 
       // Assert
-      await expect(changeMemberRolePromise).rejects.toThrowError(
-        'Team not found',
-      );
+      await expect(changeMemberRolePromise).rejects.toThrow('Team not found');
     });
 
     test('throws UserNotFoundError when user is not found', async () => {
@@ -1152,10 +1150,8 @@ suite('TeamsService', () => {
       );
 
       // Assert
-      await expect(changeMemberRolePromise).rejects.toThrowError(
-        UserNotFoundError,
-      );
-      await expect(changeMemberRolePromise).rejects.toThrowError(
+      await expect(changeMemberRolePromise).rejects.toThrow(UserNotFoundError);
+      await expect(changeMemberRolePromise).rejects.toThrow(
         'No registered user found with email: nonexistent@example.com',
       );
     });
@@ -1202,10 +1198,10 @@ suite('TeamsService', () => {
       );
 
       // Assert
-      await expect(changeMemberRolePromise).rejects.toThrowError(
+      await expect(changeMemberRolePromise).rejects.toThrow(
         MemberNotFoundError,
       );
-      await expect(changeMemberRolePromise).rejects.toThrowError(
+      await expect(changeMemberRolePromise).rejects.toThrow(
         'Member with user ID non-member-user-id not found in this team',
       );
     });
@@ -1256,10 +1252,10 @@ suite('TeamsService', () => {
       );
 
       // Assert
-      await expect(changeMemberRolePromise).rejects.toThrowError(
+      await expect(changeMemberRolePromise).rejects.toThrow(
         CannotDemoteLastTeamLeadError,
       );
-      await expect(changeMemberRolePromise).rejects.toThrowError(
+      await expect(changeMemberRolePromise).rejects.toThrow(
         'Cannot demote the last team lead',
       );
     });
@@ -1311,10 +1307,8 @@ suite('TeamsService', () => {
       );
 
       // Assert
-      await expect(changeMemberRolePromise).rejects.toThrowError(
-        AuthorizationError,
-      );
-      await expect(changeMemberRolePromise).rejects.toThrowError(
+      await expect(changeMemberRolePromise).rejects.toThrow(AuthorizationError);
+      await expect(changeMemberRolePromise).rejects.toThrow(
         'Access denied: team lead role required',
       );
     });

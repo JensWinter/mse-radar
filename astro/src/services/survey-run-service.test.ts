@@ -70,7 +70,7 @@ suite('SurveyRunService', () => {
       );
 
       // Assert
-      await expect(createPromise).rejects.toThrowError('Team not found');
+      await expect(createPromise).rejects.toThrow('Team not found');
       expect(mockSurveyRunRepository.save).not.toHaveBeenCalled();
     });
 
@@ -100,7 +100,7 @@ suite('SurveyRunService', () => {
       );
 
       // Assert
-      await expect(createPromise).rejects.toThrowError('Unauthorized');
+      await expect(createPromise).rejects.toThrow('Unauthorized');
       expect(mockAuthorizationService.assertTeamLead).toHaveBeenCalledWith(
         team,
       );
@@ -209,7 +209,7 @@ suite('SurveyRunService', () => {
       const getPromise = service.getSurveyRunsByTeam('nonexistent-team-id');
 
       // Assert
-      await expect(getPromise).rejects.toThrowError('Team not found');
+      await expect(getPromise).rejects.toThrow('Team not found');
       expect(mockSurveyRunRepository.getAllByTeamId).not.toHaveBeenCalled();
     });
 
@@ -235,7 +235,7 @@ suite('SurveyRunService', () => {
       const getPromise = service.getSurveyRunsByTeam('team-id');
 
       // Assert
-      await expect(getPromise).rejects.toThrowError('Unauthorized');
+      await expect(getPromise).rejects.toThrow('Unauthorized');
       expect(mockAuthorizationService.assertTeamMember).toHaveBeenCalledWith(
         team,
       );
@@ -299,7 +299,7 @@ suite('SurveyRunService', () => {
       const getPromise = service.getSurveyRun('nonexistent-id');
 
       // Assert
-      await expect(getPromise).rejects.toThrowError('Survey run not found');
+      await expect(getPromise).rejects.toThrow('Survey run not found');
       expect(mockSurveyRunRepository.getById).toHaveBeenCalledWith(
         'nonexistent-id',
       );
@@ -334,7 +334,7 @@ suite('SurveyRunService', () => {
       const getPromise = service.getSurveyRun('survey-run-id');
 
       // Assert
-      await expect(getPromise).rejects.toThrowError('Unauthorized');
+      await expect(getPromise).rejects.toThrow('Unauthorized');
       expect(mockSurveyRunRepository.getById).toHaveBeenCalledWith(
         'survey-run-id',
       );
@@ -400,7 +400,7 @@ suite('SurveyRunService', () => {
       const openPromise = service.openSurveyRun('nonexistent-id');
 
       // Assert
-      await expect(openPromise).rejects.toThrowError('Survey run not found');
+      await expect(openPromise).rejects.toThrow('Survey run not found');
       expect(mockSurveyRunRepository.getById).toHaveBeenCalledWith(
         'nonexistent-id',
       );
@@ -440,7 +440,7 @@ suite('SurveyRunService', () => {
       const openPromise = service.openSurveyRun('survey-run-id');
 
       // Assert
-      await expect(openPromise).rejects.toThrowError('Unauthorized');
+      await expect(openPromise).rejects.toThrow('Unauthorized');
       expect(mockSurveyRunRepository.getById).toHaveBeenCalledWith(
         'survey-run-id',
       );
@@ -507,7 +507,7 @@ suite('SurveyRunService', () => {
       const closePromise = service.closeSurveyRun('nonexistent-id');
 
       // Assert
-      await expect(closePromise).rejects.toThrowError('Survey run not found');
+      await expect(closePromise).rejects.toThrow('Survey run not found');
       expect(mockSurveyRunRepository.getById).toHaveBeenCalledWith(
         'nonexistent-id',
       );
@@ -547,7 +547,7 @@ suite('SurveyRunService', () => {
       const closePromise = service.closeSurveyRun('survey-run-id');
 
       // Assert
-      await expect(closePromise).rejects.toThrowError('Unauthorized');
+      await expect(closePromise).rejects.toThrow('Unauthorized');
       expect(mockSurveyRunRepository.getById).toHaveBeenCalledWith(
         'survey-run-id',
       );
@@ -618,7 +618,7 @@ suite('SurveyRunService', () => {
       const reopenPromise = service.reopenSurveyRun('nonexistent-id');
 
       // Assert
-      await expect(reopenPromise).rejects.toThrowError('Survey run not found');
+      await expect(reopenPromise).rejects.toThrow('Survey run not found');
       expect(mockSurveyRunRepository.getById).toHaveBeenCalledWith(
         'nonexistent-id',
       );
@@ -658,7 +658,7 @@ suite('SurveyRunService', () => {
       const reopenPromise = service.reopenSurveyRun('survey-run-id');
 
       // Assert
-      await expect(reopenPromise).rejects.toThrowError('Unauthorized');
+      await expect(reopenPromise).rejects.toThrow('Unauthorized');
       expect(mockSurveyRunRepository.getById).toHaveBeenCalledWith(
         'survey-run-id',
       );
@@ -707,7 +707,7 @@ suite('SurveyRunService', () => {
       const reopenPromise = service.reopenSurveyRun('closed-survey-run-id');
 
       // Assert
-      await expect(reopenPromise).rejects.toThrowError(
+      await expect(reopenPromise).rejects.toThrow(
         'Cannot reopen survey run: another survey run is already open for this team',
       );
       expect(mockSurveyRunRepository.getById).toHaveBeenCalledWith(
@@ -767,9 +767,9 @@ suite('SurveyRunService', () => {
         mockTeamsRepository,
       );
 
-      await expect(
-        service.saveAnswer('nonexistent-id', 0, 5),
-      ).rejects.toThrowError('Survey run not found');
+      await expect(service.saveAnswer('nonexistent-id', 0, 5)).rejects.toThrow(
+        'Survey run not found',
+      );
       expect(mockSurveyRunRepository.save).not.toHaveBeenCalled();
     });
 
@@ -798,9 +798,9 @@ suite('SurveyRunService', () => {
         mockTeamsRepository,
       );
 
-      await expect(
-        service.saveAnswer('survey-run-id', 0, 5),
-      ).rejects.toThrowError('Unauthorized');
+      await expect(service.saveAnswer('survey-run-id', 0, 5)).rejects.toThrow(
+        'Unauthorized',
+      );
       expect(mockSurveyRunRepository.save).not.toHaveBeenCalled();
     });
   });
@@ -889,7 +889,7 @@ suite('SurveyRunService', () => {
 
       await expect(
         service.saveComment('nonexistent-id', 0, 'comment'),
-      ).rejects.toThrowError('Survey run not found');
+      ).rejects.toThrow('Survey run not found');
       expect(mockSurveyRunRepository.save).not.toHaveBeenCalled();
     });
 
@@ -920,7 +920,7 @@ suite('SurveyRunService', () => {
 
       await expect(
         service.saveComment('survey-run-id', 0, 'comment'),
-      ).rejects.toThrowError('Unauthorized');
+      ).rejects.toThrow('Unauthorized');
       expect(mockSurveyRunRepository.save).not.toHaveBeenCalled();
     });
   });

@@ -78,10 +78,10 @@ suite('AuthorizationService', () => {
       const authService = new AuthorizationService(user, mockTeamsRepo);
 
       // Act & Assert
-      await expect(authService.assertTeamMember(team)).rejects.toThrowError(
+      await expect(authService.assertTeamMember(team)).rejects.toThrow(
         AuthorizationError,
       );
-      await expect(authService.assertTeamMember(team)).rejects.toThrowError(
+      await expect(authService.assertTeamMember(team)).rejects.toThrow(
         'Access denied: not a team member',
       );
     });
@@ -111,10 +111,10 @@ suite('AuthorizationService', () => {
       const authService = new AuthorizationService(user, mockTeamsRepo);
 
       // Act & Assert
-      await expect(authService.assertTeamLead(team)).rejects.toThrowError(
+      await expect(authService.assertTeamLead(team)).rejects.toThrow(
         AuthorizationError,
       );
-      await expect(authService.assertTeamLead(team)).rejects.toThrowError(
+      await expect(authService.assertTeamLead(team)).rejects.toThrow(
         'Access denied: team lead role required',
       );
     });
@@ -129,7 +129,7 @@ suite('AuthorizationService', () => {
       const authService = new AuthorizationService(user, mockTeamsRepo);
 
       // Act & Assert
-      await expect(authService.assertTeamLead(team)).rejects.toThrowError(
+      await expect(authService.assertTeamLead(team)).rejects.toThrow(
         AuthorizationError,
       );
     });
@@ -179,7 +179,7 @@ suite('AuthorizationService', () => {
       // Act & Assert
       await expect(
         authService.assertCanAccessSurveyRun(surveyRun),
-      ).rejects.toThrowError(AuthorizationError);
+      ).rejects.toThrow(AuthorizationError);
     });
   });
 
@@ -227,7 +227,7 @@ suite('AuthorizationService', () => {
       // Act & Assert
       await expect(
         authService.assertCanManageSurveyRun(surveyRun),
-      ).rejects.toThrowError(AuthorizationError);
+      ).rejects.toThrow(AuthorizationError);
     });
   });
 
@@ -275,7 +275,7 @@ suite('AuthorizationService', () => {
       // Act & Assert
       await expect(
         authService.assertCanSubmitSurveyResponse(surveyRun),
-      ).rejects.toThrowError(AuthorizationError);
+      ).rejects.toThrow(AuthorizationError);
     });
   });
 });
