@@ -99,7 +99,7 @@ suite('GetSurveyRunCapabilityGuidanceUseCase', () => {
 
     await expect(
       useCase.execute('missing-run', 'capability-1'),
-    ).rejects.toThrowError(
+    ).rejects.toThrow(
       new SurveyRunGuidanceUnavailableError('Survey run not found'),
     );
   });
@@ -117,7 +117,7 @@ suite('GetSurveyRunCapabilityGuidanceUseCase', () => {
       },
     });
 
-    await expect(useCase.execute('run-1', 'capability-1')).rejects.toThrowError(
+    await expect(useCase.execute('run-1', 'capability-1')).rejects.toThrow(
       new SurveyRunGuidanceUnavailableError(
         'Guidance is only available for closed survey runs',
       ),
@@ -133,7 +133,7 @@ suite('GetSurveyRunCapabilityGuidanceUseCase', () => {
 
     await expect(
       useCase.execute('run-1', 'missing-capability'),
-    ).rejects.toThrowError(
+    ).rejects.toThrow(
       new SurveyRunGuidanceUnavailableError(
         'Capability is not part of this survey run',
       ),
@@ -152,7 +152,7 @@ suite('GetSurveyRunCapabilityGuidanceUseCase', () => {
       },
     });
 
-    await expect(useCase.execute('run-1', 'capability-1')).rejects.toThrowError(
+    await expect(useCase.execute('run-1', 'capability-1')).rejects.toThrow(
       new SurveyRunGuidanceUnavailableError(
         'Capability score is not available for this survey run',
       ),
@@ -166,7 +166,7 @@ suite('GetSurveyRunCapabilityGuidanceUseCase', () => {
       },
     });
 
-    await expect(useCase.execute('run-1', 'capability-1')).rejects.toThrowError(
+    await expect(useCase.execute('run-1', 'capability-1')).rejects.toThrow(
       new SurveyRunGuidanceUnavailableError('Capability not found'),
     );
   });
@@ -201,7 +201,7 @@ suite('GetSurveyRunCapabilityGuidanceUseCase', () => {
       },
     });
 
-    await expect(useCase.execute('run-1', 'capability-1')).rejects.toThrowError(
+    await expect(useCase.execute('run-1', 'capability-1')).rejects.toThrow(
       new AuthorizationError('Access denied: not a team member'),
     );
   });

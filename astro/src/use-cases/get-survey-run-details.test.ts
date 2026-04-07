@@ -334,7 +334,7 @@ suite('GetSurveyRunDetailsUseCase', () => {
 
     await expect(
       useCase.execute('team-1', 'missing-run', 'lead-1'),
-    ).rejects.toThrowError(
+    ).rejects.toThrow(
       new SurveyRunDetailsNotFoundError('Survey run not found'),
     );
   });
@@ -348,7 +348,7 @@ suite('GetSurveyRunDetailsUseCase', () => {
 
     await expect(
       useCase.execute('missing-team', 'run-1', 'lead-1'),
-    ).rejects.toThrowError(new SurveyRunDetailsNotFoundError('Team not found'));
+    ).rejects.toThrow(new SurveyRunDetailsNotFoundError('Team not found'));
   });
 
   test('throws not found when the survey run is not part of the team route', async () => {
@@ -370,9 +370,7 @@ suite('GetSurveyRunDetailsUseCase', () => {
       },
     });
 
-    await expect(
-      useCase.execute('team-1', 'run-1', 'lead-1'),
-    ).rejects.toThrowError(
+    await expect(useCase.execute('team-1', 'run-1', 'lead-1')).rejects.toThrow(
       new SurveyRunDetailsNotFoundError('Survey run not found'),
     );
   });
@@ -384,9 +382,7 @@ suite('GetSurveyRunDetailsUseCase', () => {
       },
     });
 
-    await expect(
-      useCase.execute('team-1', 'run-1', 'lead-1'),
-    ).rejects.toThrowError(
+    await expect(useCase.execute('team-1', 'run-1', 'lead-1')).rejects.toThrow(
       new SurveyRunDetailsNotFoundError('Survey model not found'),
     );
   });
@@ -405,7 +401,7 @@ suite('GetSurveyRunDetailsUseCase', () => {
 
     await expect(
       useCase.execute('team-1', 'run-1', 'member-2'),
-    ).rejects.toThrowError(
+    ).rejects.toThrow(
       new AuthorizationError('Access denied: not a team member'),
     );
   });

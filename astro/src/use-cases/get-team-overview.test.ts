@@ -100,9 +100,9 @@ suite('GetTeamOverviewUseCase', () => {
       },
     });
 
-    await expect(
-      useCase.execute('missing-team', 'lead-1'),
-    ).rejects.toThrowError(new TeamOverviewNotFoundError('Team not found'));
+    await expect(useCase.execute('missing-team', 'lead-1')).rejects.toThrow(
+      new TeamOverviewNotFoundError('Team not found'),
+    );
   });
 
   test('maps missing teams from survey runs lookup to not found', async () => {
@@ -114,9 +114,9 @@ suite('GetTeamOverviewUseCase', () => {
       },
     });
 
-    await expect(
-      useCase.execute('missing-team', 'lead-1'),
-    ).rejects.toThrowError(new TeamOverviewNotFoundError('Team not found'));
+    await expect(useCase.execute('missing-team', 'lead-1')).rejects.toThrow(
+      new TeamOverviewNotFoundError('Team not found'),
+    );
   });
 
   test('propagates authorization errors', async () => {
@@ -130,7 +130,7 @@ suite('GetTeamOverviewUseCase', () => {
       },
     });
 
-    await expect(useCase.execute('team-1', 'member-2')).rejects.toThrowError(
+    await expect(useCase.execute('team-1', 'member-2')).rejects.toThrow(
       new AuthorizationError('Access denied: not a team member'),
     );
   });
