@@ -41,6 +41,7 @@ export const onRequest = sequence(
       currentUser,
       new SqliteTeamsRepository(),
     );
+    const usersService = createUsersService();
     const teamsRepository = new SqliteTeamsRepository();
     const surveyRunRepository = new SqliteSurveyRunRepository();
     const usersRepository = new SqliteUsersRepository();
@@ -49,6 +50,7 @@ export const onRequest = sequence(
 
     Object.assign(context.locals, {
       authorizationService,
+      usersService,
       teamsRepository,
       surveyRunRepository,
       usersRepository,

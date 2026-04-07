@@ -12,16 +12,12 @@ import { GetTeamOverviewUseCase } from '@use-cases/get-team-overview.ts';
 export function createTeamsService({
   authorizationService,
   teamsRepository,
-  usersRepository,
+  usersService,
 }: Pick<
   Dependencies,
-  'authorizationService' | 'teamsRepository' | 'usersRepository'
+  'authorizationService' | 'teamsRepository' | 'usersService'
 >) {
-  return new TeamsService(
-    authorizationService,
-    teamsRepository,
-    usersRepository,
-  );
+  return new TeamsService(authorizationService, teamsRepository, usersService);
 }
 
 export function createSurveyRunService({

@@ -1,7 +1,7 @@
 import { Team, type TeamMemberRole } from '@models/aggregates/team.ts';
 import type { TeamsRepository } from '@database/teams-repository.ts';
-import type { UsersRepository } from '@database/users-repository.ts';
 import type { IAuthorizationService } from '@services/authorization-service.ts';
+import type { UsersService } from '@services/users-service.ts';
 
 export class TeamNameAlreadyExistsError extends Error {
   constructor(teamName: string) {
@@ -21,7 +21,7 @@ export class TeamsService {
   constructor(
     private readonly authorizationService: IAuthorizationService,
     private readonly teamsRepository: TeamsRepository,
-    private readonly usersRepository: UsersRepository,
+    private readonly usersService: UsersService,
   ) {}
 
   async createTeam(name: string, description: string | null) {
@@ -109,7 +109,7 @@ export class TeamsService {
   }
 
   private async getUserOrThrow(userEmail: string) {
-    const user = await this.usersRepository.findByEmail(userEmail);
+    const user = await this.usersService.getUser(userEmail);
     if (!user) {
       throw new UserNotFoundError(userEmail);
     }

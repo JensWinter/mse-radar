@@ -4,6 +4,10 @@ import { User } from '@models/aggregates/user.ts';
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
+  async getUser(email: string) {
+    return await this.usersRepository.findByEmail(email);
+  }
+
   async getOrCreateUser(email: string) {
     const user = await this.usersRepository.findByEmail(email);
     if (user) {
