@@ -4,8 +4,7 @@ export type AstroSutHandle = {
   baseUrl: string;
   /** true if this module started the process and should stop it */
   readonly ownsProcess: boolean;
-  readonly dbPath: string;
-  readonly authDbPath: string;
+  readonly databaseUrl: string;
   stop: () => Promise<void>;
 };
 
@@ -38,36 +37,23 @@ async function waitUntilReachable(url: string, timeoutMs: number) {
   );
 }
 
-function tryReuseHandle(dbPath: string, authDbPath: string): AstroSutHandle | undefined {
+function tryReuseHandle(databaseUrl: string): AstroSutHandle | undefined {
   if (!sharedHandle) return undefined;
-  if (sharedHandle.dbPath !== dbPath || sharedHandle.authDbPath !== authDbPath) {
+  if (sharedHandle.databaseUrl !== databaseUrl) {
     throw new Error(
-      `Database path mismatch: the shared Astro SUT was started with different database paths.\n` +
-        `  Expected dbPath:     ${sharedHandle.dbPath}\n` +
-        `  Requested dbPath:    ${dbPath}\n` +
-        `  Expected authDbPath: ${sharedHandle.authDbPath}\n` +
-        `  Requested authDbPath: ${authDbPath}\n\n` +
-        `All test files sharing a server instance must use the same database paths.`,
+      `Database URL mismatch: the shared Astro SUT was started with a different database URL.\n` +
+        `  Expected: ${sharedHandle.databaseUrl}\n` +
+        `  Requested: ${databaseUrl}\n\n` +
+        `All test files sharing a server instance must use the same database URL.`,
     );
   }
   return sharedHandle;
 }
 
-/**
- * Ensures the Astro app (SUT) is running.
- *
- * This function always starts a new test-owned server process.
- * It does not reuse external servers to prevent database mismatch issues
- * (external servers may be connected to a different database file).
- *
- * The test server runs on port 4322 by default (configurable via ASTRO_WEB_PORT)
- * to avoid conflicts with the development server on port 4321.
- */
 export async function ensureAstroSutRunning(
-  dbPath: string,
-  authDbPath: string,
+  databaseUrl: string,
 ): Promise<AstroSutHandle> {
-  const existingHandle = tryReuseHandle(dbPath, authDbPath);
+  const existingHandle = tryReuseHandle(databaseUrl);
   if (existingHandle) return existingHandle;
 
   const options = getAstroSutOptionsFromEnv();
@@ -77,9 +63,6 @@ export async function ensureAstroSutRunning(
   const port = options.port ?? DEFAULT_TEST_PORT;
   const baseUrl = `${protocol}://${host}:${port}`;
 
-  // Refuse to reuse external servers to prevent schema mismatch issues.
-  // External servers may be connected to a different database schema,
-  // causing flaky tests when the test expects a fresh schema.
   if (await isHttpReachable(baseUrl)) {
     throw new Error(
       `An external server is already running at ${baseUrl}.\n` +
@@ -101,8 +84,7 @@ export async function ensureAstroSutRunning(
     stderr: 'null',
     env: {
       ...Deno.env.toObject(),
-      SURVEY_DB_PATH: dbPath,
-      AUTH_DB_PATH: authDbPath,
+      DATABASE_URL: databaseUrl,
       NODE_ENV: 'acceptance',
     },
   });
@@ -126,8 +108,7 @@ export async function ensureAstroSutRunning(
   sharedHandle = {
     baseUrl,
     ownsProcess,
-    dbPath,
-    authDbPath,
+    databaseUrl,
     stop: async () => {
       if (!ownsProcess) return;
       try {

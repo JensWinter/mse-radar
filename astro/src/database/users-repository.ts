@@ -1,5 +1,5 @@
 import { User } from '@models/aggregates/user.ts';
-import { query, execute } from '@database/db.ts';
+import { query } from '@database/db.ts';
 
 export interface UsersRepository {
   save(user: User): Promise<void>;
@@ -11,17 +11,17 @@ type UserRow = {
   email: string;
 };
 
-export class SqliteUsersRepository implements UsersRepository {
+export class PgUsersRepository implements UsersRepository {
   async save(user: User): Promise<void> {
-    execute('INSERT INTO users (id, email) VALUES (?, ?)', [
+    await query('INSERT INTO users (id, email) VALUES ($1, $2)', [
       user.id,
       user.email,
     ]);
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const result = query<UserRow>(
-      'SELECT id, email FROM users WHERE email = ?',
+    const result = await query<UserRow>(
+      'SELECT id, email FROM users WHERE email = $1',
       [email],
     );
     const row = result.rows[0];

@@ -1,62 +1,39 @@
-import { type BindValue, Database } from '@db/sqlite';
+import pg from 'pg';
 
-/**
- * SQLite database connection wrapper providing a consistent interface.
- */
+const { Client } = pg;
+
 export class SqlConnection {
-  private readonly db: Database;
+  private readonly client: pg.Client;
 
-  constructor(db: Database) {
-    this.db = db;
+  constructor(client: pg.Client) {
+    this.client = client;
   }
 
-  /**
-   * Execute a query and return rows as objects.
-   */
-  queryObject<T>(sql: string, params: BindValue[] = []): { rows: T[] } {
-    const stmt = this.db.prepare(sql);
-    const rows = stmt.all(...params) as T[];
-    return { rows };
+  async queryObject<T>(sql: string, params: unknown[] = []): Promise<{ rows: T[] }> {
+    const result = await this.client.query<T>(sql, params);
+    return { rows: result.rows };
   }
 
-  /**
-   * Execute a statement without returning results.
-   */
-  execute(sql: string, params: BindValue[] = []): void {
-    const stmt = this.db.prepare(sql);
-    stmt.run(...params);
+  async execute(sql: string, params: unknown[] = []): Promise<void> {
+    await this.client.query(sql, params);
   }
 
-  /**
-   * Execute multiple SQL statements (for migrations).
-   */
-  executeScript(sql: string): void {
-    this.db.exec(sql);
+  async executeScript(sql: string): Promise<void> {
+    await this.client.query(sql);
   }
 
-  /**
-   * Close the database connection.
-   */
-  end(): void {
-    this.db.close();
+  async end(): Promise<void> {
+    await this.client.end();
   }
 }
 
-/**
- * Creates a connection to a SQLite database.
- * @param dbPath Path to the database file. For tests, this will be a unique file path.
- */
-export function createConnection(dbPath: string): SqlConnection {
-  const db = new Database(dbPath);
-  db.exec('PRAGMA journal_mode = WAL');
-  db.exec('PRAGMA foreign_keys = ON');
-
-  return new SqlConnection(db);
+export async function createConnection(databaseUrl: string): Promise<SqlConnection> {
+  const client = new Client({ connectionString: databaseUrl });
+  await client.connect();
+  return new SqlConnection(client);
 }
 
-/**
- * Gets the database path from environment or uses default.
- */
-export function getDatabasePath(): string {
-  return Deno.env.get('AUTH_DB_PATH') || './data/auth.db';
+export function getDatabaseUrl(): string {
+  return Deno.env.get('DATABASE_URL') ||
+    'postgresql://mse_radar:mse_radar@localhost:5432/mse_radar';
 }

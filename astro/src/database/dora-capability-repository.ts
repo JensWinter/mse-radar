@@ -15,20 +15,20 @@ type DoraCapabilityRow = {
   name: string;
   description: string;
   dora_reference: string;
-  drill_down_content: string;
+  drill_down_content: TieredGuidance[];
 };
 
-export class SqliteDoraCapabilityRepository implements DoraCapabilityRepository {
+export class PgDoraCapabilityRepository implements DoraCapabilityRepository {
   async getAll(): Promise<DoraCapability[]> {
-    const result = query<DoraCapabilityRow>(
+    const result = await query<DoraCapabilityRow>(
       'SELECT id, slug, name, description, dora_reference, drill_down_content FROM dora_capabilities',
     );
     return result.rows.map((row) => this.rowToDoraCapability(row));
   }
 
   async getById(id: string): Promise<DoraCapability | null> {
-    const doraCapabilityRows = query<DoraCapabilityRow>(
-      'SELECT id, slug, name, description, dora_reference, drill_down_content FROM dora_capabilities WHERE id = ?',
+    const doraCapabilityRows = await query<DoraCapabilityRow>(
+      'SELECT id, slug, name, description, dora_reference, drill_down_content FROM dora_capabilities WHERE id = $1',
       [id],
     );
 
@@ -41,12 +41,7 @@ export class SqliteDoraCapabilityRepository implements DoraCapabilityRepository 
   }
 
   private rowToDoraCapability(row: DoraCapabilityRow): DoraCapability {
-    let drillDownContent: TieredGuidance[] = [];
-    try {
-      drillDownContent = JSON.parse(row.drill_down_content) as TieredGuidance[];
-    } catch {
-      drillDownContent = [];
-    }
+    const drillDownContent: TieredGuidance[] = row.drill_down_content ?? [];
 
     return new DoraCapability(
       row.id,

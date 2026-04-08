@@ -1,14 +1,12 @@
 import { runMigrations } from '../../deno_scripts/db/migrate.ts';
 import { seedDoraCapabilities } from '../../deno_scripts/db/seed_dora_capabilities.ts';
-import { createConnection } from '../../deno_scripts/db/connection.ts';
-import { TestSqliteDatabase } from './testSqliteDatabase.ts';
+import { TestPostgresDatabase } from './testPostgresDatabase.ts';
 
-export class TestDatabase extends TestSqliteDatabase {
+export class TestDatabase extends TestPostgresDatabase {
   constructor() {
     super({
       migrate: runMigrations,
       seed: seedDoraCapabilities,
-      createConnection,
       resetScript: `
         BEGIN;
         DELETE FROM survey_responses;
@@ -21,9 +19,9 @@ export class TestDatabase extends TestSqliteDatabase {
     });
   }
 
-  static connectToExisting(dbPath: string): TestDatabase {
+  static connectToExisting(databaseUrl: string): TestDatabase {
     const instance = new TestDatabase();
-    instance.setExistingContext(dbPath);
+    instance.setExistingContext(databaseUrl);
     return instance;
   }
 }

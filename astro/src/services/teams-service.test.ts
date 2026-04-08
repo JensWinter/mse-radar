@@ -1,21 +1,21 @@
 import { expect, suite, test, vi } from 'vitest';
 import {
-  TeamsService,
   TeamNameAlreadyExistsError,
+  TeamsService,
   UserNotFoundError,
 } from '@services/teams-service.ts';
 import type { TeamsRepository } from '@database/teams-repository.ts';
 import { User } from '@models/aggregates/user.ts';
 import {
+  CannotDemoteLastTeamLeadError,
+  MemberNotFoundError,
   Team,
   TeamMember,
   UserAlreadyTeamMemberError,
-  MemberNotFoundError,
-  CannotDemoteLastTeamLeadError,
 } from '@models/aggregates/team.ts';
 import {
-  type IAuthorizationService,
   AuthorizationError,
+  type IAuthorizationService,
 } from '@services/authorization-service.ts';
 import type { UsersService } from '@services/users-service.ts';
 

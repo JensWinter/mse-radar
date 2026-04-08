@@ -1,22 +1,21 @@
 // @ts-check
-import { defineConfig, envField, passthroughImageService } from 'astro/config';
+import { defineConfig, envField, passthroughImageService } from "astro/config";
 
-import alpinejs from '@astrojs/alpinejs';
+import alpinejs from "@astrojs/alpinejs";
 
-import node from '@astrojs/node';
+import node from "@astrojs/node";
 
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'server',
+  output: "server",
 
   security: {
     allowedDomains: [
-      ...(process.env.NODE_ENV === 'acceptance'
+      ...(process.env.NODE_ENV === "acceptance"
         ? [{ hostname: "localhost" }]
-        : []
-      ),
+        : []),
     ],
   },
 
@@ -27,19 +26,21 @@ export default defineConfig({
   integrations: [alpinejs()],
 
   adapter: node({
-    mode: 'standalone',
+    mode: "standalone",
   }),
 
   env: {
     schema: {
-      SURVEY_DB_PATH: envField.string({ context: 'server', access: 'public' }),
-      AUTH_DB_PATH: envField.string({ context: 'server', access: 'public' }),
-      BETTER_AUTH_SECRET: envField.string({ context: 'server', access: 'secret' }),
-      BETTER_AUTH_URL: envField.string({ context: 'server', access: 'public' }),
+      DATABASE_URL: envField.string({ context: "server", access: "secret" }),
+      BETTER_AUTH_SECRET: envField.string({
+        context: "server",
+        access: "secret",
+      }),
+      BETTER_AUTH_URL: envField.string({ context: "server", access: "public" }),
     },
   },
 
   vite: {
-    plugins: [tailwindcss()]
-  }
+    plugins: [tailwindcss()],
+  },
 });

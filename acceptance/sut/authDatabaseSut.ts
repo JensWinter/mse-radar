@@ -1,26 +1,29 @@
-import { runMigrations } from '../../deno_scripts/db_better-auth/migrate.ts';
-import { createConnection } from '../../deno_scripts/db_better-auth/connection.ts';
-import { TestSqliteDatabase } from './testSqliteDatabase.ts';
+import { runMigrations as runAuthMigrations } from '../../deno_scripts/db_better-auth/migrate.ts';
+import { TestPostgresDatabase } from './testPostgresDatabase.ts';
 
-export class AuthTestDatabase extends TestSqliteDatabase {
+export class AuthTestDatabase extends TestPostgresDatabase {
   constructor() {
     super({
-      migrate: runMigrations,
-      createConnection,
+      migrate: runAuthMigrations,
       resetScript: `
         BEGIN;
-        DELETE FROM verification;
-        DELETE FROM account;
-        DELETE FROM session;
-        DELETE FROM user;
+        DELETE FROM auth_verification;
+        DELETE FROM auth_account;
+        DELETE FROM auth_session;
+        DELETE FROM auth_user;
         COMMIT;
       `,
     });
   }
 
-  static connectToExisting(dbPath: string): AuthTestDatabase {
+  async runMigrations(): Promise<void> {
+    const databaseUrl = this.getDatabaseUrl();
+    await runAuthMigrations(databaseUrl);
+  }
+
+  static connectToExisting(databaseUrl: string): AuthTestDatabase {
     const instance = new AuthTestDatabase();
-    instance.setExistingContext(dbPath);
+    instance.setExistingContext(databaseUrl);
     return instance;
   }
 }

@@ -3,7 +3,7 @@ import {
   SurveyRun,
   SurveyRunResponse,
 } from '@models/aggregates/survey-run.ts';
-import { query, execute, transaction } from '@database/db.ts';
+import { query, transaction } from '@database/db.ts';
 
 export interface SurveyRunRepository {
   getAllByTeamId(teamId: string): Promise<SurveyRun[]>;
@@ -22,17 +22,18 @@ type SurveyRunRow = {
 type SurveyResponseRow = {
   id: string;
   respondent_id: string;
-  answer_values: string;
-  answer_comments: string;
+  answer_values: (AnswerValue | null)[];
+  answer_comments: (string | null)[];
 };
 
-export class SqliteSurveyRunRepository implements SurveyRunRepository {
+export class PgSurveyRunRepository implements SurveyRunRepository {
   async getAllByTeamId(teamId: string): Promise<SurveyRun[]> {
-    const { rows: surveyRunRows } = query<SurveyRunRow>(
+    const { rows: surveyRunRows } = await query<SurveyRunRow>(
       `
 SELECT id, team_id, survey_model_id, title, status
 FROM survey_runs
-WHERE team_id = ?`,
+WHERE team_id = $1
+ORDER BY created_at`,
       [teamId],
     );
     return surveyRunRows.map((row) =>
@@ -48,8 +49,8 @@ WHERE team_id = ?`,
   }
 
   async getById(id: string): Promise<SurveyRun | null> {
-    const { rows: surveyRunRows } = query<SurveyRunRow>(
-      'SELECT id, team_id, survey_model_id, title, status FROM survey_runs WHERE id = ?',
+    const { rows: surveyRunRows } = await query<SurveyRunRow>(
+      'SELECT id, team_id, survey_model_id, title, status FROM survey_runs WHERE id = $1',
       [id],
     );
 
@@ -59,21 +60,17 @@ WHERE team_id = ?`,
       return null;
     }
 
-    const responseRows = query<SurveyResponseRow>(
+    const responseRows = await query<SurveyResponseRow>(
       `
 SELECT id, respondent_id, answer_values, answer_comments
 FROM survey_responses
-WHERE survey_run_id = ?`,
+WHERE survey_run_id = $1`,
       [surveyRunRow.id],
     );
 
     const surveyResponses = responseRows.rows.map((row) => {
-      const answerValues: (AnswerValue | null)[] = JSON.parse(
-        row.answer_values || '[]',
-      );
-      const answerComments: (string | null)[] = JSON.parse(
-        row.answer_comments || '[]',
-      );
+      const answerValues: (AnswerValue | null)[] = row.answer_values ?? [];
+      const answerComments: (string | null)[] = row.answer_comments ?? [];
 
       const answers = answerValues.map((answerValue, index) => ({
         answerValue,
@@ -93,10 +90,10 @@ WHERE survey_run_id = ?`,
   }
 
   async save(surveyRun: SurveyRun): Promise<void> {
-    transaction(() => {
-      execute(
+    await transaction(async (client) => {
+      await client.query(
         `INSERT INTO survey_runs (id, team_id, survey_model_id, title, status)
-        VALUES (?, ?, ?, ?, ?)
+        VALUES ($1, $2, $3, $4, $5)
         ON CONFLICT (id) DO UPDATE SET team_id = excluded.team_id, survey_model_id = excluded.survey_model_id, title = excluded.title, status = excluded.status`,
         [
           surveyRun.id,
@@ -113,9 +110,9 @@ WHERE survey_run_id = ?`,
         );
         const comments = response.answers.map((answer) => answer.comment);
 
-        execute(
+        await client.query(
           `INSERT INTO survey_responses (id, survey_run_id, respondent_id, answer_values, answer_comments)
-VALUES (?, ?, ?, ?, ?)
+VALUES ($1, $2, $3, $4, $5)
 ON CONFLICT(survey_run_id, respondent_id) DO UPDATE SET
   answer_values = excluded.answer_values,
   answer_comments = excluded.answer_comments`,
@@ -131,15 +128,18 @@ ON CONFLICT(survey_run_id, respondent_id) DO UPDATE SET
 
       const respondentIds = surveyRun.responses.map((r) => r.respondentId);
       if (respondentIds.length > 0) {
-        const placeholders = respondentIds.map(() => '?').join(', ');
-        execute(
-          `DELETE FROM survey_responses WHERE survey_run_id = ? AND respondent_id NOT IN (${placeholders})`,
+        const placeholders = respondentIds
+          .map((_, i) => `$${i + 2}`)
+          .join(', ');
+        await client.query(
+          `DELETE FROM survey_responses WHERE survey_run_id = $1 AND respondent_id NOT IN (${placeholders})`,
           [surveyRun.id, ...respondentIds],
         );
       } else {
-        execute('DELETE FROM survey_responses WHERE survey_run_id = ?', [
-          surveyRun.id,
-        ]);
+        await client.query(
+          'DELETE FROM survey_responses WHERE survey_run_id = $1',
+          [surveyRun.id],
+        );
       }
     });
   }

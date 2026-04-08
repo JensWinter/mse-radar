@@ -6,12 +6,5 @@ copilot.*
 acceptance-tests-report.xml
 docs/DORA
 
-/db/data/survey.db
-/db/data/survey.db-shm
-/db/data/survey.db-wal
-/db/data/auth.db
-/db/data/auth.db-shm
-/db/data/auth.db-wal
-/db/test-databases/
 
 **/.idea/aws.xml

@@ -1,4 +1,4 @@
-import { createConnection } from './connection.ts';
+import { createConnection, getDatabaseUrl } from './connection.ts';
 import _DORA_CAPABILITIES from './dora_capabilities.json' with { type: 'json' };
 
 // TODO: Redesign/Rename/Reframe to "Seeding Survey Model"
@@ -48,17 +48,17 @@ function resolveGuidance(capability: DoraCapabilityData): TieredGuidance[] {
   return hasPlaceholderGuidance ? buildDefaultGuidance(capability.name) : capability.guidance;
 }
 
-export function seedDoraCapabilities(dbPath: string) {
-  const client = createConnection(dbPath);
+export async function seedDoraCapabilities(databaseUrl: string) {
+  const client = await createConnection(databaseUrl);
 
   try {
     // 1. Seed DORA Capabilities with tiered guidance
     for (const capability of CORE_DORA_CAPABILITIES) {
       const id = crypto.randomUUID();
       const drillDownContent = JSON.stringify(resolveGuidance(capability));
-      client.execute(
+      await client.execute(
         `INSERT INTO dora_capabilities (id, slug, name, description, dora_reference, drill_down_content)
-         VALUES (?, ?, ?, ?, ?, ?)
+         VALUES ($1, $2, $3, $4, $5, $6)
          ON CONFLICT (slug) DO UPDATE SET
            name = excluded.name,
            description = excluded.description,
@@ -79,24 +79,22 @@ export function seedDoraCapabilities(dbPath: string) {
     const modelVersion = 'v1.0';
     const modelId = crypto.randomUUID();
 
-    // Try to insert, or get existing ID if version exists
-    client.execute(
+    await client.execute(
       `INSERT INTO survey_models (id, version)
-       VALUES (?, ?)
+       VALUES ($1, $2)
        ON CONFLICT (version) DO NOTHING`,
       [modelId, modelVersion],
     );
 
     // Get the actual survey model ID (either new or existing)
-    const modelResult = client.queryObject<{ id: string }>(
-      `SELECT id FROM survey_models WHERE version = ?`,
+    const modelResult = await client.queryObject<{ id: string }>(
+      `SELECT id FROM survey_models WHERE version = $1`,
       [modelVersion],
     );
     const surveyModelId = modelResult.rows[0].id;
 
     // 3. Link Capabilities to Survey Model as Questions
-    // Get all capabilities to have their IDs
-    const capResult = client.queryObject<{ id: string; slug: string; name: string }>(
+    const capResult = await client.queryObject<{ id: string; slug: string; name: string }>(
       'SELECT id, slug, name FROM dora_capabilities',
     );
     const capabilities = capResult.rows;
@@ -105,9 +103,9 @@ export function seedDoraCapabilities(dbPath: string) {
     for (const cap of capabilities) {
       const questionId = crypto.randomUUID();
       const questionText = `To what extent does your team effectively use ${cap.name}?`;
-      client.execute(
+      await client.execute(
         `INSERT INTO questions (id, survey_model_id, dora_capability_id, question_text, sort_order)
-         VALUES (?, ?, ?, ?, ?)
+         VALUES ($1, $2, $3, $4, $5)
          ON CONFLICT (survey_model_id, dora_capability_id) DO UPDATE SET
            question_text = excluded.question_text,
            sort_order = excluded.sort_order`,
@@ -116,16 +114,18 @@ export function seedDoraCapabilities(dbPath: string) {
       sortOrder += 10;
     }
   } finally {
-    client.end();
+    await client.end();
   }
 }
 
-function seed() {
-  const dbPath = Deno.args[0] || Deno.env.get('SURVEY_DB_PATH') || './data/survey.db';
-  console.log(`Seeding DORA capabilities into database: ${dbPath}`);
+async function seed() {
+  const databaseUrl = Deno.args[0] || getDatabaseUrl();
+  console.log(
+    `Seeding DORA capabilities into database: ${databaseUrl.replace(/\/\/.*@/, '//***@')}`,
+  );
 
   try {
-    seedDoraCapabilities(dbPath);
+    await seedDoraCapabilities(databaseUrl);
     console.log('Seeding completed successfully.');
   } catch (error) {
     console.error('Seeding failed:', error);
@@ -134,5 +134,5 @@ function seed() {
 }
 
 if (import.meta.main) {
-  seed();
+  await seed();
 }

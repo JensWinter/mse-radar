@@ -1,18 +1,24 @@
 import { betterAuth } from 'better-auth';
 import { createAuthMiddleware } from 'better-auth/api';
-import Database from 'better-sqlite3';
+import pg from 'pg';
 import {
   BETTER_AUTH_SECRET,
   BETTER_AUTH_URL,
-  AUTH_DB_PATH,
+  DATABASE_URL,
 } from 'astro:env/server';
 import { UsersService } from '@services/users-service.ts';
-import { SqliteUsersRepository } from '@database/users-repository.ts';
+import { PgUsersRepository } from '@database/users-repository.ts';
+
+const { Pool } = pg;
 
 export const auth = betterAuth({
-  database: new Database(AUTH_DB_PATH),
+  database: new Pool({ connectionString: DATABASE_URL }),
   baseURL: BETTER_AUTH_URL,
   secret: BETTER_AUTH_SECRET,
+  user: { modelName: 'auth_user' },
+  session: { modelName: 'auth_session' },
+  account: { modelName: 'auth_account' },
+  verification: { modelName: 'auth_verification' },
   emailAndPassword: {
     enabled: true,
     autoSignIn: false,
@@ -22,7 +28,7 @@ export const auth = betterAuth({
       if (ctx.path === '/sign-up/email') {
         const returned = ctx.context.returned as any;
         if (!returned.statusCode) {
-          const usersService = new UsersService(new SqliteUsersRepository());
+          const usersService = new UsersService(new PgUsersRepository());
           await usersService.createUser(returned.user.email);
         }
       }

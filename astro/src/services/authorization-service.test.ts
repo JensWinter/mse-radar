@@ -1,7 +1,7 @@
 import { expect, suite, test, vi } from 'vitest';
 import {
-  AuthorizationService,
   AuthorizationError,
+  AuthorizationService,
 } from '@services/authorization-service.ts';
 import type { TeamsRepository } from '@database/teams-repository.ts';
 import { User } from '@models/aggregates/user.ts';

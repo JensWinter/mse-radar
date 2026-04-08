@@ -1,4 +1,4 @@
-import { suite, test, expect, vi } from 'vitest';
+import { expect, suite, test, vi } from 'vitest';
 import { GuidanceService } from './guidance-service.ts';
 import type { DoraCapabilityRepository } from '@database/dora-capability-repository.ts';
 import { DoraCapability } from '@models/aggregates/dora-capability.ts';

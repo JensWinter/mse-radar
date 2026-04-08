@@ -1,16 +1,16 @@
 import { defineMiddleware, sequence } from 'astro:middleware';
 import { UsersService } from '@services/users-service.ts';
-import { SqliteUsersRepository } from '@database/users-repository.ts';
+import { PgUsersRepository } from '@database/users-repository.ts';
 import { auth } from '../lib/auth';
 import { AuthorizationService } from '@services/authorization-service.ts';
-import { SqliteTeamsRepository } from '@database/teams-repository.ts';
+import { PgTeamsRepository } from '@database/teams-repository.ts';
 import type { Dependencies } from '@lib/dependencies.ts';
-import { SqliteSurveyRunRepository } from '@database/survey-run-repository.ts';
-import { SqliteSurveyModelRepository } from '@database/survey-model-repository.ts';
-import { SqliteDoraCapabilityRepository } from '@database/dora-capability-repository.ts';
+import { PgSurveyRunRepository } from '@database/survey-run-repository.ts';
+import { PgSurveyModelRepository } from '@database/survey-model-repository.ts';
+import { PgDoraCapabilityRepository } from '@database/dora-capability-repository.ts';
 
 function createUsersService(): UsersService {
-  return new UsersService(new SqliteUsersRepository());
+  return new UsersService(new PgUsersRepository());
 }
 
 async function resolveDomainUser(email: string) {
@@ -32,21 +32,20 @@ export const onRequest = sequence(
 
     return await next();
   }),
-
   defineMiddleware(async (context, next) => {
     const currentUser = context.locals.user;
     if (!currentUser) return await next();
 
     const authorizationService = new AuthorizationService(
       currentUser,
-      new SqliteTeamsRepository(),
+      new PgTeamsRepository(),
     );
     const usersService = createUsersService();
-    const teamsRepository = new SqliteTeamsRepository();
-    const surveyRunRepository = new SqliteSurveyRunRepository();
-    const usersRepository = new SqliteUsersRepository();
-    const surveyModelRepository = new SqliteSurveyModelRepository();
-    const doraCapabilityRepository = new SqliteDoraCapabilityRepository();
+    const teamsRepository = new PgTeamsRepository();
+    const surveyRunRepository = new PgSurveyRunRepository();
+    const usersRepository = new PgUsersRepository();
+    const surveyModelRepository = new PgSurveyModelRepository();
+    const doraCapabilityRepository = new PgDoraCapabilityRepository();
 
     Object.assign(context.locals, {
       authorizationService,
@@ -60,7 +59,6 @@ export const onRequest = sequence(
 
     return await next();
   }),
-
   defineMiddleware(async (context, next) => {
     const publicPages = ['/', '/login', '/register', '/api/auth/[...all]'];
     if (publicPages.includes(context.routePattern) || !!context.locals.user) {

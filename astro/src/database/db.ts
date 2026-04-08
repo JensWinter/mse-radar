@@ -1,55 +1,46 @@
-import Database from 'better-sqlite3';
-import type { Database as DatabaseType } from 'better-sqlite3';
-import { SURVEY_DB_PATH } from 'astro:env/server';
+import pg from 'pg';
+import { DATABASE_URL } from 'astro:env/server';
 
-let db: DatabaseType | undefined;
+const { Pool } = pg;
 
-function getDatabase(): DatabaseType {
-  if (!db) {
-    db = new Database(SURVEY_DB_PATH);
-    db.pragma('journal_mode = WAL');
-    db.pragma('foreign_keys = ON');
+let pool: pg.Pool | undefined;
+
+function getPool(): pg.Pool {
+  if (!pool) {
+    pool = new Pool({ connectionString: DATABASE_URL });
   }
-
-  return db;
+  return pool;
 }
 
-/**
- * Execute a query and return rows.
- * @param text SQL query with ? placeholders
- * @param values Parameter values
- */
-export function query<T = Record<string, unknown>>(
+export async function query<T extends pg.QueryResultRow = pg.QueryResultRow>(
   text: string,
   values: unknown[] = [],
-): { rows: T[] } {
-  const database = getDatabase();
-  const stmt = database.prepare(text);
-  const rows = stmt.all(...values) as T[];
-  return { rows };
+): Promise<{ rows: T[] }> {
+  const result = await getPool().query<T>(text, values);
+  return { rows: result.rows };
 }
 
-/**
- * Execute a statement that modifies data (INSERT, UPDATE, DELETE).
- * @param text SQL statement with ? placeholders
- * @param values Parameter values
- * @returns Object with changes count and lastInsertRowid
- */
-export function execute(
+export async function execute(
   text: string,
   values: unknown[] = [],
-): { changes: number; lastInsertRowid: number | bigint } {
-  const database = getDatabase();
-  const stmt = database.prepare(text);
-  const result = stmt.run(...values);
-  return { changes: result.changes, lastInsertRowid: result.lastInsertRowid };
+): Promise<{ rowCount: number }> {
+  const result = await getPool().query(text, values);
+  return { rowCount: result.rowCount ?? 0 };
 }
 
-/**
- * Run multiple statements in a transaction.
- * @param fn Function containing database operations
- */
-export function transaction<T>(fn: () => T): T {
-  const database = getDatabase();
-  return database.transaction(fn)();
+export async function transaction<T>(
+  fn: (client: pg.PoolClient) => Promise<T>,
+): Promise<T> {
+  const client = await getPool().connect();
+  try {
+    await client.query('BEGIN');
+    const result = await fn(client);
+    await client.query('COMMIT');
+    return result;
+  } catch (e) {
+    await client.query('ROLLBACK');
+    throw e;
+  } finally {
+    client.release();
+  }
 }

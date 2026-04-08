@@ -1,5 +1,5 @@
 import { Team, TeamMember } from '@models/aggregates/team.ts';
-import { query, execute, transaction } from '@database/db.ts';
+import { execute, query, transaction } from '@database/db.ts';
 
 export interface TeamsRepository {
   getAll(): Promise<Team[]>;
@@ -22,9 +22,9 @@ type TeamMemberRow = {
   role: string;
 };
 
-export class SqliteTeamsRepository implements TeamsRepository {
+export class PgTeamsRepository implements TeamsRepository {
   async getAll(): Promise<Team[]> {
-    const { rows: teamRows } = query<TeamRow>(
+    const { rows: teamRows } = await query<TeamRow>(
       'SELECT id, name, description FROM teams',
     );
     return teamRows.map((row) =>
@@ -33,14 +33,14 @@ export class SqliteTeamsRepository implements TeamsRepository {
   }
 
   async getAllByMembership(userId: string): Promise<Team[]> {
-    const { rows: teamRows } = query<TeamRow>(
+    const { rows: teamRows } = await query<TeamRow>(
       `
 SELECT id, name, description
 FROM teams
 WHERE id IN (
   SELECT team_id
   FROM team_memberships
-  WHERE user_id = ?
+  WHERE user_id = $1
 )`,
       [userId],
     );
@@ -50,8 +50,8 @@ WHERE id IN (
   }
 
   async getById(id: string): Promise<Team | null> {
-    const { rows: teamRows } = query<TeamRow>(
-      'SELECT id, name, description FROM teams WHERE id = ?',
+    const { rows: teamRows } = await query<TeamRow>(
+      'SELECT id, name, description FROM teams WHERE id = $1',
       [id],
     );
 
@@ -61,12 +61,12 @@ WHERE id IN (
       return null;
     }
 
-    const memberRows = query<TeamMemberRow>(
+    const memberRows = await query<TeamMemberRow>(
       `
 SELECT tm.id, tm.user_id, u.email AS user_email, tm.role
 FROM team_memberships AS tm
 LEFT JOIN users AS u ON tm.user_id = u.id
-WHERE tm.team_id = ?`,
+WHERE tm.team_id = $1`,
       [id],
     );
 
@@ -90,18 +90,20 @@ WHERE tm.team_id = ?`,
   }
 
   async save(team: Team): Promise<void> {
-    transaction(() => {
-      execute(
-        `INSERT INTO teams (id, name, description) VALUES (?, ?, ?)
+    await transaction(async (client) => {
+      await client.query(
+        `INSERT INTO teams (id, name, description) VALUES ($1, $2, $3)
          ON CONFLICT (id) DO UPDATE SET name = excluded.name, description = excluded.description`,
         [team.id, team.name, team.description],
       );
 
-      execute('DELETE FROM team_memberships WHERE team_id = ?', [team.id]);
+      await client.query('DELETE FROM team_memberships WHERE team_id = $1', [
+        team.id,
+      ]);
 
       for (const member of team.members) {
-        execute(
-          'INSERT INTO team_memberships (id, team_id, user_id, role) VALUES (?, ?, ?, ?)',
+        await client.query(
+          'INSERT INTO team_memberships (id, team_id, user_id, role) VALUES ($1, $2, $3, $4)',
           [member.id, team.id, member.userId, member.role],
         );
       }
@@ -109,14 +111,14 @@ WHERE tm.team_id = ?`,
   }
 
   async existsByName(name: string): Promise<boolean> {
-    const result = query<{ cnt: number }>(
-      'SELECT COUNT(*) as cnt FROM teams WHERE name = ?',
+    const result = await query<{ cnt: string }>(
+      'SELECT COUNT(*) as cnt FROM teams WHERE name = $1',
       [name],
     );
-    return (result.rows[0]?.cnt ?? 0) > 0;
+    return Number(result.rows[0]?.cnt ?? 0) > 0;
   }
 
   async deleteById(id: string): Promise<void> {
-    execute('DELETE FROM teams WHERE id = ?', [id]);
+    await execute('DELETE FROM teams WHERE id = $1', [id]);
   }
 }

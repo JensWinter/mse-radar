@@ -1,41 +1,18 @@
 import { TestDatabase } from './sut/databaseSut.ts';
 import { AuthTestDatabase } from './sut/authDatabaseSut.ts';
 import { ensureAstroSutRunning } from './sut/astroSut.ts';
-import * as path from '@std/path';
-
-async function cleanupStaleTestDatabases(testDbDir: string) {
-  try {
-    for await (const entry of Deno.readDir(testDbDir)) {
-      if (entry.isFile && entry.name.startsWith('test_') && entry.name.endsWith('.db')) {
-        const filePath = path.join(testDbDir, entry.name);
-        for (const suffix of ['', '-wal', '-shm']) {
-          try {
-            await Deno.remove(filePath + suffix);
-          } catch (e) {
-            if (!(e instanceof Deno.errors.NotFound)) throw e;
-          }
-        }
-      }
-    }
-  } catch (e) {
-    if (!(e instanceof Deno.errors.NotFound)) throw e;
-  }
-}
 
 async function main() {
-  const testDbDir = path.join(Deno.cwd(), 'db', 'test-databases');
-  await cleanupStaleTestDatabases(testDbDir);
-
   const databaseSut = new TestDatabase();
-  const authDatabaseSut = new AuthTestDatabase();
 
-  const dbPath = await databaseSut.setUp();
-  const authDbPath = await authDatabaseSut.setUp();
+  const databaseUrl = await databaseSut.setUp();
+  // Run auth migrations on the same database
+  const authDatabaseSut = AuthTestDatabase.connectToExisting(databaseUrl);
+  await authDatabaseSut.runMigrations();
 
-  console.log(`[batch] Survey DB: ${dbPath}`);
-  console.log(`[batch] Auth DB:   ${authDbPath}`);
+  console.log(`[batch] Database URL: ${databaseUrl.replace(/\/\/.*@/, '//***@')}`);
 
-  const astroSut = await ensureAstroSutRunning(dbPath, authDbPath);
+  const astroSut = await ensureAstroSutRunning(databaseUrl);
   console.log(`[batch] Astro SUT running at ${astroSut.baseUrl}`);
 
   try {
@@ -55,8 +32,7 @@ async function main() {
         ...Deno.env.toObject(),
         ACCEPTANCE_SUT_MANAGED: 'true',
         ACCEPTANCE_SUT_BASE_URL: astroSut.baseUrl,
-        SURVEY_DB_PATH: dbPath,
-        AUTH_DB_PATH: authDbPath,
+        DATABASE_URL: databaseUrl,
       },
     });
 
@@ -67,7 +43,6 @@ async function main() {
     console.log('[batch] Stopping Astro SUT...');
     await astroSut.stop();
     await databaseSut.tearDown();
-    await authDatabaseSut.tearDown();
     console.log('[batch] Cleanup complete.');
   }
 }
