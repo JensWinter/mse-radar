@@ -19,7 +19,7 @@
 
 ## Database Design
 
-- SQLite with JSON arrays for answer values
+- PostgreSQL with JSONB arrays for answer values
 - Last-write-wins strategy for multiple submissions
 
 ## Reference Documentation

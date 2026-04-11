@@ -14,6 +14,7 @@ suite('DoraCapabilitiesService', () => {
           'name-1',
           'description-1',
           'ref-1',
+          [],
         ),
         new DoraCapability(
           'id-2',
@@ -21,6 +22,7 @@ suite('DoraCapabilitiesService', () => {
           'name-2',
           'description-2',
           'ref-2',
+          [],
         ),
       ];
       const mockRepository = {
@@ -61,6 +63,7 @@ suite('DoraCapabilitiesService', () => {
         'name-1',
         'description-1',
         'ref-1',
+        [],
       );
       const mockRepository = {
         getById: vi.fn().mockResolvedValue(capability),
@@ -104,8 +107,22 @@ suite('DoraCapabilitiesService', () => {
         getAll: vi
           .fn()
           .mockResolvedValue([
-            new DoraCapability('cap-1', 'slug-1', 'name-1', 'desc-1', 'ref-1'),
-            new DoraCapability('cap-2', 'slug-2', 'name-2', 'desc-2', 'ref-2'),
+            new DoraCapability(
+              'cap-1',
+              'slug-1',
+              'name-1',
+              'desc-1',
+              'ref-1',
+              [],
+            ),
+            new DoraCapability(
+              'cap-2',
+              'slug-2',
+              'name-2',
+              'desc-2',
+              'ref-2',
+              [],
+            ),
           ]),
       } as any as DoraCapabilityRepository;
       const service = new DoraCapabilitiesService(mockRepository);
@@ -140,7 +157,14 @@ suite('DoraCapabilitiesService', () => {
         getAll: vi
           .fn()
           .mockResolvedValue([
-            new DoraCapability('cap-1', 'slug-1', 'name-1', 'desc-1', 'ref-1'),
+            new DoraCapability(
+              'cap-1',
+              'slug-1',
+              'name-1',
+              'desc-1',
+              'ref-1',
+              [],
+            ),
           ]),
       } as any as DoraCapabilityRepository;
       const service = new DoraCapabilitiesService(mockRepository);

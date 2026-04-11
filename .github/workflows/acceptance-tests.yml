@@ -19,6 +19,24 @@ jobs:
   acceptance:
     name: Run acceptance tests
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: mse_radar
+          POSTGRES_PASSWORD: mse_radar
+          POSTGRES_DB: mse_radar
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://mse_radar:mse_radar@localhost:5432/mse_radar
+      BETTER_AUTH_SECRET: ci-test-secret
+      BETTER_AUTH_URL: http://localhost:4322
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -1,13 +1,14 @@
 # AGENTS.md
 
-MSE Radar: Team capability assessment via DORA-based surveys. Astro (SSR), TypeScript, SQLite, DaisyUI/TailwindCSS.
+MSE Radar: Team capability assessment via DORA-based surveys. Astro (SSR), TypeScript, PostgreSQL, DaisyUI/TailwindCSS.
 
 Keep your replies extremely concise and focus on conveying the key information. No unnecessary fluff, no long code snippets.
 
 ## Quick Start
 
 ```bash
-deno task db:migrate && deno task db:seed     # Setup database
+docker compose up -d                          # Start PostgreSQL
+deno task db:setup                            # Run migrations + seed
 deno task run:astro:dev                       # Dev server (http://localhost:4321)
 deno task test:acceptance                     # Run acceptance tests
 deno task test:astro:unit                     # Run unit tests

@@ -21,6 +21,7 @@ suite('AssessmentService', () => {
       'Continuous Integration',
       'CI description',
       'https://dora.dev',
+      [],
     ),
     new DoraCapability(
       'cap-2',
@@ -28,6 +29,7 @@ suite('AssessmentService', () => {
       'Deployment Automation',
       'Deployment description',
       'https://dora.dev',
+      [],
     ),
   ];
 

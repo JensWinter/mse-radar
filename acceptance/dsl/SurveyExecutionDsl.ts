@@ -88,21 +88,6 @@ export type ConfirmSurveyRunCountParams = {
   expectedCount: number;
 };
 
-export type OpenSurveyRunAtIndexParams = {
-  teamName: string;
-  index: number;
-};
-
-export type CloseSurveyRunAtIndexParams = {
-  teamName: string;
-  index: number;
-};
-
-export type OpenSurveyRunPageAtIndexParams = {
-  teamName: string;
-  index: number;
-};
-
 const DEFAULT_SURVEY_RUN_TITLE = 'Survey 1';
 const DEFAULT_SURVEY_RUN_ANSWERS = [1, 2, 3, 4, 5, 6, 7, 6, 5, 4];
 
@@ -141,18 +126,6 @@ export class SurveyExecutionDsl {
   async openSurveyRun(params: OpenSurveyRunParams) {
     const title = params.title ?? DEFAULT_SURVEY_RUN_TITLE;
     await this.driver.openSurveyRun(params.teamName, title);
-  }
-
-  async openSurveyRunAtIndex(params: OpenSurveyRunAtIndexParams) {
-    await this.driver.openSurveyRunAtIndex(params.teamName, params.index);
-  }
-
-  async closeSurveyRunAtIndex(params: CloseSurveyRunAtIndexParams) {
-    await this.driver.closeSurveyRunAtIndex(params.teamName, params.index);
-  }
-
-  async openSurveyRunPageAtIndex(params: OpenSurveyRunPageAtIndexParams) {
-    await this.driver.openSurveyRunPageAtIndex(params.teamName, params.index);
   }
 
   async confirmAcceptsSurveyResponse(params: ConfirmAcceptsSurveyResponse) {
