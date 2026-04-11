@@ -60,7 +60,6 @@ export async function seedWithConnection(sql: Sql) {
   // 1. Seed DORA Capabilities with tiered guidance
   for (const capability of CORE_DORA_CAPABILITIES) {
     const id = crypto.randomUUID();
-    // const drillDownContent = JSON.stringify(resolveGuidance(capability));
     const drillDownContent = resolveGuidance(capability);
     await sql.unsafe(
       `INSERT INTO dora_capabilities (id, slug, name, description, dora_reference, drill_down_content)
