@@ -6,28 +6,6 @@ import { AuthTestDatabase } from '../sut/authDatabaseSut.ts';
 
 const isManagedMode = Deno.env.get('ACCEPTANCE_SUT_MANAGED') === 'true';
 
-/**
- * Sets up the acceptance test infrastructure for a test suite.
- *
- * This function must be called at the top level of each test file (not inside describe blocks)
- * to properly register the beforeAll/afterAll/beforeEach/afterEach hooks.
- *
- * @returns The DSL instance to use in tests
- *
- * @example
- * ```typescript
- * import { describe, it } from '@std/testing/bdd';
- * import { setupAcceptanceTest } from './testSetup.ts';
- *
- * const dsl = setupAcceptanceTest();
- *
- * describe('My Test Suite', () => {
- *   it('should do something', async () => {
- *     await dsl.identityAndAccess.registerUser();
- *   });
- * });
- * ```
- */
 export function setupAcceptanceTest(): Dsl {
   const dsl = new Dsl();
 
@@ -39,16 +17,14 @@ export function setupAcceptanceTest(): Dsl {
 
 function setupManagedMode(dsl: Dsl): Dsl {
   const baseUrl = Deno.env.get('ACCEPTANCE_SUT_BASE_URL')!;
-  const surveyDbPath = Deno.env.get('SURVEY_DB_PATH')!;
-  const authDbPath = Deno.env.get('AUTH_DB_PATH')!;
+  const databaseUrl = Deno.env.get('DATABASE_URL')!;
 
-  const databaseSut = TestDatabase.connectToExisting(surveyDbPath);
-  const authDatabaseSut = AuthTestDatabase.connectToExisting(authDbPath);
+  const databaseSut = TestDatabase.connectToExisting(databaseUrl);
+  const authDatabaseSut = AuthTestDatabase.connectToExisting(databaseUrl);
   const astroSut: AstroSutHandle = {
     baseUrl,
     ownsProcess: false,
-    dbPath: surveyDbPath,
-    authDbPath,
+    databaseUrl,
     stop: () => Promise.resolve(),
   };
 
@@ -61,8 +37,8 @@ function setupManagedMode(dsl: Dsl): Dsl {
   });
 
   beforeEach(async () => {
-    databaseSut.resetData();
-    authDatabaseSut.resetData();
+    await databaseSut.resetData();
+    await authDatabaseSut.resetData();
     await dsl.setUp(astroSut);
   });
 
@@ -79,9 +55,10 @@ function setupStandaloneMode(dsl: Dsl): Dsl {
   let astroSut: AstroSutHandle;
 
   beforeAll(async () => {
-    const dbPath = await databaseSut.setUp();
-    const authDbPath = await authDatabaseSut.setUp();
-    astroSut = await ensureAstroSutRunning(dbPath, authDbPath);
+    const databaseUrl = await databaseSut.setUp();
+    // Run auth migrations on the same test database
+    await authDatabaseSut.runMigrations(databaseUrl);
+    astroSut = await ensureAstroSutRunning(databaseUrl);
     await dsl.setUpBrowser();
   });
 
@@ -89,12 +66,12 @@ function setupStandaloneMode(dsl: Dsl): Dsl {
     await dsl.tearDownBrowser();
     await astroSut.stop();
     await databaseSut.tearDown();
-    await authDatabaseSut.tearDown();
+    // authDatabaseSut shares the same DB, no separate tearDown needed
   });
 
   beforeEach(async () => {
-    databaseSut.resetData();
-    authDatabaseSut.resetData();
+    await databaseSut.resetData();
+    await authDatabaseSut.resetData();
     await dsl.setUp(astroSut);
   });
 

@@ -1,6 +1,4 @@
-import { createConnection, getDatabasePath, type SqlConnection } from './connection.ts';
-
-const MIGRATIONS_TABLE = '_migrations';
+import { createConnection, getDatabaseUrlOrExit, type Sql } from './connection.ts';
 
 interface Migration {
   id: string;
@@ -8,42 +6,21 @@ interface Migration {
   sql: string;
 }
 
-/**
- * Ensures the migrations tracking table exists.
- */
-function ensureMigrationsTable(client: SqlConnection): void {
-  client.executeScript(`
-    CREATE TABLE IF NOT EXISTS "${MIGRATIONS_TABLE}" (
+async function ensureMigrationsTable(sql: Sql, table: string): Promise<void> {
+  await sql.unsafe(`
+    CREATE TABLE IF NOT EXISTS "${table}" (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
-      applied_at TEXT DEFAULT (datetime('now'))
+      applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `);
 }
 
-/**
- * Gets the list of already applied migrations.
- */
-function getAppliedMigrations(client: SqlConnection): Set<string> {
-  const result = client.queryObject<{ id: string }>(`
-    SELECT id FROM "${MIGRATIONS_TABLE}"
-  `);
-  return new Set(result.rows.map((row) => row.id));
+async function getAppliedMigrations(sql: Sql, table: string): Promise<Set<string>> {
+  const rows = await sql.unsafe<{ id: string }[]>(`SELECT id FROM "${table}"`);
+  return new Set(rows.map((row) => row.id));
 }
 
-/**
- * Records a migration as applied.
- */
-function recordMigration(client: SqlConnection, migration: Migration): void {
-  client.execute(
-    `INSERT INTO "${MIGRATIONS_TABLE}" (id, name) VALUES (?, ?)`,
-    [migration.id, migration.name],
-  );
-}
-
-/**
- * Loads all migration files from the migrations directory.
- */
 async function loadMigrations(migrationsDir: string): Promise<Migration[]> {
   const migrations: Migration[] = [];
 
@@ -52,14 +29,9 @@ async function loadMigrations(migrationsDir: string): Promise<Migration[]> {
       const filePath = `${migrationsDir}/${entry.name}`;
       const content = await Deno.readTextFile(filePath);
 
-      // Extract ID from filename (e.g., "001_initial.sql" -> "001")
       const match = entry.name.match(/^(\d+)_(.+)\.sql$/);
       if (match) {
-        migrations.push({
-          id: match[1],
-          name: match[2],
-          sql: content,
-        });
+        migrations.push({ id: match[1], name: match[2], sql: content });
       }
     }
   }
@@ -67,39 +39,18 @@ async function loadMigrations(migrationsDir: string): Promise<Migration[]> {
   return migrations.sort((a, b) => a.id.localeCompare(b.id));
 }
 
-/**
- * Ensures the database directory exists.
- */
-async function ensureDatabaseDirectory(dbPath: string): Promise<void> {
-  const dir = dbPath.substring(0, dbPath.lastIndexOf('/'));
-  if (dir) {
-    try {
-      await Deno.mkdir(dir, { recursive: true });
-    } catch (error) {
-      if (!(error instanceof Deno.errors.AlreadyExists)) {
-        throw error;
-      }
-    }
-  }
-}
-
-/**
- * Runs all pending migrations.
- * @param dbPath Path to the SQLite database file
- */
 export async function runMigrations(
-  dbPath: string,
+  databaseUrl: string,
+  migrationsDir: string,
+  migrationsTable = '_migrations',
 ): Promise<{ applied: string[]; skipped: string[] }> {
-  await ensureDatabaseDirectory(dbPath);
-
-  const client = createConnection(dbPath);
+  const sql = createConnection(databaseUrl);
 
   try {
-    ensureMigrationsTable(client);
+    await ensureMigrationsTable(sql, migrationsTable);
 
-    const migrations = await loadMigrations('./db/migrations');
-
-    const appliedMigrations = getAppliedMigrations(client);
+    const migrations = await loadMigrations(migrationsDir);
+    const appliedMigrations = await getAppliedMigrations(sql, migrationsTable);
 
     const applied: string[] = [];
     const skipped: string[] = [];
@@ -110,34 +61,31 @@ export async function runMigrations(
         continue;
       }
 
-      // SQLite doesn't support transactional DDL,
-      // but we can still use transactions for the migration tracking
-      try {
-        client.executeScript(migration.sql);
-        recordMigration(client, migration);
-      } catch (error) {
-        throw new Error(`Migration ${migration.id}_${migration.name} failed: ${error}`);
-      }
+      // PostgreSQL supports transactional DDL — wrap migration + tracking in one transaction
+      await sql.begin(async (tx) => {
+        await tx.unsafe(migration.sql);
+        await tx.unsafe(
+          `INSERT INTO "${migrationsTable}" (id, name) VALUES ($1, $2)`,
+          [migration.id, migration.name],
+        );
+      });
 
       applied.push(`${migration.id}_${migration.name}`);
     }
 
     return { applied, skipped };
   } finally {
-    client.end();
+    await sql.end();
   }
 }
 
-/**
- * CLI entry point for running migrations.
- */
 async function main(): Promise<void> {
-  const dbPath = Deno.args[0] || getDatabasePath();
+  const databaseUrl = getDatabaseUrlOrExit();
 
-  console.log(`Running migrations on database: ${dbPath}`);
+  console.log('Running main database migrations');
 
   try {
-    const result = await runMigrations(dbPath);
+    const result = await runMigrations(databaseUrl, './db/migrations');
 
     if (result.applied.length > 0) {
       console.log(`\nApplied ${result.applied.length} migration(s):`);
@@ -155,7 +103,6 @@ async function main(): Promise<void> {
   }
 }
 
-// Run if executed directly
 if (import.meta.main) {
   await main();
 }

@@ -393,14 +393,6 @@ export class ProtocolDriver {
     this.lastSurveyRunUrl = this.page.url();
   }
 
-  async openSurveyRunPageAtIndex(teamName: string, index: number) {
-    await this.openTeamDetails(teamName);
-    const surveyRunLinks = this.page.getByTestId('survey-run-link');
-    const count = await surveyRunLinks.count();
-    assert(index < count, `Survey run index ${index} is out of bounds (total: ${count})`);
-    await surveyRunLinks.nth(index).click();
-  }
-
   async confirmSurveyRunCount(expectedCount: number) {
     const surveyRunLinks = this.page.getByTestId('survey-run-link');
     const count = await surveyRunLinks.count();
@@ -417,17 +409,6 @@ export class ProtocolDriver {
     await this.openSurveyRunPage(teamName, title);
     await expect(this.page.getByRole('heading', { name: title })).toBeVisible();
     await this.page.getByRole('button', { name: 'Open' }).click();
-  }
-
-  async openSurveyRunAtIndex(teamName: string, index: number) {
-    await this.openSurveyRunPageAtIndex(teamName, index);
-    await this.page.getByRole('button', { name: 'Open' }).click();
-  }
-
-  async closeSurveyRunAtIndex(teamName: string, index: number) {
-    await this.openSurveyRunPageAtIndex(teamName, index);
-    await this.page.getByRole('button', { name: 'Close' }).click();
-    this.lastClosedSurveyRunUrl = this.page.url();
   }
 
   async confirmAcceptsSurveyResponse() {

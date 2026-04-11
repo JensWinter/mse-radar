@@ -6,6 +6,6 @@ export default getViteConfig({
     include: [
       'src/tests/**/*.{test,spec}.?(c|m)[jt]s?(x)',
       'src/**/*.{test,spec}.?(c|m)[jt]s?(x)'
-    ]
+    ],
   },
 });

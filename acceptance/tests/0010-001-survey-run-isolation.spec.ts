@@ -8,6 +8,9 @@ describe('0010-001: Survey Run Isolation', () => {
   const teamLeadEmail = 'pete@example.com';
   const teamMemberEmail = 'murat@example.com';
   const teamName = 'Road Runners';
+  const firstSurveyTitle = 'Sprint 1';
+  const secondSurveyTitle = 'Sprint 2';
+  const thirdSurveyTitle = 'Sprint 3';
 
   beforeEach(async () => {
     assertExists(dsl.identityAndAccess);
@@ -26,26 +29,53 @@ describe('0010-001: Survey Run Isolation', () => {
     assertExists(dsl.surveyExecution);
 
     // GIVEN my team has completed multiple survey runs with different responses
-    await dsl.surveyExecution.createSurveyRun({ teamName });
-    await dsl.surveyExecution.openSurveyRunAtIndex({ teamName, index: 0 });
+    await dsl.surveyExecution.createSurveyRun({
+      teamName,
+      title: firstSurveyTitle,
+    });
+    await dsl.surveyExecution.openSurveyRun({
+      teamName,
+      title: firstSurveyTitle,
+    });
     await dsl.identityAndAccess.signIn({ email: teamMemberEmail });
-    await dsl.surveyExecution.openSurveyRunPageAtIndex({ teamName, index: 0 });
+    await dsl.surveyExecution.openSurveyRunPage({
+      teamName,
+      title: firstSurveyTitle,
+    });
     await dsl.surveyExecution.answerSurvey({ answers: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2] });
 
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
-    await dsl.surveyExecution.closeSurveyRunAtIndex({ teamName, index: 0 });
+    await dsl.surveyExecution.closeSurveyRun({
+      teamName,
+      title: firstSurveyTitle,
+    });
 
-    await dsl.surveyExecution.createSurveyRun({ teamName });
-    await dsl.surveyExecution.openSurveyRunAtIndex({ teamName, index: 1 });
+    await dsl.surveyExecution.createSurveyRun({
+      teamName,
+      title: secondSurveyTitle,
+    });
+    await dsl.surveyExecution.openSurveyRun({
+      teamName,
+      title: secondSurveyTitle,
+    });
     await dsl.identityAndAccess.signIn({ email: teamMemberEmail });
-    await dsl.surveyExecution.openSurveyRunPageAtIndex({ teamName, index: 1 });
+    await dsl.surveyExecution.openSurveyRunPage({
+      teamName,
+      title: secondSurveyTitle,
+    });
     await dsl.surveyExecution.answerSurvey({ answers: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6] });
 
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
-    await dsl.surveyExecution.closeSurveyRunAtIndex({ teamName, index: 1 });
+    await dsl.surveyExecution.closeSurveyRun({
+      teamName,
+      title: secondSurveyTitle,
+    });
 
-    // WHEN I view the first survey run (index 0 - oldest)
-    await dsl.surveyExecution.openSurveyRunPageAtIndex({ teamName, index: 0 });
+    // WHEN I view the first survey run
+    await dsl.surveyExecution.openSurveyRunPage({
+      teamName,
+      title: firstSurveyTitle,
+    });
 
     // THEN I see only the responses and results from that run (score should be 2.0)
     await dsl.surveyExecution.confirmAssessmentResultsDisplayed();
@@ -61,27 +91,54 @@ describe('0010-001: Survey Run Isolation', () => {
     assertExists(dsl.surveyExecution);
 
     // GIVEN I have submitted responses to a survey run
-    await dsl.surveyExecution.createSurveyRun({ teamName });
-    await dsl.surveyExecution.openSurveyRunAtIndex({ teamName, index: 0 });
+    await dsl.surveyExecution.createSurveyRun({
+      teamName,
+      title: firstSurveyTitle,
+    });
+    await dsl.surveyExecution.openSurveyRun({
+      teamName,
+      title: firstSurveyTitle,
+    });
     await dsl.identityAndAccess.signIn({ email: teamMemberEmail });
-    await dsl.surveyExecution.openSurveyRunPageAtIndex({ teamName, index: 0 });
+    await dsl.surveyExecution.openSurveyRunPage({
+      teamName,
+      title: firstSurveyTitle,
+    });
     await dsl.surveyExecution.answerSurvey({ answers: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] });
 
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
-    await dsl.surveyExecution.closeSurveyRunAtIndex({ teamName, index: 0 });
+    await dsl.surveyExecution.closeSurveyRun({
+      teamName,
+      title: firstSurveyTitle,
+    });
 
     // AND I submit responses to a new survey run with different answers
-    await dsl.surveyExecution.createSurveyRun({ teamName });
-    await dsl.surveyExecution.openSurveyRunAtIndex({ teamName, index: 1 });
+    await dsl.surveyExecution.createSurveyRun({
+      teamName,
+      title: secondSurveyTitle,
+    });
+    await dsl.surveyExecution.openSurveyRun({
+      teamName,
+      title: secondSurveyTitle,
+    });
     await dsl.identityAndAccess.signIn({ email: teamMemberEmail });
-    await dsl.surveyExecution.openSurveyRunPageAtIndex({ teamName, index: 1 });
+    await dsl.surveyExecution.openSurveyRunPage({
+      teamName,
+      title: secondSurveyTitle,
+    });
     await dsl.surveyExecution.answerSurvey({ answers: [7, 7, 7, 7, 7, 7, 7, 7, 7, 7] });
 
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
-    await dsl.surveyExecution.closeSurveyRunAtIndex({ teamName, index: 1 });
+    await dsl.surveyExecution.closeSurveyRun({
+      teamName,
+      title: secondSurveyTitle,
+    });
 
     // WHEN I view the previous (first) survey run
-    await dsl.surveyExecution.openSurveyRunPageAtIndex({ teamName, index: 0 });
+    await dsl.surveyExecution.openSurveyRunPage({
+      teamName,
+      title: firstSurveyTitle,
+    });
 
     // THEN my old responses remain unchanged (score should still be 3.0, not 7.0)
     await dsl.surveyExecution.confirmAssessmentResultsDisplayed();
@@ -96,15 +153,36 @@ describe('0010-001: Survey Run Isolation', () => {
     assertExists(dsl.teamManagement);
 
     // GIVEN my team has multiple historical survey runs
-    await dsl.surveyExecution.createSurveyRun({ teamName });
-    await dsl.surveyExecution.openSurveyRunAtIndex({ teamName, index: 0 });
-    await dsl.surveyExecution.closeSurveyRunAtIndex({ teamName, index: 0 });
+    await dsl.surveyExecution.createSurveyRun({
+      teamName,
+      title: firstSurveyTitle,
+    });
+    await dsl.surveyExecution.openSurveyRun({
+      teamName,
+      title: firstSurveyTitle,
+    });
+    await dsl.surveyExecution.closeSurveyRun({
+      teamName,
+      title: firstSurveyTitle,
+    });
 
-    await dsl.surveyExecution.createSurveyRun({ teamName });
-    await dsl.surveyExecution.openSurveyRunAtIndex({ teamName, index: 1 });
-    await dsl.surveyExecution.closeSurveyRunAtIndex({ teamName, index: 1 });
+    await dsl.surveyExecution.createSurveyRun({
+      teamName,
+      title: secondSurveyTitle,
+    });
+    await dsl.surveyExecution.openSurveyRun({
+      teamName,
+      title: secondSurveyTitle,
+    });
+    await dsl.surveyExecution.closeSurveyRun({
+      teamName,
+      title: secondSurveyTitle,
+    });
 
-    await dsl.surveyExecution.createSurveyRun({ teamName });
+    await dsl.surveyExecution.createSurveyRun({
+      teamName,
+      title: thirdSurveyTitle,
+    });
 
     // WHEN I view the team's survey history
     await dsl.teamManagement.openTeamDetails({ teamName });
@@ -118,27 +196,54 @@ describe('0010-001: Survey Run Isolation', () => {
     assertExists(dsl.surveyExecution);
 
     // GIVEN my team has multiple closed survey runs with different responses
-    await dsl.surveyExecution.createSurveyRun({ teamName });
-    await dsl.surveyExecution.openSurveyRunAtIndex({ teamName, index: 0 });
+    await dsl.surveyExecution.createSurveyRun({
+      teamName,
+      title: firstSurveyTitle,
+    });
+    await dsl.surveyExecution.openSurveyRun({
+      teamName,
+      title: firstSurveyTitle,
+    });
     await dsl.identityAndAccess.signIn({ email: teamMemberEmail });
-    await dsl.surveyExecution.openSurveyRunPageAtIndex({ teamName, index: 0 });
+    await dsl.surveyExecution.openSurveyRunPage({
+      teamName,
+      title: firstSurveyTitle,
+    });
     await dsl.surveyExecution.answerSurvey({ answers: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2] });
 
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
-    await dsl.surveyExecution.closeSurveyRunAtIndex({ teamName, index: 0 });
+    await dsl.surveyExecution.closeSurveyRun({
+      teamName,
+      title: firstSurveyTitle,
+    });
 
     // Second survey run: team member answers with 6s
-    await dsl.surveyExecution.createSurveyRun({ teamName });
-    await dsl.surveyExecution.openSurveyRunAtIndex({ teamName, index: 1 });
+    await dsl.surveyExecution.createSurveyRun({
+      teamName,
+      title: secondSurveyTitle,
+    });
+    await dsl.surveyExecution.openSurveyRun({
+      teamName,
+      title: secondSurveyTitle,
+    });
     await dsl.identityAndAccess.signIn({ email: teamMemberEmail });
-    await dsl.surveyExecution.openSurveyRunPageAtIndex({ teamName, index: 1 });
+    await dsl.surveyExecution.openSurveyRunPage({
+      teamName,
+      title: secondSurveyTitle,
+    });
     await dsl.surveyExecution.answerSurvey({ answers: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6] });
 
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
-    await dsl.surveyExecution.closeSurveyRunAtIndex({ teamName, index: 1 });
+    await dsl.surveyExecution.closeSurveyRun({
+      teamName,
+      title: secondSurveyTitle,
+    });
 
     // WHEN I view the results of the first survey run
-    await dsl.surveyExecution.openSurveyRunPageAtIndex({ teamName, index: 0 });
+    await dsl.surveyExecution.openSurveyRunPage({
+      teamName,
+      title: firstSurveyTitle,
+    });
 
     // THEN it shows its own independent calculated results (score should be 2.0)
     await dsl.surveyExecution.confirmAssessmentResultsDisplayed();
@@ -148,7 +253,10 @@ describe('0010-001: Survey Run Isolation', () => {
     });
 
     // WHEN I view the results of the second survey run
-    await dsl.surveyExecution.openSurveyRunPageAtIndex({ teamName, index: 1 });
+    await dsl.surveyExecution.openSurveyRunPage({
+      teamName,
+      title: secondSurveyTitle,
+    });
 
     // THEN it shows its own independent calculated results (score should be 6.0)
     await dsl.surveyExecution.confirmAssessmentResultsDisplayed();

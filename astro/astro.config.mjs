@@ -32,8 +32,7 @@ export default defineConfig({
 
   env: {
     schema: {
-      SURVEY_DB_PATH: envField.string({ context: 'server', access: 'public' }),
-      AUTH_DB_PATH: envField.string({ context: 'server', access: 'public' }),
+      DATABASE_URL: envField.string({ context: 'server', access: 'secret', default: '' }),
       BETTER_AUTH_SECRET: envField.string({ context: 'server', access: 'secret' }),
       BETTER_AUTH_URL: envField.string({ context: 'server', access: 'public' }),
     },

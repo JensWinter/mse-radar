@@ -22,9 +22,9 @@ type SurveyQuestionRow = {
   sort_order: number;
 };
 
-export class SqliteSurveyModelRepository implements SurveyModelRepository {
+export class PgSurveyModelRepository implements SurveyModelRepository {
   async getAll(): Promise<SurveyModel[]> {
-    const surveyModelRows = query<SurveyModelRow>(
+    const surveyModelRows = await query<SurveyModelRow>(
       'SELECT id, version FROM survey_models',
     );
     return surveyModelRows.rows.map((row) =>
@@ -33,8 +33,8 @@ export class SqliteSurveyModelRepository implements SurveyModelRepository {
   }
 
   async getById(id: string): Promise<SurveyModel | null> {
-    const surveyModelRows = query<SurveyModelRow>(
-      'SELECT id, version FROM survey_models WHERE id = ?',
+    const surveyModelRows = await query<SurveyModelRow>(
+      'SELECT id, version FROM survey_models WHERE id = $1',
       [id],
     );
 
@@ -43,10 +43,10 @@ export class SqliteSurveyModelRepository implements SurveyModelRepository {
       return null;
     }
 
-    const questionRows = query<SurveyQuestionRow>(
+    const questionRows = await query<SurveyQuestionRow>(
       `SELECT id, dora_capability_id, question_text, sort_order
        FROM questions
-       WHERE survey_model_id = ?
+       WHERE survey_model_id = $1
        ORDER BY sort_order`,
       [id],
     );
@@ -69,8 +69,8 @@ export class SqliteSurveyModelRepository implements SurveyModelRepository {
   }
 
   async getByVersion(version: string): Promise<SurveyModel | null> {
-    const surveyModelRows = query<SurveyModelRow>(
-      'SELECT id, version FROM survey_models WHERE version = ?',
+    const surveyModelRows = await query<SurveyModelRow>(
+      'SELECT id, version FROM survey_models WHERE version = $1',
       [version],
     );
 
@@ -79,10 +79,10 @@ export class SqliteSurveyModelRepository implements SurveyModelRepository {
       return null;
     }
 
-    const questionRows = query<SurveyQuestionRow>(
+    const questionRows = await query<SurveyQuestionRow>(
       `SELECT id, dora_capability_id, question_text, sort_order
        FROM questions
-       WHERE survey_model_id = ?
+       WHERE survey_model_id = $1
        ORDER BY sort_order`,
       [surveyModelRow.id],
     );

@@ -15,7 +15,7 @@ export class DoraCapability {
     name: string,
     public description: string,
     public doraReference: string,
-    public drillDownContent: TieredGuidance[] = [],
+    public drillDownContent: TieredGuidance[],
   ) {
     this.validateSlug(slug);
     this.validateName(name);

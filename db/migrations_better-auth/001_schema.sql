@@ -1,13 +1,51 @@
-create table "user" ("id" text not null primary key, "name" text not null, "email" text not null unique, "emailVerified" integer not null, "image" text, "createdAt" date not null, "updatedAt" date not null);
+-- PostgreSQL schema for better-auth (auth_ prefixed tables)
 
-create table "session" ("id" text not null primary key, "expiresAt" date not null, "token" text not null unique, "createdAt" date not null, "updatedAt" date not null, "ipAddress" text, "userAgent" text, "userId" text not null references "user" ("id") on delete cascade);
+CREATE TABLE auth_user (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  "emailVerified" BOOLEAN NOT NULL DEFAULT FALSE,
+  image TEXT,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
 
-create table "account" ("id" text not null primary key, "accountId" text not null, "providerId" text not null, "userId" text not null references "user" ("id") on delete cascade, "accessToken" text, "refreshToken" text, "idToken" text, "accessTokenExpiresAt" date, "refreshTokenExpiresAt" date, "scope" text, "password" text, "createdAt" date not null, "updatedAt" date not null);
+CREATE TABLE auth_session (
+  id TEXT NOT NULL PRIMARY KEY,
+  "expiresAt" TIMESTAMPTZ NOT NULL,
+  token TEXT NOT NULL UNIQUE,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "ipAddress" TEXT,
+  "userAgent" TEXT,
+  "userId" TEXT NOT NULL REFERENCES auth_user(id) ON DELETE CASCADE
+);
 
-create table "verification" ("id" text not null primary key, "identifier" text not null, "value" text not null, "expiresAt" date not null, "createdAt" date not null, "updatedAt" date not null);
+CREATE TABLE auth_account (
+  id TEXT NOT NULL PRIMARY KEY,
+  "accountId" TEXT NOT NULL,
+  "providerId" TEXT NOT NULL,
+  "userId" TEXT NOT NULL REFERENCES auth_user(id) ON DELETE CASCADE,
+  "accessToken" TEXT,
+  "refreshToken" TEXT,
+  "idToken" TEXT,
+  "accessTokenExpiresAt" TIMESTAMPTZ,
+  "refreshTokenExpiresAt" TIMESTAMPTZ,
+  scope TEXT,
+  password TEXT,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
 
-create index "session_userId_idx" on "session" ("userId");
+CREATE TABLE auth_verification (
+  id TEXT NOT NULL PRIMARY KEY,
+  identifier TEXT NOT NULL,
+  value TEXT NOT NULL,
+  "expiresAt" TIMESTAMPTZ NOT NULL,
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
 
-create index "account_userId_idx" on "account" ("userId");
-
-create index "verification_identifier_idx" on "verification" ("identifier");
+CREATE INDEX auth_session_userId_idx ON auth_session("userId");
+CREATE INDEX auth_account_userId_idx ON auth_account("userId");
+CREATE INDEX auth_verification_identifier_idx ON auth_verification(identifier);
