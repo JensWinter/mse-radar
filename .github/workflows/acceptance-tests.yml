@@ -142,7 +142,7 @@ jobs:
             'acceptance/tests/0001-001-user-registration.spec.ts'
         env:
           ACCEPTANCE_SUT_MANAGED: 'true'
-          ACCEPTANCE_SUT_BASE_URL: http://127.0.0.1:4322
+          ACCEPTANCE_SUT_BASE_URL: http://localhost:4322
 
       - name: Print app container logs
         if: ${{ !cancelled() }}
