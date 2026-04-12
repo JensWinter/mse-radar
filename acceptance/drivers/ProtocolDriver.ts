@@ -27,6 +27,7 @@ export class ProtocolDriver {
     await this.page.fill('input[name="email"]', email);
     await this.page.fill('input[name="password"]', password);
     await this.page.getByRole('button', { name: 'Register' }).click();
+    await this.page.waitForLoadState('networkidle');
   }
 
   async confirmRegistrationConfirmationMessage() {
