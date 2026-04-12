@@ -8,6 +8,7 @@ RUN npm run build
 
 # Stage 2: runtime
 FROM node:24-slim AS runtime
+RUN groupadd --system astro && useradd --system --gid astro astro
 WORKDIR /app
 COPY --from=build --chown=astro:astro --chmod=755 /app/package.json /app/package-lock.json ./
 RUN npm ci --omit=dev
