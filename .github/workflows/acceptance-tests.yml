@@ -51,6 +51,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
       - name: Setup Deno
         uses: denoland/setup-deno@v2
         with:
