@@ -87,6 +87,10 @@ jobs:
 
       - name: Start app container
         run: |
+          for i in $(seq 1 5); do
+            docker pull "${{ steps.image.outputs.ref }}" && break
+            sleep 3
+          done
           docker run -d --name mse-radar-sut \
             --network host \
             -e DATABASE_URL="${{ env.DATABASE_URL }}" \
