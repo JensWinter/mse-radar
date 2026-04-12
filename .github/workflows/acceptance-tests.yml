@@ -51,10 +51,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-#      - name: Setup Node
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: 24
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
 
       - name: Setup Deno
         uses: denoland/setup-deno@v2
@@ -130,6 +130,9 @@ jobs:
 #      - name: Install Playwright browsers
 #        run: npx playwright install chromium --with-deps
 #        if: steps.playwright-cache.outputs.cache-hit != 'true'
+
+      - name: Install Playwright browsers
+        run: npx playwright install
 
 #      - name: Install Playwright system dependencies
 #        run: npx playwright install-deps chromium
