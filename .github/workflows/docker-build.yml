@@ -30,4 +30,4 @@ jobs:
           push: true
           tags: |
             ${{ steps.meta.outputs.image }}:${{ github.sha }}
-            ${{ steps.meta.outputs.image }}:latest
+            ${{ github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && format('{0}:latest', steps.meta.outputs.image) || '' }}
