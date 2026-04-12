@@ -135,7 +135,7 @@ jobs:
         run: |
           deno test --permit-no-files --allow-all \
             --junit-path=./acceptance-tests-report.xml \
-            'acceptance/tests/0000-001-dummy.spec.ts'
+            'acceptance/tests/*.spec.ts'
         env:
           ACCEPTANCE_SUT_MANAGED: 'true'
           ACCEPTANCE_SUT_BASE_URL: http://localhost:4322
