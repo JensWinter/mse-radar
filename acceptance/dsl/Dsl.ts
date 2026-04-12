@@ -16,7 +16,10 @@ export class Dsl {
   public surveyExecution: SurveyExecutionDsl | undefined;
 
   async setUpBrowser() {
-    this.browser = await chromium.launch();
+    this.browser = await chromium.launch({
+      timeout: 10000,
+      chromiumSandbox: true,
+    });
   }
 
   async tearDownBrowser() {
