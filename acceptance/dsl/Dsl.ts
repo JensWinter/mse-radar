@@ -16,10 +16,7 @@ export class Dsl {
   public surveyExecution: SurveyExecutionDsl | undefined;
 
   async setUpBrowser() {
-    this.browser = await chromium.launch({
-      timeout: 30000,
-      args: ['--disable-gpu', '--disable-gpu-sandbox', '--no-sandbox'],
-    });
+    this.browser = await chromium.launch({ timeout: 30000 });
   }
 
   async tearDownBrowser() {
