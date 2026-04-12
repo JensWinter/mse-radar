@@ -128,7 +128,7 @@ jobs:
 #          key: ${{ runner.os }}-ms-playwright-${{ hashFiles('deno.lock') }}
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium --with-deps
 #        if: steps.playwright-cache.outputs.cache-hit != 'true'
 
 #      - name: Install Playwright system dependencies
