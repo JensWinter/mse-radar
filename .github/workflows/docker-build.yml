@@ -2,6 +2,14 @@ name: Build and Push Docker Image
 
 on:
   workflow_dispatch:
+  workflow_call:
+    outputs:
+      image:
+        description: Full image name (without tag)
+        value: ${{ jobs.build-and-push.outputs.image }}
+      tag:
+        description: Image tag (commit SHA)
+        value: ${{ jobs.build-and-push.outputs.tag }}
 
 permissions:
   contents: read
@@ -10,6 +18,9 @@ permissions:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.meta.outputs.image }}
+      tag: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v6
 
