@@ -49,7 +49,7 @@ jobs:
       BETTER_AUTH_URL: http://localhost:4322
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Deno
         uses: denoland/setup-deno@v2
