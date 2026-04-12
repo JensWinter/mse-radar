@@ -1,12 +1,13 @@
 name: Acceptance tests
 
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
-      ref:
-        description: 'Git ref (branch, tag, SHA) to run against. Leave empty for the default ref.'
+      image-tag:
+        description: 'Docker image tag to test against (default: latest)'
         required: false
-        default: ''
+        default: 'latest'
 
 env:
   CI: true
@@ -16,8 +17,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  build-image:
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/docker-build.yml
+    permissions:
+      contents: read
+      packages: write
+
   acceptance:
     name: Run acceptance tests
+    needs: [build-image]
+    if: always() && !failure()
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -40,19 +50,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.ref || github.ref }}
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
-          cache-dependency-path: astro/package-lock.json
-
-      - name: Install Astro dependencies
-        working-directory: astro
-        run: npm ci
 
       - name: Setup Deno
         uses: denoland/setup-deno@v2
@@ -62,6 +59,55 @@ jobs:
 
       - name: Install Deno dependencies
         run: deno install
+
+      - name: Run database migrations and seed
+        run: |
+          deno run --allow-env --allow-read --allow-net deno_scripts/db/migrate.ts
+          deno run --allow-env --allow-read --allow-net deno_scripts/db_better-auth/migrate.ts
+          deno run --allow-env --allow-read --allow-net deno_scripts/db/seed_dora_capabilities.ts
+
+      - name: Determine image tag
+        id: image
+        run: |
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/mse-radar"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            TAG="${{ needs.build-image.outputs.tag }}"
+          else
+            TAG="${{ inputs.image-tag || 'latest' }}"
+          fi
+          echo "ref=${IMAGE}:${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Start app container
+        run: |
+          docker run -d --name mse-radar-sut \
+            --network host \
+            -e DATABASE_URL="${{ env.DATABASE_URL }}" \
+            -e BETTER_AUTH_SECRET="${{ env.BETTER_AUTH_SECRET }}" \
+            -e BETTER_AUTH_URL="${{ env.BETTER_AUTH_URL }}" \
+            -e NODE_ENV=acceptance \
+            -e HOST=0.0.0.0 \
+            -e PORT=4322 \
+            ${{ steps.image.outputs.ref }}
+
+      - name: Wait for app to be ready
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:4322/ > /dev/null 2>&1; then
+              echo "App is ready"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "App failed to start within 30s"
+          docker logs mse-radar-sut
+          exit 1
 
       - name: Cache Playwright browsers
         uses: actions/cache@v5
@@ -76,7 +122,17 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit != 'true'
 
       - name: Run acceptance tests
-        run: deno task test:acceptance
+        run: |
+          deno test --permit-no-files --allow-all \
+            --junit-path=./acceptance-tests-report.xml \
+            'acceptance/tests/*.spec.ts'
+        env:
+          ACCEPTANCE_SUT_MANAGED: 'true'
+          ACCEPTANCE_SUT_BASE_URL: http://127.0.0.1:4322
+
+      - name: Print app container logs
+        if: ${{ !cancelled() }}
+        run: docker logs mse-radar-sut
 
       - name: Test Report
         uses: dorny/test-reporter@v2
