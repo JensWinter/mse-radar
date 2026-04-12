@@ -135,7 +135,6 @@ jobs:
         run: |
           deno test --permit-no-files --allow-all \
             --junit-path=./acceptance-tests-report.xml \
-#            'acceptance/tests/*.spec.ts'
             'acceptance/tests/0000-001-dummy.spec.ts'
         env:
           ACCEPTANCE_SUT_MANAGED: 'true'
