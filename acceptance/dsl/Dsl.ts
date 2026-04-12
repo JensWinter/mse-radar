@@ -18,7 +18,7 @@ export class Dsl {
   async setUpBrowser() {
     this.browser = await chromium.launch({
       timeout: 30000,
-      args: ['--disable-gpu'],
+      args: ['--disable-gpu', '--disable-gpu-sandbox', '--no-sandbox'],
     });
   }
 
