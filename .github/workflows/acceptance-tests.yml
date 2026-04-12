@@ -69,10 +69,11 @@ jobs:
       - name: Determine image tag
         id: image
         run: |
-          IMAGE="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/mse-radar"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
+            IMAGE="${{ needs.build-image.outputs.image }}"
             TAG="${{ needs.build-image.outputs.tag }}"
           else
+            IMAGE="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/mse-radar"
             TAG="${{ inputs.image-tag || 'latest' }}"
           fi
           echo "ref=${IMAGE}:${TAG}" >> "$GITHUB_OUTPUT"
