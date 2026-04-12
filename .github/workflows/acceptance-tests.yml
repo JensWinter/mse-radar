@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   build-image:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
     uses: ./.github/workflows/docker-build.yml
     permissions:
       contents: read
@@ -66,14 +66,13 @@ jobs:
           deno run --allow-env --allow-read --allow-net deno_scripts/db_better-auth/migrate.ts
           deno run --allow-env --allow-read --allow-net deno_scripts/db/seed_dora_capabilities.ts
 
-      - name: Determine image tag
+      - name: Determine image ref
         id: image
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            IMAGE="${{ needs.build-image.outputs.image }}"
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/mse-radar"
+          if [ -n "${{ needs.build-image.outputs.tag }}" ]; then
             TAG="${{ needs.build-image.outputs.tag }}"
           else
-            IMAGE="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/mse-radar"
             TAG="${{ inputs.image-tag || 'latest' }}"
           fi
           echo "ref=${IMAGE}:${TAG}" >> "$GITHUB_OUTPUT"
