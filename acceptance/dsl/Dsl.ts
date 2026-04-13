@@ -1,5 +1,5 @@
 import { ProtocolDriver } from '../drivers/ProtocolDriver.ts';
-import { Browser, BrowserContext, chromium } from 'playwright/test';
+import { Browser, BrowserContext, chromium } from 'playwright';
 import { AstroSutHandle } from '../sut/astroSut.ts';
 import { IdentityAndAccessDsl } from './IdentityAndAccessDsl.ts';
 import { TeamManagementDsl } from './TeamManagementDsl.ts';
@@ -16,7 +16,7 @@ export class Dsl {
   public surveyExecution: SurveyExecutionDsl | undefined;
 
   async setUpBrowser() {
-    this.browser = await chromium.launch();
+    this.browser = await chromium.launch({ timeout: 30000 });
   }
 
   async tearDownBrowser() {
