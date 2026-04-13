@@ -8,7 +8,7 @@ import netlify from '@astrojs/netlify';
 
 import tailwindcss from '@tailwindcss/vite';
 
-const isNetlify = !!process.env.NETLIFY;
+const isNetlify = !!import.meta.env.PROD;
 
 // https://astro.build/config
 export default defineConfig({

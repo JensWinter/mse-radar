@@ -1,6 +1,7 @@
 [build]
-  command = "cd astro && npm install && npm run build"
-  publish = "astro/dist"
+  base = "astro"
+  command = "npm install && npm run build"
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "22"
