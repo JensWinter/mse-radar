@@ -52,7 +52,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
 
@@ -74,10 +74,11 @@ jobs:
       - name: Determine image ref
         id: image
         run: |
-          IMAGE="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/mse-radar"
-          if [ -n "${{ needs.build-image.outputs.tag }}" ]; then
+          if [ -n "${{ needs.build-image.outputs.image }}" ] && [ -n "${{ needs.build-image.outputs.tag }}" ]; then
+            IMAGE="${{ needs.build-image.outputs.image }}"
             TAG="${{ needs.build-image.outputs.tag }}"
           else
+            IMAGE="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/mse-radar"
             TAG="${{ inputs.image-tag || 'latest' }}"
           fi
           echo "ref=${IMAGE}:${TAG}" >> "$GITHUB_OUTPUT"
@@ -95,6 +96,10 @@ jobs:
             docker pull "${{ steps.image.outputs.ref }}" && break
             sleep 3
           done
+          if ! docker image inspect "${{ steps.image.outputs.ref }}" > /dev/null 2>&1; then
+            echo "Failed to pull image after 5 attempts"
+            exit 1
+          fi
           docker run -d --name mse-radar-sut \
             --network host \
             -e DATABASE_URL="${{ env.DATABASE_URL }}" \
