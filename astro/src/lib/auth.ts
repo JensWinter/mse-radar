@@ -19,6 +19,9 @@ export const auth = betterAuth({
     enabled: true,
     autoSignIn: false,
   },
+  advanced: {
+    disableOriginCheck: import.meta.env.CONTEXT === 'deploy-preview',
+  },
   user: { modelName: 'auth_user' },
   session: { modelName: 'auth_session' },
   account: { modelName: 'auth_account' },

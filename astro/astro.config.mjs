@@ -4,8 +4,11 @@ import { defineConfig, envField, passthroughImageService } from 'astro/config';
 import alpinejs from '@astrojs/alpinejs';
 
 import node from '@astrojs/node';
+import netlify from '@astrojs/netlify';
 
 import tailwindcss from '@tailwindcss/vite';
+
+const isNetlify = !!process.env.NETLIFY;
 
 // https://astro.build/config
 export default defineConfig({
@@ -26,9 +29,7 @@ export default defineConfig({
 
   integrations: [alpinejs()],
 
-  adapter: node({
-    mode: 'standalone',
-  }),
+  adapter: isNetlify ? netlify() : node({ mode: 'standalone' }),
 
   env: {
     schema: {

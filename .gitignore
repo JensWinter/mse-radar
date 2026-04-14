@@ -7,3 +7,10 @@ acceptance-tests-report.xml
 docs/DORA
 
 **/.idea/aws.xml
+
+# Local Netlify folder
+.netlify
+
+.env*
+!.env.local
+!.env.sample
