@@ -49,6 +49,12 @@ jobs:
           api_key: ${{ secrets.NEON_API_KEY }}
           expires_at: ${{ env.EXPIRES_AT }}
 
+      - name: Install Netlify CLI
+        run: npm install -g netlify-cli && netlify link --id ${{ env.NETLIFY_SITE_ID }} --auth ${{ env.NETLIFY_AUTH_TOKEN }}
+      - name: Deploy Preview to Netlify with CLI
+        id: deploy
+        run: netlify env:set DATABASE_URL "${{ steps.create_neon_branch.outputs.db_url_with_pooler }}" --context=deploy-preview
+
   # The step above creates a new Neon branch.
   # You may want to do something with the new branch, such as run migrations, run tests
   # on it, or send the connection details to a hosting platform environment.
