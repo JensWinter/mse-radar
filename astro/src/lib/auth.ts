@@ -19,6 +19,9 @@ export const auth = betterAuth({
     enabled: true,
     autoSignIn: false,
   },
+  advanced: {
+    disableOriginCheck: true,
+  },
   user: { modelName: 'auth_user' },
   session: { modelName: 'auth_session' },
   account: { modelName: 'auth_account' },
