@@ -9,5 +9,4 @@
 docs/prompts
 
 .env*
-!.env.local
 !.env.sample
