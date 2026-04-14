@@ -51,22 +51,12 @@ jobs:
           branch_name: preview/pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
           api_key: ${{ secrets.NEON_API_KEY }}
           expires_at: ${{ env.EXPIRES_AT }}
-
-  connect_to_netlify_project:
-    name: Connect to Netlify Project
-    needs: create_neon_branch
-    if: |
-      github.event_name == 'pull_request' && (
-      github.event.action == 'synchronize'
-      || github.event.action == 'opened'
-      || github.event.action == 'reopened')
-    runs-on: ubuntu-latest
-    steps:
       - name: Install Netlify CLI
         run: npm install -g netlify-cli && netlify link --id ${{ env.NETLIFY_SITE_ID }} --auth ${{ env.NETLIFY_AUTH_TOKEN }}
       - name: Deploy Preview to Netlify with CLI
         id: deploy
-        run: netlify env:set DATABASE_URL "${{ needs.create_neon_branch.steps.create_neon_branch.outputs.db_url_pooled }}" --context=deploy-preview
+        run: netlify env:set DATABASE_URL "${{ steps.create_neon_branch.outputs.db_url_pooled }}" --context=deploy-preview
+
 
   # The step above creates a new Neon branch.
   # You may want to do something with the new branch, such as run migrations, run tests
