@@ -55,7 +55,11 @@ jobs:
         run: npm install -g netlify-cli && netlify link --id ${{ env.NETLIFY_SITE_ID }} --auth ${{ env.NETLIFY_AUTH_TOKEN }}
       - name: Deploy Preview to Netlify with CLI
         id: deploy
-        run: netlify env:set DATABASE_URL "${{ steps.create_neon_branch.outputs.db_url_pooled }}" --context=deploy-preview
+        env:
+          DATABASE_URL: ${{ steps.create_neon_branch.outputs.db_url_pooled }}
+        run: |
+          echo "::add-mask::$DATABASE_URL"
+          netlify env:set DATABASE_URL "$DATABASE_URL" --context=deploy-preview
 
 
   # The step above creates a new Neon branch.
