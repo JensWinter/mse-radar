@@ -15,6 +15,7 @@ export const auth = betterAuth({
   database: new Pool({ connectionString: DATABASE_URL }),
   baseURL: BETTER_AUTH_URL,
   secret: BETTER_AUTH_SECRET,
+
   emailAndPassword: {
     enabled: true,
     autoSignIn: false,
