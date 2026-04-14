@@ -10,3 +10,7 @@ docs/DORA
 
 # Local Netlify folder
 .netlify
+
+.env*
+!.env.local
+!.env.sample
