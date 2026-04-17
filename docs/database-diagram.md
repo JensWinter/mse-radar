@@ -62,8 +62,8 @@ erDiagram
         UUID survey_run_id FK
         UUID respondent_id FK
         TIMESTAMPTZ submitted_at
-        JSONB answer_values
-        JSONB answer_comments
+        BYTEA answer_values
+        BYTEA answer_comments
     }
 
     users ||--o{ team_memberships : "has"

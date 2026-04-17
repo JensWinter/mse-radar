@@ -19,8 +19,18 @@
 
 ## Database Design
 
-- PostgreSQL with JSONB arrays for answer values
+- PostgreSQL; `survey_responses.answer_values` and `answer_comments` stored as BYTEA ciphertext (see Encryption at rest below)
 - Last-write-wins strategy for multiple submissions
+
+## Encryption at rest
+
+Survey response values and comments are encrypted with AES-256-GCM before insert/update and decrypted on load.
+
+- Key: `RESPONSE_ENCRYPTION_KEY` env var, 32 bytes base64-encoded
+- Threat model: **database administrators** (Postgres/backup access) — they see ciphertext only, cannot learn who rated which capability. The application operator is trusted.
+- `respondent_id` stays plaintext — participation is not private, only rating values are.
+- Out of scope: key rotation (future: versioned key ID column), hardware-backed key storage (KMS/Vault).
+- Losing the key makes all existing responses unreadable; leaking it to someone with DB access breaks the guarantee.
 
 ## Reference Documentation
 

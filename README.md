@@ -37,7 +37,9 @@ MSE Radar helps software development teams assess their engineering capabilities
 cd astro && npm install && cd ..
 
 # Set up environment
-cp .env.sample .env
+cp .env.sample .env.local
+# Generate the survey response encryption key (32 bytes, base64)
+echo "RESPONSE_ENCRYPTION_KEY=$(openssl rand -base64 32)" >> .env.local
 
 # Set up database
 deno task db:migrate

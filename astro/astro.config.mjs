@@ -36,6 +36,7 @@ export default defineConfig({
       DATABASE_URL: envField.string({ context: 'server', access: 'secret', default: '' }),
       BETTER_AUTH_SECRET: envField.string({ context: 'server', access: 'secret' }),
       BETTER_AUTH_URL: envField.string({ context: 'server', access: 'secret' }),
+      RESPONSE_ENCRYPTION_KEY: envField.string({ context: 'server', access: 'secret' }),
     },
   },
 

@@ -71,13 +71,17 @@ CREATE INDEX idx_survey_runs_team_id ON survey_runs(team_id);
 CREATE INDEX idx_survey_runs_survey_model_id ON survey_runs(survey_model_id);
 CREATE INDEX idx_survey_runs_status ON survey_runs(status);
 
+-- answer_values / answer_comments: AES-256-GCM ciphertext
+-- (iv(12) || tag(16) || ciphertext) of the JSON-encoded answer arrays.
+-- Encryption key held by application (RESPONSE_ENCRYPTION_KEY).
+-- See docs/agents/architecture.md → Encryption at rest.
 CREATE TABLE survey_responses (
   id UUID PRIMARY KEY,
   survey_run_id UUID NOT NULL REFERENCES survey_runs(id),
   respondent_id UUID NOT NULL REFERENCES users(id),
   submitted_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  answer_values JSONB NOT NULL DEFAULT '[]'::jsonb,
-  answer_comments JSONB NOT NULL DEFAULT '[]'::jsonb,
+  answer_values BYTEA NOT NULL,
+  answer_comments BYTEA NOT NULL,
   UNIQUE(survey_run_id, respondent_id)
 );
 
