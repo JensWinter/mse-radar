@@ -289,6 +289,7 @@ Manages the lifecycle of survey runs, collecting responses from team members, an
 - A survey run can be reopened after being closed
 - Respondent identifiers are protected (only accessible to authorized system components)
 - Raw responses are only visible to the submitter
+- Rating values and comments are encrypted at rest
 
 ---
 

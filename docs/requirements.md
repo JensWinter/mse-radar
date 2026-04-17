@@ -71,6 +71,7 @@
 - Team leads are also team members. They can answer surveys for their team.
 - Raw individual responses are only ever visible to the team members who submitted them. No team member or team lead can see the raw responses of another team member.
 - Pseudonymity: No one can see who answered what. (Exception: respondents can see their own responses) Responses will be aggregated.
+- Encryption at rest: rating values and comments should be encrypted with an app-held key.
 - "Audit context" requires storing identifiers that could re-identify people. These identifiers should be protected and only accessible to authorized system components.
 - DORA capabilities are defined in https://dora.dev/capabilities/.
 - Survey questions should be defined as a Likert Scale (1-7)

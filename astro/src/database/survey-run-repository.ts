@@ -4,6 +4,7 @@ import {
   SurveyRunResponse,
 } from '@models/aggregates/survey-run.ts';
 import { query, transaction } from '@database/db.ts';
+import { getResponseCrypto } from '@lib/response-crypto.ts';
 
 export interface SurveyRunRepository {
   getAllByTeamId(teamId: string): Promise<SurveyRun[]>;
@@ -22,8 +23,8 @@ type SurveyRunRow = {
 type SurveyResponseRow = {
   id: string;
   respondent_id: string;
-  answer_values: (AnswerValue | null)[];
-  answer_comments: (string | null)[];
+  answer_values: Buffer;
+  answer_comments: Buffer;
 };
 
 export class PgSurveyRunRepository implements SurveyRunRepository {
@@ -68,9 +69,14 @@ WHERE survey_run_id = $1`,
       [surveyRunRow.id],
     );
 
+    const crypto = getResponseCrypto();
     const surveyResponses = responseRows.rows.map((row) => {
-      const answerValues: (AnswerValue | null)[] = row.answer_values ?? [];
-      const answerComments: (string | null)[] = row.answer_comments ?? [];
+      const answerValues = crypto.decryptJson<(AnswerValue | null)[]>(
+        row.answer_values,
+      );
+      const answerComments = crypto.decryptJson<(string | null)[]>(
+        row.answer_comments,
+      );
 
       const answers = answerValues.map((answerValue, index) => ({
         answerValue,
@@ -104,6 +110,7 @@ WHERE survey_run_id = $1`,
         ],
       );
 
+      const crypto = getResponseCrypto();
       for (const response of surveyRun.responses) {
         const answerValues = response.answers.map(
           (answer) => answer.answerValue,
@@ -120,8 +127,8 @@ ON CONFLICT(survey_run_id, respondent_id) DO UPDATE SET
             response.id,
             surveyRun.id,
             response.respondentId,
-            JSON.stringify(answerValues),
-            JSON.stringify(comments),
+            crypto.encryptJson(answerValues),
+            crypto.encryptJson(comments),
           ],
         );
       }
