@@ -9,7 +9,7 @@ describe('0017-001: Tailored Improvement Guidance', () => {
   const teamMemberEmail = 'murat@example.com';
   const teamName = 'Road Runners';
   const capabilityName = 'Code maintainability';
-  const developingGuidanceText =
+  const level4GuidanceText =
     'Strengthen code maintainability by measuring where the team still slows down, removing one recurring bottleneck, and standardizing the improved workflow across the team.';
 
   beforeEach(async () => {
@@ -57,7 +57,7 @@ describe('0017-001: Tailored Improvement Guidance', () => {
     assertExists(dsl.identityAndAccess);
     assertExists(dsl.surveyExecution);
 
-    // GIVEN a closed survey run with a "developing" level score for a capability
+    // GIVEN a closed survey run with a level 4 score for a capability
     // (Survey run created, opened, answered with 4s, and closed in beforeEach)
 
     // WHEN a team member views the assessment results
@@ -65,9 +65,9 @@ describe('0017-001: Tailored Improvement Guidance', () => {
     await dsl.surveyExecution.viewAssessmentResults({ teamName });
     await dsl.surveyExecution.accessGuidanceForCapability({ capabilityName });
 
-    // THEN the guidance reflects the "developing" level for that capability
-    await dsl.surveyExecution.confirmGuidanceActionText({
-      actionText: developingGuidanceText,
+    // THEN the guidance reflects level 4 for that capability
+    await dsl.surveyExecution.confirmGuidanceText({
+      text: level4GuidanceText,
     });
   });
 
@@ -75,7 +75,7 @@ describe('0017-001: Tailored Improvement Guidance', () => {
     assertExists(dsl.identityAndAccess);
     assertExists(dsl.surveyExecution);
 
-    // GIVEN a closed survey run with a "developing" level score for a capability
+    // GIVEN a closed survey run with a level 4 score for a capability
     // (Survey run created, opened, answered with 4s, and closed in beforeEach)
 
     // WHEN a team member views the guidance for a capability

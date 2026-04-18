@@ -1,9 +1,6 @@
-export type GuidanceTier = 'beginning' | 'developing' | 'mature';
-
-export type TieredGuidance = {
-  tier: GuidanceTier;
-  actionText: string;
-  doraReference?: string;
+export type LevelGuidance = {
+  level: number;
+  text: string;
 };
 
 export class DoraCapability {
@@ -15,7 +12,7 @@ export class DoraCapability {
     name: string,
     public description: string,
     public doraReference: string,
-    public drillDownContent: TieredGuidance[],
+    public drillDownContent: LevelGuidance[],
   ) {
     this.validateSlug(slug);
     this.validateName(name);

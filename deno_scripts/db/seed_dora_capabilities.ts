@@ -1,50 +1,21 @@
 import { createConnection, getDatabaseUrlOrExit, type Sql } from './connection.ts';
 import _DORA_CAPABILITIES from './dora_capabilities.json' with { type: 'json' };
 
-type TieredGuidance = {
-  tier: 'beginning' | 'developing' | 'mature';
-  actionText: string;
+type LevelGuidance = {
+  level: number;
+  text: string;
 };
 
 type DoraCapabilityData = {
   slug: string;
   name: string;
+  question: string;
   description: string;
   dora_reference: string;
-  tags: string[];
-  guidance: TieredGuidance[];
+  guidance: LevelGuidance[];
 };
 
-const CORE_DORA_CAPABILITIES = (_DORA_CAPABILITIES as DoraCapabilityData[])
-  .filter((doraCapability) => doraCapability.tags.includes('core'));
-
-function buildDefaultGuidance(capabilityName: string): TieredGuidance[] {
-  return [
-    {
-      tier: 'beginning',
-      actionText:
-        `Create a simple baseline for ${capabilityName.toLowerCase()}: agree on one team practice, make it visible in daily work, and review progress every sprint.`,
-    },
-    {
-      tier: 'developing',
-      actionText:
-        `Strengthen ${capabilityName.toLowerCase()} by measuring where the team still slows down, removing one recurring bottleneck, and standardizing the improved workflow across the team.`,
-    },
-    {
-      tier: 'mature',
-      actionText:
-        `Keep ${capabilityName.toLowerCase()} strong by automating the checks that protect it, sharing examples with neighboring teams, and revisiting the practice when delivery goals change.`,
-    },
-  ];
-}
-
-function resolveGuidance(capability: DoraCapabilityData): TieredGuidance[] {
-  const hasPlaceholderGuidance = capability.guidance.some((guidance) =>
-    guidance.actionText.startsWith('TODO:')
-  );
-
-  return hasPlaceholderGuidance ? buildDefaultGuidance(capability.name) : capability.guidance;
-}
+const DORA_CAPABILITIES = _DORA_CAPABILITIES as DoraCapabilityData[];
 
 export async function seedDoraCapabilities(databaseUrl: string) {
   const sql = createConnection(databaseUrl);
@@ -57,10 +28,9 @@ export async function seedDoraCapabilities(databaseUrl: string) {
 }
 
 export async function seedWithConnection(sql: Sql) {
-  // 1. Seed DORA Capabilities with tiered guidance
-  for (const capability of CORE_DORA_CAPABILITIES) {
+  // 1. Seed DORA Capabilities with leveled guidance
+  for (const capability of DORA_CAPABILITIES) {
     const id = crypto.randomUUID();
-    const drillDownContent = resolveGuidance(capability);
     await sql.unsafe(
       `INSERT INTO dora_capabilities (id, slug, name, description, dora_reference, drill_down_content)
        VALUES ($1, $2, $3, $4, $5, $6)
@@ -75,7 +45,7 @@ export async function seedWithConnection(sql: Sql) {
         capability.name,
         capability.description,
         capability.dora_reference,
-        drillDownContent,
+        capability.guidance,
       ],
     );
   }
@@ -96,14 +66,21 @@ export async function seedWithConnection(sql: Sql) {
   const surveyModelId = modelResult[0].id;
 
   // 3. Link Capabilities to Survey Model as Questions
-  const capResult = await sql.unsafe<{ id: string; slug: string; name: string }[]>(
-    'SELECT id, slug, name FROM dora_capabilities',
+  const capResult = await sql.unsafe<{ id: string; slug: string }[]>(
+    'SELECT id, slug FROM dora_capabilities',
   );
+
+  const capabilityBySlug = new Map(DORA_CAPABILITIES.map((c) => [c.slug, c]));
 
   let sortOrder = 10;
   for (const cap of capResult) {
+    const capabilityData = capabilityBySlug.get(cap.slug);
+    if (!capabilityData) {
+      throw new Error(`Capability with slug '${cap.slug}' not found in DORA_CAPABILITIES`);
+    }
+
+    const questionText = capabilityData.question;
     const questionId = crypto.randomUUID();
-    const questionText = `To what extent does your team effectively use ${cap.name}?`;
     await sql.unsafe(
       `INSERT INTO questions (id, survey_model_id, dora_capability_id, question_text, sort_order)
        VALUES ($1, $2, $3, $4, $5)

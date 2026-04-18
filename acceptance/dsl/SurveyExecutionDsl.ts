@@ -80,8 +80,8 @@ export type ConfirmGuidanceDisplayedParams = {
   capabilityName: string;
 };
 
-export type ConfirmGuidanceActionTextParams = {
-  actionText: string;
+export type ConfirmGuidanceTextParams = {
+  text: string;
 };
 
 export type ConfirmSurveyRunCountParams = {
@@ -270,8 +270,8 @@ export class SurveyExecutionDsl {
     await this.driver.confirmGuidanceDisplayed(params.capabilityName);
   }
 
-  async confirmGuidanceActionText(params: ConfirmGuidanceActionTextParams) {
-    await this.driver.confirmGuidanceActionText(params.actionText);
+  async confirmGuidanceText(params: ConfirmGuidanceTextParams) {
+    await this.driver.confirmGuidanceText(params.text);
   }
 
   async confirmGuidanceContainsActionableAdvice() {

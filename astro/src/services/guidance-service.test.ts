@@ -3,190 +3,117 @@ import { GuidanceService } from './guidance-service.ts';
 import type { DoraCapabilityRepository } from '@database/dora-capability-repository.ts';
 import { DoraCapability } from '@models/aggregates/dora-capability.ts';
 
+const makeCapability = () =>
+  new DoraCapability(
+    'cap-1',
+    'continuous-integration',
+    'Continuous Integration',
+    'CI description',
+    'https://dora.dev/capabilities/continuous-integration/',
+    [
+      { level: 1, text: 'Level 1 action' },
+      { level: 2, text: 'Level 2 action' },
+      { level: 3, text: 'Level 3 action' },
+      { level: 4, text: 'Level 4 action' },
+      { level: 5, text: 'Level 5 action' },
+      { level: 6, text: 'Level 6 action' },
+      { level: 7, text: 'Level 7 action' },
+    ],
+  );
+
+const makeService = (capability: DoraCapability | null) => {
+  const mockRepository: DoraCapabilityRepository = {
+    getAll: vi.fn(),
+    getById: vi.fn().mockResolvedValue(capability),
+  };
+  return new GuidanceService(mockRepository);
+};
+
 suite('GuidanceService', () => {
   suite('getGuidanceForCapability', () => {
     test('returns null when capability is not found', async () => {
-      const mockRepository: DoraCapabilityRepository = {
-        getAll: vi.fn(),
-        getById: vi.fn().mockResolvedValue(null),
-      };
-      const service = new GuidanceService(mockRepository);
-
+      const service = makeService(null);
       const result = await service.getGuidanceForCapability('unknown-id', 5.0);
-
       expect(result).toBeNull();
     });
 
-    test('returns tailored guidance for beginning tier at upper boundary', async () => {
-      const capability = new DoraCapability(
-        'cap-1',
-        'continuous-integration',
-        'Continuous Integration',
-        'CI description',
-        'https://dora.dev/capabilities/continuous-integration/',
-        [
-          {
-            tier: 'beginning',
-            actionText: 'Start with basic CI setup',
-            doraReference: 'https://dora.dev/ci-basics',
-          },
-          {
-            tier: 'developing',
-            actionText: 'Improve build times',
-          },
-          {
-            tier: 'mature',
-            actionText: 'Optimize for elite performance',
-          },
-        ],
-      );
-
-      const mockRepository: DoraCapabilityRepository = {
-        getAll: vi.fn(),
-        getById: vi.fn().mockResolvedValue(capability),
-      };
-      const service = new GuidanceService(mockRepository);
-
-      const result = await service.getGuidanceForCapability('cap-1', 2.9);
-
-      expect(result).not.toBeNull();
-      expect(result!.tier).toBe('beginning');
-      expect(result!.guidance?.actionText).toBe('Start with basic CI setup');
-      expect(result!.capabilityName).toBe('Continuous Integration');
-      expect(result!.score).toBe(2.9);
+    test('score 1.0 maps to level 1', async () => {
+      const result = await makeService(
+        makeCapability(),
+      ).getGuidanceForCapability('cap-1', 1.0);
+      expect(result!.level).toBe(1);
+      expect(result!.guidance?.text).toBe('Level 1 action');
     });
 
-    test('returns tailored guidance for developing tier at lower boundary', async () => {
-      const capability = new DoraCapability(
-        'cap-1',
-        'continuous-integration',
-        'Continuous Integration',
-        'CI description',
-        'https://dora.dev/capabilities/continuous-integration/',
-        [
-          {
-            tier: 'beginning',
-            actionText: 'Start with basic CI setup',
-          },
-          {
-            tier: 'developing',
-            actionText: 'Improve build times',
-          },
-          {
-            tier: 'mature',
-            actionText: 'Optimize for elite performance',
-          },
-        ],
-      );
-
-      const mockRepository: DoraCapabilityRepository = {
-        getAll: vi.fn(),
-        getById: vi.fn().mockResolvedValue(capability),
-      };
-      const service = new GuidanceService(mockRepository);
-
-      const result = await service.getGuidanceForCapability('cap-1', 3.0);
-
-      expect(result).not.toBeNull();
-      expect(result!.tier).toBe('developing');
-      expect(result!.guidance?.actionText).toBe('Improve build times');
+    test('score 1.4 rounds to level 1', async () => {
+      const result = await makeService(
+        makeCapability(),
+      ).getGuidanceForCapability('cap-1', 1.4);
+      expect(result!.level).toBe(1);
     });
 
-    test('returns tailored guidance for developing tier at upper boundary', async () => {
-      const capability = new DoraCapability(
-        'cap-1',
-        'continuous-integration',
-        'Continuous Integration',
-        'CI description',
-        'https://dora.dev/capabilities/continuous-integration/',
-        [
-          {
-            tier: 'beginning',
-            actionText: 'Start with basic CI setup',
-          },
-          {
-            tier: 'developing',
-            actionText: 'Improve build times',
-          },
-          {
-            tier: 'mature',
-            actionText: 'Optimize for elite performance',
-          },
-        ],
-      );
-
-      const mockRepository: DoraCapabilityRepository = {
-        getAll: vi.fn(),
-        getById: vi.fn().mockResolvedValue(capability),
-      };
-      const service = new GuidanceService(mockRepository);
-
-      const result = await service.getGuidanceForCapability('cap-1', 4.9);
-
-      expect(result).not.toBeNull();
-      expect(result!.tier).toBe('developing');
-      expect(result!.guidance?.actionText).toBe('Improve build times');
+    test('score 1.5 rounds to level 2', async () => {
+      const result = await makeService(
+        makeCapability(),
+      ).getGuidanceForCapability('cap-1', 1.5);
+      expect(result!.level).toBe(2);
     });
 
-    test('returns tailored guidance for mature tier at lower boundary', async () => {
-      const capability = new DoraCapability(
-        'cap-1',
-        'continuous-integration',
-        'Continuous Integration',
-        'CI description',
-        'https://dora.dev/capabilities/continuous-integration/',
-        [
-          {
-            tier: 'beginning',
-            actionText: 'Start with basic CI setup',
-          },
-          {
-            tier: 'developing',
-            actionText: 'Improve build times',
-          },
-          {
-            tier: 'mature',
-            actionText: 'Optimize for elite performance',
-          },
-        ],
-      );
-
-      const mockRepository: DoraCapabilityRepository = {
-        getAll: vi.fn(),
-        getById: vi.fn().mockResolvedValue(capability),
-      };
-      const service = new GuidanceService(mockRepository);
-
-      const result = await service.getGuidanceForCapability('cap-1', 5.0);
-
-      expect(result).not.toBeNull();
-      expect(result!.tier).toBe('mature');
-      expect(result!.guidance?.actionText).toBe(
-        'Optimize for elite performance',
-      );
+    test('score 2.9 rounds to level 3', async () => {
+      const result = await makeService(
+        makeCapability(),
+      ).getGuidanceForCapability('cap-1', 2.9);
+      expect(result!.level).toBe(3);
+      expect(result!.guidance?.text).toBe('Level 3 action');
     });
 
-    test('returns null guidance when tier guidance is not available', async () => {
+    test('score 5.0 maps to level 5', async () => {
+      const result = await makeService(
+        makeCapability(),
+      ).getGuidanceForCapability('cap-1', 5.0);
+      expect(result!.level).toBe(5);
+      expect(result!.guidance?.text).toBe('Level 5 action');
+    });
+
+    test('score 7.0 maps to level 7', async () => {
+      const result = await makeService(
+        makeCapability(),
+      ).getGuidanceForCapability('cap-1', 7.0);
+      expect(result!.level).toBe(7);
+      expect(result!.guidance?.text).toBe('Level 7 action');
+    });
+
+    test('score 0 clamps to level 1', async () => {
+      const result = await makeService(
+        makeCapability(),
+      ).getGuidanceForCapability('cap-1', 0);
+      expect(result!.level).toBe(1);
+    });
+
+    test('returns null guidance when no matching level exists', async () => {
       const capability = new DoraCapability(
         'cap-1',
         'continuous-integration',
-        'Continuous Integration',
-        'CI description',
-        'https://dora.dev/capabilities/continuous-integration/',
-        [], // No guidance content
+        'CI',
+        'desc',
+        'https://dora.dev/',
+        [],
       );
-
-      const mockRepository: DoraCapabilityRepository = {
-        getAll: vi.fn(),
-        getById: vi.fn().mockResolvedValue(capability),
-      };
-      const service = new GuidanceService(mockRepository);
-
-      const result = await service.getGuidanceForCapability('cap-1', 6.0);
-
+      const result = await makeService(capability).getGuidanceForCapability(
+        'cap-1',
+        4.0,
+      );
       expect(result).not.toBeNull();
-      expect(result!.tier).toBe('mature');
+      expect(result!.level).toBe(4);
       expect(result!.guidance).toBeNull();
+    });
+
+    test('returns capabilityName and score', async () => {
+      const result = await makeService(
+        makeCapability(),
+      ).getGuidanceForCapability('cap-1', 3.0);
+      expect(result!.capabilityName).toBe('Continuous Integration');
+      expect(result!.score).toBe(3.0);
     });
   });
 });

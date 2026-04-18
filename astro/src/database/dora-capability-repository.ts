@@ -1,6 +1,6 @@
 import {
   DoraCapability,
-  type TieredGuidance,
+  type LevelGuidance,
 } from '@models/aggregates/dora-capability.ts';
 import { query } from '@database/db.ts';
 
@@ -15,7 +15,7 @@ type DoraCapabilityRow = {
   name: string;
   description: string;
   dora_reference: string;
-  drill_down_content: TieredGuidance[];
+  drill_down_content: LevelGuidance[];
 };
 
 export class PgDoraCapabilityRepository implements DoraCapabilityRepository {
