@@ -44,7 +44,7 @@ Requirements for the guidance:
 
 Output Requirements:
 - Return valid JSON only
-- Do not use markdown code fences
+- Do not use Markdown code fences
 - Use exactly these keys:
     - name
     - question
@@ -70,4 +70,4 @@ Quality checks before finalizing:
 General rules:
 - The target audience is software developers and other members of software project teams with varying levels of professional experience. Assume a baseline understanding of common software development concepts and practices. Use clear, precise, technically credible language. Established software engineering terms may be used where they improve accuracy, but avoid unnecessary jargon, niche framework terminology, and overly academic wording.
 - Return only the final output in this format, with no additional commentary.
-- Text content should contain valid markdown syntax
+- Text values may include valid Markdown syntax inside JSON string fields

@@ -171,7 +171,7 @@ suite('GetSurveyRunCapabilityGuidanceUseCase', () => {
     );
   });
 
-  test('preserves null level guidance so the page can render a warning state', async () => {
+  test('preserves null guidance so the page can render a warning state', async () => {
     const useCase = createUseCase({
       guidanceService: {
         getGuidanceForCapability: vi.fn().mockResolvedValue({
