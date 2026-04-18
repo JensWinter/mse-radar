@@ -53,7 +53,7 @@ Output Requirements:
 - guidance must contain exactly 7 items
 - Each item must contain:
     - level
-    - guidance
+    - text
 - name must contain the name of the DORA capability being assessed
 - level must be an integer from 1 to 7
 - question must contain 30 to 40 words
