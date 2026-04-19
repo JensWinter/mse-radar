@@ -46,7 +46,6 @@ jobs:
       DATABASE_URL: postgresql://mse_radar:mse_radar@localhost:5432/mse_radar
       BETTER_AUTH_SECRET: ci-test-secret
       BETTER_AUTH_URL: http://localhost:4322
-      RESPONSE_ENCRYPTION_KEY: LE4yKmohXZoATTkDtMEEmygQE6rmfIJfb3BFNw9DXCo=
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -105,7 +104,6 @@ jobs:
             -e DATABASE_URL="${{ env.DATABASE_URL }}" \
             -e BETTER_AUTH_SECRET="${{ env.BETTER_AUTH_SECRET }}" \
             -e BETTER_AUTH_URL="${{ env.BETTER_AUTH_URL }}" \
-            -e RESPONSE_ENCRYPTION_KEY="${{ env.RESPONSE_ENCRYPTION_KEY }}" \
             -e NODE_ENV=acceptance \
             -e HOST=0.0.0.0 \
             -e PORT=4322 \
