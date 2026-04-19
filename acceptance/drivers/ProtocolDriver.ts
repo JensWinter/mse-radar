@@ -335,9 +335,15 @@ export class ProtocolDriver {
   ): Promise<void> {
     await this.navigateTo('/dora-capabilities');
     for (const question of questions) {
-      const capabilityElement = this.page.getByTestId('dora-capability-item').filter({
-        hasText: question.doraCapabilityName,
+      const capabilityContainerElements = this.page.getByTestId('dora-capability-item');
+      const capabilityElement = capabilityContainerElements.filter({
+        has: this.page.getByRole('heading', {
+          level: 3,
+          name: question.doraCapabilityName,
+          exact: true,
+        }),
       });
+
       await expect(capabilityElement).toBeVisible();
     }
   }
@@ -694,29 +700,29 @@ export class ProtocolDriver {
     const guidanceSection = this.page.getByTestId('guidance-section');
     await expect(guidanceSection).toBeVisible();
 
-    const guidanceText = this.page.getByTestId('guidance-action-text');
+    const guidanceText = this.page.getByTestId('guidance-text');
     await expect(guidanceText).toBeVisible();
     const text = await guidanceText.innerText();
     expect(text.length).toBeGreaterThan(0);
   }
 
-  async confirmGuidanceActionText(expectedActionText: string) {
-    const actionText = this.page.getByTestId('guidance-action-text');
-    await expect(actionText).toBeVisible();
-    await expect(actionText).toHaveText(expectedActionText);
+  async confirmGuidanceText(expectedText: string) {
+    const guidanceText = this.page.getByTestId('guidance-text');
+    await expect(guidanceText).toBeVisible();
+    await expect(guidanceText).toHaveText(expectedText);
   }
 
   async confirmGuidanceContainsActionableAdvice() {
-    const actionText = this.page.getByTestId('guidance-action-text');
-    await expect(actionText).toBeVisible();
+    const guidanceText = this.page.getByTestId('guidance-text');
+    await expect(guidanceText).toBeVisible();
 
-    const text = await actionText.innerText();
+    const text = await guidanceText.innerText();
     expect(text.length).toBeGreaterThan(20);
   }
 
   async confirmGuidanceShowsDoraSource() {
     const doraSourceLink = this.page.getByTestId('guidance-dora-source');
     await expect(doraSourceLink).toBeVisible();
-    await expect(doraSourceLink).toHaveAttribute('href', /dora\.dev\/capabilities\//);
+    await expect(doraSourceLink).toHaveAttribute('href', /https:\/\/dora\.dev\/capabilities\//);
   }
 }

@@ -1,7 +1,6 @@
 import {
   DoraCapability,
-  type TieredGuidance,
-  type GuidanceTier,
+  type LevelGuidance,
 } from '@models/aggregates/dora-capability.ts';
 import type { DoraCapabilityRepository } from '@database/dora-capability-repository.ts';
 
@@ -57,7 +56,7 @@ export type DoraCapabilityDto = {
   name: string;
   description: string;
   doraReference: string;
-  guidance: TieredGuidance[];
+  guidance: LevelGuidance[];
 };
 
-export type { TieredGuidance, GuidanceTier };
+export type { LevelGuidance };

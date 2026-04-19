@@ -9,8 +9,8 @@ describe('0017-001: Tailored Improvement Guidance', () => {
   const teamMemberEmail = 'murat@example.com';
   const teamName = 'Road Runners';
   const capabilityName = 'Code maintainability';
-  const developingGuidanceText =
-    'Strengthen code maintainability by measuring where the team still slows down, removing one recurring bottleneck, and standardizing the improved workflow across the team.';
+  const level4GuidanceText =
+    'Run automated tests on normal code changes and on dependency upgrades before changes are merged or released. Strengthen review workflows so cross-team changes can be proposed, reviewed, and audited without needing special side channels. Make it easier to search for examples and reusable components so teams can reuse existing code instead of reimplementing it. Track how often dependency updates fail and where manual coordination still slows changes.';
 
   beforeEach(async () => {
     assertExists(dsl.identityAndAccess);
@@ -57,7 +57,7 @@ describe('0017-001: Tailored Improvement Guidance', () => {
     assertExists(dsl.identityAndAccess);
     assertExists(dsl.surveyExecution);
 
-    // GIVEN a closed survey run with a "developing" level score for a capability
+    // GIVEN a closed survey run with a level 4 score for a capability
     // (Survey run created, opened, answered with 4s, and closed in beforeEach)
 
     // WHEN a team member views the assessment results
@@ -65,9 +65,9 @@ describe('0017-001: Tailored Improvement Guidance', () => {
     await dsl.surveyExecution.viewAssessmentResults({ teamName });
     await dsl.surveyExecution.accessGuidanceForCapability({ capabilityName });
 
-    // THEN the guidance reflects the "developing" level for that capability
-    await dsl.surveyExecution.confirmGuidanceActionText({
-      actionText: developingGuidanceText,
+    // THEN the guidance reflects level 4 for that capability
+    await dsl.surveyExecution.confirmGuidanceText({
+      text: level4GuidanceText,
     });
   });
 
@@ -75,7 +75,7 @@ describe('0017-001: Tailored Improvement Guidance', () => {
     assertExists(dsl.identityAndAccess);
     assertExists(dsl.surveyExecution);
 
-    // GIVEN a closed survey run with a "developing" level score for a capability
+    // GIVEN a closed survey run with a level 4 score for a capability
     // (Survey run created, opened, answered with 4s, and closed in beforeEach)
 
     // WHEN a team member views the guidance for a capability

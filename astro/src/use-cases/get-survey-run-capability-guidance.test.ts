@@ -54,10 +54,10 @@ suite('GetSurveyRunCapabilityGuidanceUseCase', () => {
           capabilityId: 'capability-1',
           capabilityName: 'Code maintainability',
           score: 4.5,
-          tier: 'developing',
+          level: 5,
           guidance: {
-            tier: 'developing',
-            actionText: 'Pay down hotspots every sprint.',
+            level: 5,
+            text: 'Pay down hotspots every sprint.',
           },
           doraReference: 'https://dora.dev/capabilities/code-maintainability/',
         } satisfies TailoredGuidance),
@@ -82,10 +82,10 @@ suite('GetSurveyRunCapabilityGuidanceUseCase', () => {
       capabilityId: 'capability-1',
       capabilityName: 'Code maintainability',
       score: 4.5,
-      tier: 'developing',
+      level: 5,
       doraReference: 'https://dora.dev/capabilities/code-maintainability/',
     });
-    expect(result.guidance?.actionText).toBe('Pay down hotspots every sprint.');
+    expect(result.guidance?.text).toBe('Pay down hotspots every sprint.');
   });
 
   test('maps missing survey runs to unavailable guidance', async () => {
@@ -171,14 +171,14 @@ suite('GetSurveyRunCapabilityGuidanceUseCase', () => {
     );
   });
 
-  test('preserves null tier guidance so the page can render a warning state', async () => {
+  test('preserves null guidance so the page can render a warning state', async () => {
     const useCase = createUseCase({
       guidanceService: {
         getGuidanceForCapability: vi.fn().mockResolvedValue({
           capabilityId: 'capability-1',
           capabilityName: 'Code maintainability',
           score: 4.5,
-          tier: 'developing',
+          level: 5,
           guidance: null,
           doraReference: 'https://dora.dev/capabilities/code-maintainability/',
         } satisfies TailoredGuidance),
