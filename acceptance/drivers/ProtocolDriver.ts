@@ -335,9 +335,15 @@ export class ProtocolDriver {
   ): Promise<void> {
     await this.navigateTo('/dora-capabilities');
     for (const question of questions) {
-      const capabilityElement = this.page.getByTestId('dora-capability-item').filter({
-        hasText: question.doraCapabilityName,
+      const capabilityContainerElements = this.page.getByTestId('dora-capability-item');
+      const capabilityElement = capabilityContainerElements.filter({
+        has: this.page.getByRole('heading', {
+          level: 3,
+          name: question.doraCapabilityName,
+          exact: true,
+        }),
       });
+
       await expect(capabilityElement).toBeVisible();
     }
   }
@@ -717,6 +723,6 @@ export class ProtocolDriver {
   async confirmGuidanceShowsDoraSource() {
     const doraSourceLink = this.page.getByTestId('guidance-dora-source');
     await expect(doraSourceLink).toBeVisible();
-    await expect(doraSourceLink).toHaveAttribute('href', /dora\.dev\/capabilities\//);
+    await expect(doraSourceLink).toHaveAttribute('href', /https:\/\/dora\.dev\/capabilities\//);
   }
 }

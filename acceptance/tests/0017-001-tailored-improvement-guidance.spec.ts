@@ -10,7 +10,7 @@ describe('0017-001: Tailored Improvement Guidance', () => {
   const teamName = 'Road Runners';
   const capabilityName = 'Code maintainability';
   const level4GuidanceText =
-    'Strengthen code maintainability by measuring where the team still slows down, removing one recurring bottleneck, and standardizing the improved workflow across the team.';
+    'Run automated tests on normal code changes and on dependency upgrades before changes are merged or released. Strengthen review workflows so cross-team changes can be proposed, reviewed, and audited without needing special side channels. Make it easier to search for examples and reusable components so teams can reuse existing code instead of reimplementing it. Track how often dependency updates fail and where manual coordination still slows changes.';
 
   beforeEach(async () => {
     assertExists(dsl.identityAndAccess);
