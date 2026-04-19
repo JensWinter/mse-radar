@@ -1,7 +1,7 @@
 1. Version control & code
    1. Version control (1)
    2. Trunk-based development (2)
-   3. Code maintenability (3)
+   3. Code maintainability (3)
 2. Build, test, release
    1. Continuous integration (4)
    2. Test automation (5)
