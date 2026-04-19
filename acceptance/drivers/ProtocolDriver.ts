@@ -623,14 +623,15 @@ export class ProtocolDriver {
 
     const scoreElement = scoreCard.getByTestId('capability-score');
     const scoreText = await scoreElement.innerText();
-    const score = parseFloat(scoreText);
+    const score = Number.parseFloat(scoreText);
     expect(score).toBeCloseTo(expectedScore, 1);
   }
 
   async confirmTotalResponsesCount(expectedCount: number) {
     const totalResponsesElement = this.page.getByTestId('total-responses');
     const responseText = await totalResponsesElement.innerText();
-    expect(parseInt(responseText)).toBe(expectedCount);
+    const count = Number.parseInt(responseText);
+    expect(count).toBe(expectedCount);
   }
 
   // Capability Profile
