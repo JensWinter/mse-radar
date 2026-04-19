@@ -13,6 +13,7 @@ type DoraCapabilityData = {
   description: string;
   dora_reference: string;
   guidance: LevelGuidance[];
+  sort_order: number;
 };
 
 const DORA_CAPABILITIES = _DORA_CAPABILITIES as DoraCapabilityData[];
@@ -30,7 +31,6 @@ export async function seedDoraCapabilities(databaseUrl: string) {
 export async function seedWithConnection(sql: Sql) {
   // 1. Seed DORA Capabilities with leveled guidance
   for (const capability of DORA_CAPABILITIES) {
-    const id = crypto.randomUUID();
     await sql.unsafe(
       `INSERT INTO dora_capabilities (id, slug, name, description, dora_reference, drill_down_content)
        VALUES ($1, $2, $3, $4, $5, $6)
@@ -40,7 +40,7 @@ export async function seedWithConnection(sql: Sql) {
          dora_reference = excluded.dora_reference,
          drill_down_content = excluded.drill_down_content`,
       [
-        id,
+        crypto.randomUUID(),
         capability.slug,
         capability.name,
         capability.description,
@@ -72,7 +72,6 @@ export async function seedWithConnection(sql: Sql) {
 
   const capabilityBySlug = new Map(DORA_CAPABILITIES.map((c) => [c.slug, c]));
 
-  let sortOrder = 10;
   for (const cap of capResult) {
     const capabilityData = capabilityBySlug.get(cap.slug);
     if (!capabilityData) {
@@ -81,6 +80,7 @@ export async function seedWithConnection(sql: Sql) {
 
     const questionText = capabilityData.question;
     const questionId = crypto.randomUUID();
+    const sortOrder = capabilityData.sort_order;
     await sql.unsafe(
       `INSERT INTO questions (id, survey_model_id, dora_capability_id, question_text, sort_order)
        VALUES ($1, $2, $3, $4, $5)
@@ -89,7 +89,6 @@ export async function seedWithConnection(sql: Sql) {
          sort_order = excluded.sort_order`,
       [questionId, surveyModelId, cap.id, questionText, sortOrder],
     );
-    sortOrder += 10;
   }
 }
 
