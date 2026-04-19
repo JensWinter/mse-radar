@@ -29,7 +29,7 @@ export class Dsl {
     }
 
     this.context = await this.browser.newContext({ baseURL: sut.baseUrl });
-    this.context.setDefaultTimeout(5000);
+    this.context.setDefaultTimeout(2000);
     const page = await this.context.newPage();
     await page.goto('/');
     const driver = new ProtocolDriver(page);
