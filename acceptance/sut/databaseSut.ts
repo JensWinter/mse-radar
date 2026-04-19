@@ -89,7 +89,7 @@ function getDatabaseUrlOrExit(): string {
 function generateTestDbName(): string {
   const uuid = crypto
     .randomUUID()
-    .replaceAll(/-/g, '')
+    .replaceAll('-', '')
     .substring(0, 12);
   return `test_${uuid}`;
 }
