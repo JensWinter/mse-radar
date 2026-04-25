@@ -1,5 +1,12 @@
-import { type AnswerValue, SurveyRun } from '@models/aggregates/survey-run.ts';
-import type { SurveyRunRepository } from '@database/survey-run-repository.ts';
+import {
+  type AnswerValue,
+  SurveyRun,
+  type SurveyRunStatus,
+} from '@models/aggregates/survey-run.ts';
+import type {
+  GetAllByTeamIdOptions,
+  SurveyRunRepository,
+} from '@database/survey-run-repository.ts';
 import type { TeamsRepository } from '@database/teams-repository.ts';
 import type { IAuthorizationService } from '@services/authorization-service.ts';
 
@@ -22,12 +29,17 @@ export class SurveyRunService {
     return surveyRunId;
   }
 
-  async getSurveyRunsByTeam(teamId: string) {
+  async getSurveyRunsByTeam(
+    teamId: string,
+    includeResponses: boolean = false,
+    status: SurveyRunStatus | undefined = undefined,
+  ) {
     const team = await this.getTeamOrThrow(teamId);
 
     await this.authorizationService.assertTeamMember(team);
 
-    return await this.surveyRunRepository.getAllByTeamId(teamId);
+    const options: GetAllByTeamIdOptions = { includeResponses, status };
+    return await this.surveyRunRepository.getAllByTeamId(teamId, options);
   }
 
   async getSurveyRun(surveyRunId: string) {

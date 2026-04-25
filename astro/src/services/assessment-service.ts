@@ -4,7 +4,6 @@ import type { DoraCapabilityRepository } from '@database/dora-capability-reposit
 import type {
   AssessmentResult,
   DoraCapabilityScore,
-  OverallSummary,
 } from '@models/aggregates/assessment-result.ts';
 import type { SurveyRun } from '@models/aggregates/survey-run.ts';
 import type { SurveyModel } from '@models/aggregates/survey-model.ts';
@@ -46,17 +45,54 @@ export class AssessmentService {
       doraCapabilities,
     );
 
-    const overallSummary = this.calculateOverallSummary(
-      doraCapabilityScores,
-      surveyRun.responses.length,
-    );
-
     return {
       surveyRunId: surveyRun.id,
       teamId: surveyRun.teamId,
       doraCapabilityScores,
-      overallSummary,
     };
+  }
+
+  async getAssessmentResultsForSurveys(
+    surveyRuns: SurveyRun[],
+  ): Promise<AssessmentResult[]> {
+    if (surveyRuns.some((run) => run.status !== 'closed')) {
+      throw new SurveyRunNotClosedError(
+        'Assessment results are only available for closed survey runs',
+      );
+    }
+
+    if (surveyRuns.length === 0) {
+      return [];
+    }
+
+    const distinctModelIds = [
+      ...new Set(surveyRuns.map((r) => r.surveyModelId)),
+    ];
+    const surveyModels = new Map<string, SurveyModel>();
+    for (const modelId of distinctModelIds) {
+      const model = await this.surveyModelRepository.getById(modelId);
+      if (!model) {
+        throw new Error('Survey model not found');
+      }
+      surveyModels.set(modelId, model);
+    }
+
+    const doraCapabilities = await this.doraCapabilityRepository.getAll();
+
+    return surveyRuns.map((run) => {
+      const surveyModel = surveyModels.get(run.surveyModelId)!;
+      const doraCapabilityScores = this.calculateDoraCapabilityScores(
+        run,
+        surveyModel,
+        doraCapabilities,
+      );
+
+      return {
+        surveyRunId: run.id,
+        teamId: run.teamId,
+        doraCapabilityScores,
+      };
+    });
   }
 
   async getCapabilityScore(
@@ -105,30 +141,6 @@ export class AssessmentService {
         responseCount: answersForQuestion.length,
       };
     });
-  }
-
-  private calculateOverallSummary(
-    doraCapabilityScores: DoraCapabilityScore[],
-    totalResponses: number,
-  ): OverallSummary {
-    const scoresWithValues = doraCapabilityScores
-      .map((s) => s.score)
-      .filter((s): s is number => s !== null);
-
-    const overallScore =
-      scoresWithValues.length > 0
-        ? Math.round(
-            (scoresWithValues.reduce((a, b) => a + b, 0) /
-              scoresWithValues.length) *
-              10,
-          ) / 10
-        : null;
-
-    return {
-      overallScore,
-      totalDoraCapabilities: doraCapabilityScores.length,
-      totalResponses,
-    };
   }
 }
 

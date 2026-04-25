@@ -8,6 +8,7 @@ import type { Dependencies } from '@lib/dependencies.ts';
 import { GetSurveyRunCapabilityGuidanceUseCase } from '@use-cases/get-survey-run-capability-guidance.ts';
 import { GetSurveyRunDetailsUseCase } from '@use-cases/get-survey-run-details.ts';
 import { GetTeamOverviewUseCase } from '@use-cases/get-team-overview.ts';
+import { GetTeamTrendUseCase } from '@use-cases/get-team-trend.ts';
 
 export function createTeamsService({
   authorizationService,
@@ -81,6 +82,14 @@ export function createGetSurveyRunDetailsUseCase(dependencies: Dependencies) {
     createTeamsService(dependencies),
     createSurveyModelService(dependencies),
     createDoraCapabilitiesService(dependencies),
+    createAssessmentService(dependencies),
+  );
+}
+
+export function createGetTeamTrendUseCase(dependencies: Dependencies) {
+  return new GetTeamTrendUseCase(
+    createTeamsService(dependencies),
+    createSurveyRunService(dependencies),
     createAssessmentService(dependencies),
   );
 }
