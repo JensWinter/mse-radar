@@ -37,13 +37,19 @@ const { surveyRunId, questionIndex, question, totalQuestions } = Astro.props;
           <p class="leading-6" data-testid="capability-description">
             {question.capabilityDescription}
           </p>
-          <a
-            href={question.doraReference}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-testid="capability-dora-link"
-            class="link link-primary text-sm">Learn more on dora.dev</a
-          >
+          {
+            question.doraReference && (
+              <a
+                href={question.doraReference}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="capability-dora-link"
+                class="link link-primary text-sm"
+              >
+                Learn more on dora.dev
+              </a>
+            )
+          }
           <div class="modal-action">
             <form method="dialog">
               <button class="btn">Close</button>
