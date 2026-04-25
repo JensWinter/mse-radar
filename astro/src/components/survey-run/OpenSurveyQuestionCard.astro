@@ -22,10 +22,15 @@ const { surveyRunId, questionIndex, question, totalQuestions } = Astro.props;
     </div>
     <div class="flex flex-row items-center gap-2">
       <h2 class="card-title">{question.capabilityName}</h2>
-      <span
-        class="iconify lucide--info cursor-pointer"
+      <button
+        type="button"
+        class="btn btn-ghost btn-xs btn-circle"
+        aria-label={`Learn more about ${question.capabilityName}`}
         data-testid="capability-info-trigger"
-        onclick={`capability-info-modal-${questionIndex}.showModal()`}></span>
+        onclick={`document.getElementById('capability-info-modal-${questionIndex}').showModal()`}
+      >
+        <span class="iconify lucide--info" aria-hidden="true"></span>
+      </button>
       <dialog id={`capability-info-modal-${questionIndex}`} class="modal">
         <div class="modal-box space-y-4">
           <h3 class="text-lg font-bold">{question.capabilityName}</h3>
