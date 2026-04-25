@@ -25,8 +25,8 @@ const { surveyRunId, questionIndex, question, totalQuestions } = Astro.props;
       <span
         class="iconify lucide--info cursor-pointer"
         data-testid="capability-info-trigger"
-        onclick={`my_modal_${questionIndex}.showModal()`}></span>
-      <dialog id={`my_modal_${questionIndex}`} class="modal">
+        onclick={`capability-info-modal-${questionIndex}.showModal()`}></span>
+      <dialog id={`capability-info-modal-${questionIndex}`} class="modal">
         <div class="modal-box space-y-4">
           <h3 class="text-lg font-bold">{question.capabilityName}</h3>
           <p class="leading-6" data-testid="capability-description">
