@@ -1,0 +1,105 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Alert from '@components/ui/Alert.astro';
+import EmptyState from '@components/ui/EmptyState.astro';
+import TrendGrid from '@components/trend/TrendGrid.astro';
+import assert from 'node:assert';
+import { AuthorizationError } from '@services/authorization-service.ts';
+import { createGetTeamTrendUseCase } from '@lib/composition.ts';
+import {
+  type TeamTrend,
+  TeamTrendNotFoundError,
+} from '@use-cases/get-team-trend.ts';
+
+const { user } = Astro.locals;
+assert(user, 'User must be logged in.');
+
+const { teamId } = Astro.params as { teamId: string };
+
+let teamTrend: TeamTrend | null = null;
+let notAuthorized = false;
+
+try {
+  teamTrend = await createGetTeamTrendUseCase(Astro.locals).execute(teamId);
+} catch (error) {
+  if (error instanceof AuthorizationError) {
+    notAuthorized = true;
+  } else if (error instanceof TeamTrendNotFoundError) {
+    return new Response('Not Found', { status: 404 });
+  } else {
+    return new Response('Not Found', { status: 404 });
+  }
+}
+
+const team = teamTrend?.team ?? null;
+const capabilityTrends = teamTrend?.capabilityTrends ?? [];
+const surveyCount = teamTrend?.surveyCount ?? 0;
+
+const breadcrumbs = team
+  ? [
+      { label: 'Home', href: '/' },
+      { label: team.name, href: `/teams/${teamId}` },
+      { label: 'Trend' },
+    ]
+  : undefined;
+---
+
+<BaseLayout title="Trend" breadcrumbs={breadcrumbs}>
+  <div class="flex-1 py-8">
+    <div class="container mx-auto px-4">
+      <div class="max-w-5xl mx-auto space-y-6">
+        {
+          notAuthorized ? (
+            <div class="card bg-base-100 shadow-xl">
+              <div class="card-body">
+                <h1 class="card-title text-2xl">Access Denied</h1>
+                <Alert type="warning">
+                  You do not have permission to view this team's trend. Only
+                  team members can access this page.
+                </Alert>
+                <div class="card-actions justify-end">
+                  <a href="/" class="btn btn-primary">
+                    Back to Home
+                  </a>
+                </div>
+              </div>
+            </div>
+          ) : (
+            team && (
+              <>
+                <div>
+                  <h1 class="text-3xl font-bold mb-1">{team.name}</h1>
+                  <p class="text-base-content/70">
+                    Capability trends across closed survey runs
+                  </p>
+                </div>
+
+                {surveyCount === 0 ? (
+                  <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                      <EmptyState
+                        icon="survey"
+                        title="No completed surveys yet"
+                        message="Close a survey run to start building trend data."
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {surveyCount === 1 && (
+                      <Alert type="info">
+                        Trends appear after the second closed survey run.
+                        Showing the latest scores so far.
+                      </Alert>
+                    )}
+                    <TrendGrid doraCapabilityTrends={capabilityTrends} />
+                  </>
+                )}
+              </>
+            )
+          )
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>

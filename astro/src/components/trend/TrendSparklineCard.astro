@@ -1,0 +1,97 @@
+---
+import 'charts.css';
+import type { DoraCapabilityTrend } from '@use-cases/get-team-trend.ts';
+
+interface Props {
+  doraCapabilityTrend: DoraCapabilityTrend;
+}
+
+const { doraCapabilityTrend } = Astro.props;
+const points = doraCapabilityTrend.points.filter((p) => p.score !== null);
+const scores = points.map((p) => p.score) as number[];
+
+const MAX_SCORE = 7;
+const normalize = (score: number | null) =>
+  score === null ? null : score / (MAX_SCORE + 0.5);
+
+const segments = points.slice(1).map((point, index) => {
+  const previousPoint = points[index];
+  const previous = scores[index];
+  const start = normalize(previous);
+  const end = normalize(point.score);
+  return { previousPoint, point, start, end };
+});
+---
+
+<div
+  data-testid="trend-capability-card"
+  data-capability-id={doraCapabilityTrend.doraCapabilityId}
+  class="card bg-base-200 border border-base-300"
+>
+  <div class="card-body p-4 gap-3">
+    <div class="flex items-baseline justify-between gap-2">
+      <h3 class="font-semibold text-base" data-testid="trend-capability-name">
+        {doraCapabilityTrend.doraCapabilityName}
+      </h3>
+      <div class="text-right">
+        <div
+          class="text-2xl font-bold leading-none"
+          data-testid="trend-latest-score"
+        >
+          {
+            doraCapabilityTrend.latestScore !== null
+              ? doraCapabilityTrend.latestScore.toFixed(1)
+              : '?'
+          }
+          <span class="text-xs font-normal text-base-content/60">/ 7</span>
+        </div>
+      </div>
+    </div>
+    <div class="trend-sparkline">
+      <table class="charts-css line hide-data">
+        <tbody>
+          {
+            segments.map((segment) => (
+              <tr>
+                <td
+                  data-testid="trend-sparkline-segment"
+                  data-from-survey-run-title={
+                    segment.previousPoint.surveyRunTitle
+                  }
+                  data-to-survey-run-title={segment.point.surveyRunTitle}
+                  data-from-score={segment.previousPoint.score ?? ''}
+                  data-to-score={segment.point.score ?? ''}
+                  title={`${segment.previousPoint.surveyRunTitle} → ${segment.point.surveyRunTitle} — ${
+                    segment.point.score !== null
+                      ? segment.point.score.toFixed(1)
+                      : 'no data'
+                  }`}
+                  style={
+                    segment.end === null
+                      ? '--start: 0; --end: 0;'
+                      : `--start: ${segment.start ?? segment.end}; --end: ${segment.end};`
+                  }
+                >
+                  <span class="data">
+                    {segment.point.score !== null
+                      ? segment.point.score.toFixed(1)
+                      : ''}
+                  </span>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<style>
+  .trend-sparkline {
+    --color: var(--color-primary, #3b82f6);
+  }
+  .trend-sparkline .charts-css.line {
+    --line-size: 2px;
+  }
+</style>

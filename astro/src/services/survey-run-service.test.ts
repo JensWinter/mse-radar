@@ -150,6 +150,7 @@ suite('SurveyRunService', () => {
       expect(mockTeamsRepository.getById).toHaveBeenCalledWith('team-id');
       expect(mockSurveyRunRepository.getAllByTeamId).toHaveBeenCalledWith(
         'team-id',
+        { includeResponses: false, status: undefined },
       );
       expect(result[0].id).toEqual('survey-run-1');
       expect(result[0].teamId).toEqual('team-id');

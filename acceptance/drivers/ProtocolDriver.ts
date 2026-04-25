@@ -11,6 +11,7 @@ export class ProtocolDriver {
   private lastClosedSurveyRunUrl: string | null = null;
   private lastOpenedTeamUrl: string | null = null;
   private lastSurveyRunUrl: string | null = null;
+  private lastTrendViewUrl: string | null = null;
 
   constructor(private readonly page: Page) {
   }
@@ -681,6 +682,140 @@ export class ProtocolDriver {
     await expect(accessDeniedMessage).toBeVisible();
   }
 
+  // Trend View
+
+  async openTrendView(teamName: string) {
+    await this.openTeamDetails(teamName);
+    const trendLink = this.page.getByTestId('view-trend-link');
+    await expect(trendLink).toBeVisible();
+    await trendLink.click();
+    await this.page.waitForLoadState('networkidle');
+    this.lastTrendViewUrl = this.page.url();
+  }
+
+  async confirmTrendVisualizationDisplayed() {
+    const trendGrid = this.page.getByTestId('trend-grid');
+    await expect(trendGrid).toBeVisible();
+
+    const trendCards = this.page.getByTestId('trend-capability-card');
+    const count = await trendCards.count();
+    expect(count).toBeGreaterThan(0);
+
+    let cardsWithPoints = 0;
+
+    for (let i = 0; i < count; i++) {
+      const card = trendCards.nth(i);
+      await expect(card.getByTestId('trend-capability-name')).toBeVisible();
+      await expect(card.getByTestId('trend-latest-score')).toBeVisible();
+      const segments = card.getByTestId('trend-sparkline-segment');
+      const segmentCount = await segments.count();
+      if (segmentCount > 0) {
+        cardsWithPoints++;
+      }
+    }
+
+    expect(cardsWithPoints).toBeGreaterThan(0);
+  }
+
+  async confirmTrendCardsHaveSurveyCount(expectedSurveyCount: number) {
+    const trendCards = this.page.getByTestId('trend-capability-card');
+    const cardCount = await trendCards.count();
+    expect(cardCount).toBeGreaterThan(0);
+    const expectedSegmentCount = Math.max(expectedSurveyCount - 1, 0);
+
+    let cardsWithExpectedCount = 0;
+
+    for (let i = 0; i < cardCount; i++) {
+      const segments = trendCards.nth(i).getByTestId('trend-sparkline-segment');
+      const segmentCount = await segments.count();
+      if (segmentCount === expectedSegmentCount) {
+        cardsWithExpectedCount++;
+      }
+    }
+
+    expect(cardsWithExpectedCount).toBeGreaterThan(0);
+  }
+
+  async confirmRunsInChronologicalOrder(expectedTitlesInOrder: string[]) {
+    const firstCard = this.page.getByTestId('trend-capability-card').first();
+    await expect(firstCard).toBeVisible();
+    const segments = firstCard.getByTestId('trend-sparkline-segment');
+    const count = await segments.count();
+    expect(count).toBe(Math.max(expectedTitlesInOrder.length - 1, 0));
+
+    if (expectedTitlesInOrder.length === 0) {
+      return;
+    }
+
+    const actualTitles: string[] = [];
+    const firstFromTitle = await segments.nth(0).getAttribute('data-from-survey-run-title');
+    actualTitles.push(firstFromTitle ?? '');
+
+    for (let i = 0; i < count; i++) {
+      const toTitle = await segments.nth(i).getAttribute('data-to-survey-run-title');
+      actualTitles.push(toTitle ?? '');
+    }
+
+    expect(actualTitles).toEqual(expectedTitlesInOrder);
+  }
+
+  async confirmDoraCapabilityImproved(
+    doraCapabilityName: string,
+    fromRunTitle: string,
+    toRunTitle: string,
+  ) {
+    const { fromScore, toScore } = await this.getTrendSegmentScores(
+      doraCapabilityName,
+      fromRunTitle,
+      toRunTitle,
+    );
+    assert(
+      toScore > fromScore,
+      `Expected capability "${doraCapabilityName}" to improve from "${fromRunTitle}" to "${toRunTitle}", but got ${fromScore} -> ${toScore}.`,
+    );
+  }
+
+  async confirmDoraCapabilityDeclined(
+    doraCapabilityName: string,
+    fromRunTitle: string,
+    toRunTitle: string,
+  ) {
+    const { fromScore, toScore } = await this.getTrendSegmentScores(
+      doraCapabilityName,
+      fromRunTitle,
+      toRunTitle,
+    );
+    assert(
+      toScore < fromScore,
+      `Expected capability "${doraCapabilityName}" to decline from "${fromRunTitle}" to "${toRunTitle}", but got ${fromScore} -> ${toScore}.`,
+    );
+  }
+
+  async confirmDoraCapabilityRemainedUnchanged(
+    doraCapabilityName: string,
+    fromRunTitle: string,
+    toRunTitle: string,
+  ) {
+    const { fromScore, toScore } = await this.getTrendSegmentScores(
+      doraCapabilityName,
+      fromRunTitle,
+      toRunTitle,
+    );
+    assert(
+      toScore === fromScore,
+      `Expected capability "${doraCapabilityName}" to remain unchanged from "${fromRunTitle}" to "${toRunTitle}", but got ${fromScore} -> ${toScore}.`,
+    );
+  }
+
+  async attemptToViewTrendView() {
+    if (!this.lastTrendViewUrl) {
+      throw new Error(
+        'No trend view URL has been stored. Make sure openTrendView was called first.',
+      );
+    }
+    await this.page.goto(this.lastTrendViewUrl);
+  }
+
   // Improvement Guidance
 
   async accessGuidanceForCapability(capabilityName: string) {
@@ -725,5 +860,35 @@ export class ProtocolDriver {
     const doraSourceLink = this.page.getByTestId('guidance-dora-source');
     await expect(doraSourceLink).toBeVisible();
     await expect(doraSourceLink).toHaveAttribute('href', /https:\/\/dora\.dev\/capabilities\//);
+  }
+
+  private async getTrendSegmentScores(
+    doraCapabilityName: string,
+    fromRunTitle: string,
+    toRunTitle: string,
+  ) {
+    const trendCard = this.page.locator('[data-testid="trend-capability-card"]', {
+      has: this.page.locator('[data-testid="trend-capability-name"]', {
+        hasText: doraCapabilityName,
+      }),
+    });
+    await expect(trendCard).toBeVisible();
+
+    const segment = trendCard.locator(
+      `[data-testid="trend-sparkline-segment"][data-from-survey-run-title="${fromRunTitle}"][data-to-survey-run-title="${toRunTitle}"]`,
+    );
+    await expect(segment).toBeVisible();
+
+    const fromScoreText = await segment.getAttribute('data-from-score');
+    const toScoreText = await segment.getAttribute('data-to-score');
+    assertExists(fromScoreText);
+    assertExists(toScoreText);
+
+    const fromScore = Number.parseFloat(fromScoreText);
+    const toScore = Number.parseFloat(toScoreText);
+    assert(!Number.isNaN(fromScore), `Expected numeric from score, got "${fromScoreText}".`);
+    assert(!Number.isNaN(toScore), `Expected numeric to score, got "${toScoreText}".`);
+
+    return { fromScore, toScore };
   }
 }

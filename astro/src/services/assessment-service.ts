@@ -59,6 +59,53 @@ export class AssessmentService {
     };
   }
 
+  async getAssessmentResultsForSurveys(
+    surveyRuns: SurveyRun[],
+  ): Promise<AssessmentResult[]> {
+    if (surveyRuns.some((run) => run.status !== 'closed')) {
+      throw new SurveyRunNotClosedError(
+        'Assessment results are only available for closed survey runs',
+      );
+    }
+
+    if (surveyRuns.length === 0) {
+      return [];
+    }
+
+    const distinctModelIds = [
+      ...new Set(surveyRuns.map((r) => r.surveyModelId)),
+    ];
+    const surveyModels = new Map<string, SurveyModel>();
+    for (const modelId of distinctModelIds) {
+      const model = await this.surveyModelRepository.getById(modelId);
+      if (!model) {
+        throw new Error('Survey model not found');
+      }
+      surveyModels.set(modelId, model);
+    }
+
+    const doraCapabilities = await this.doraCapabilityRepository.getAll();
+
+    return surveyRuns.map((run) => {
+      const surveyModel = surveyModels.get(run.surveyModelId)!;
+      const doraCapabilityScores = this.calculateDoraCapabilityScores(
+        run,
+        surveyModel,
+        doraCapabilities,
+      );
+      const overallSummary = this.calculateOverallSummary(
+        doraCapabilityScores,
+        run.responses.length,
+      );
+      return {
+        surveyRunId: run.id,
+        teamId: run.teamId,
+        doraCapabilityScores,
+        overallSummary,
+      };
+    });
+  }
+
   async getCapabilityScore(
     surveyRunId: string,
     doraCapabilityId: string,

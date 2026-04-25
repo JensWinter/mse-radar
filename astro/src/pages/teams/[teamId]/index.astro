@@ -109,15 +109,25 @@ const breadcrumbs = team
                   <div class="card-body">
                     <div class="flex items-center justify-between mb-4">
                       <h2 class="card-title text-xl">Surveys</h2>
-                      {isTeamLead && (
+                      <div class="flex items-center gap-2">
                         <a
-                          href={`/teams/${team.id}/surveys/new`}
-                          class="btn btn-primary btn-sm gap-2"
+                          href={`/teams/${team.id}/trend`}
+                          data-testid="view-trend-link"
+                          class="btn btn-ghost btn-sm gap-2"
                         >
-                          <span class="iconify lucide--plus" />
-                          New Survey
+                          <span class="iconify lucide--trending-up" />
+                          View trend
                         </a>
-                      )}
+                        {isTeamLead && (
+                          <a
+                            href={`/teams/${team.id}/surveys/new`}
+                            class="btn btn-primary btn-sm gap-2"
+                          >
+                            <span class="iconify lucide--plus" />
+                            New Survey
+                          </a>
+                        )}
+                      </div>
                     </div>
 
                     {surveyRuns.length === 0 ? (

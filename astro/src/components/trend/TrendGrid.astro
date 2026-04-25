@@ -1,0 +1,21 @@
+---
+import TrendSparklineCard from './TrendSparklineCard.astro';
+import type { DoraCapabilityTrend } from '@use-cases/get-team-trend.ts';
+
+interface Props {
+  doraCapabilityTrends: DoraCapabilityTrend[];
+}
+
+const { doraCapabilityTrends } = Astro.props;
+---
+
+<div
+  data-testid="trend-grid"
+  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+>
+  {
+    doraCapabilityTrends.map((doraCapabilityTrend) => (
+      <TrendSparklineCard doraCapabilityTrend={doraCapabilityTrend} />
+    ))
+  }
+</div>

@@ -260,6 +260,64 @@ export class SurveyExecutionDsl {
     await this.driver.confirmAccessDenied();
   }
 
+  // Trend View
+
+  async viewTrendView(params: { teamName: string }) {
+    await this.driver.openTrendView(params.teamName);
+  }
+
+  async confirmTrendVisualizationDisplayed() {
+    await this.driver.confirmTrendVisualizationDisplayed();
+  }
+
+  async confirmTrendCardsHaveSurveyCount(params: { expectedSurveyCount: number }) {
+    await this.driver.confirmTrendCardsHaveSurveyCount(params.expectedSurveyCount);
+  }
+
+  async confirmRunsInChronologicalOrder(params: { expectedTitlesInOrder: string[] }) {
+    await this.driver.confirmRunsInChronologicalOrder(params.expectedTitlesInOrder);
+  }
+
+  async confirmDoraCapabilityImproved(params: {
+    doraCapabilityName: string;
+    fromRunTitle: string;
+    toRunTitle: string;
+  }) {
+    await this.driver.confirmDoraCapabilityImproved(
+      params.doraCapabilityName,
+      params.fromRunTitle,
+      params.toRunTitle,
+    );
+  }
+
+  async confirmDoraCapabilityDeclined(params: {
+    doraCapabilityName: string;
+    fromRunTitle: string;
+    toRunTitle: string;
+  }) {
+    await this.driver.confirmDoraCapabilityDeclined(
+      params.doraCapabilityName,
+      params.fromRunTitle,
+      params.toRunTitle,
+    );
+  }
+
+  async confirmDoraCapabilityRemainedUnchanged(params: {
+    doraCapabilityName: string;
+    fromRunTitle: string;
+    toRunTitle: string;
+  }) {
+    await this.driver.confirmDoraCapabilityRemainedUnchanged(
+      params.doraCapabilityName,
+      params.fromRunTitle,
+      params.toRunTitle,
+    );
+  }
+
+  async attemptToViewTrendView() {
+    await this.driver.attemptToViewTrendView();
+  }
+
   // Improvement Guidance
 
   async accessGuidanceForCapability(params: AccessGuidanceParams) {
