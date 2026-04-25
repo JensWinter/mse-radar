@@ -130,9 +130,6 @@ export class GetSurveyRunDetailsUseCase {
       await this.doraCapabilitiesService.getDoraCapabilitiesByIds(
         doraCapabilityIds,
       );
-    const capabilityNamesById = new Map(
-      doraCapabilities.map((capability) => [capability.id, capability.name]),
-    );
     const capabilitiesById = new Map(
       doraCapabilities.map((capability) => [capability.id, capability]),
     );
@@ -144,7 +141,7 @@ export class GetSurveyRunDetailsUseCase {
       questionId: question.id,
       questionText: question.questionText,
       capabilityName:
-        capabilityNamesById.get(question.doraCapabilityId) ?? 'Unknown',
+        capabilitiesById.get(question.doraCapabilityId)?.name ?? 'Unknown',
       capabilityDescription:
         capabilitiesById.get(question.doraCapabilityId)?.description ??
         'Unknown',
