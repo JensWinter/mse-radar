@@ -133,6 +133,9 @@ export class GetSurveyRunDetailsUseCase {
     const capabilityNamesById = new Map(
       doraCapabilities.map((capability) => [capability.id, capability.name]),
     );
+    const capabilitiesById = new Map(
+      doraCapabilities.map((capability) => [capability.id, capability]),
+    );
     const userResponse = surveyRun.responses.find(
       (response) => response.respondentId === currentUserId,
     );
@@ -142,6 +145,11 @@ export class GetSurveyRunDetailsUseCase {
       questionText: question.questionText,
       capabilityName:
         capabilityNamesById.get(question.doraCapabilityId) ?? 'Unknown',
+      capabilityDescription:
+        capabilitiesById.get(question.doraCapabilityId)?.description ??
+        'Unknown',
+      doraReference:
+        capabilitiesById.get(question.doraCapabilityId)?.doraReference ?? '',
       answerValue: userResponse?.answers[index]?.answerValue ?? null,
       comment: userResponse?.answers[index]?.comment ?? null,
     }));

@@ -493,15 +493,15 @@ export class ProtocolDriver {
     const questionCards = this.page.getByTestId('question-card');
     for (let index = 0; index < answers.length; index++) {
       const answer = answers[index];
-      if (answer !== null) {
+      if (answer === null) {
+        const pressedButtons = questionCards.nth(index).locator('button[aria-pressed="true"]');
+        await expect(pressedButtons).toHaveCount(0);
+      } else {
         const selectedButton = questionCards.nth(index).getByRole('button', {
           name: answer.toString(),
           exact: true,
         });
         await expect(selectedButton).toHaveAttribute('aria-pressed', 'true');
-      } else {
-        const pressedButtons = questionCards.nth(index).locator('button[aria-pressed="true"]');
-        await expect(pressedButtons).toHaveCount(0);
       }
     }
   }
@@ -860,6 +860,24 @@ export class ProtocolDriver {
     const doraSourceLink = this.page.getByTestId('guidance-dora-source');
     await expect(doraSourceLink).toBeVisible();
     await expect(doraSourceLink).toHaveAttribute('href', /https:\/\/dora\.dev\/capabilities\//);
+  }
+
+  async openDoraCapabilityInfo() {
+    await this.page
+      .getByTestId('question-card').first()
+      .getByTestId('capability-info-trigger').click();
+  }
+
+  async confirmDoraCapabilityDescriptionVisible() {
+    await expect(
+      this.page.locator('dialog[open]').getByTestId('capability-description'),
+    ).toBeVisible();
+  }
+
+  async confirmDoraCapabilityDoraLinkVisible() {
+    const link = this.page.locator('dialog[open]').getByTestId('capability-dora-link');
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute('href', /https:\/\/dora\.dev\/capabilities\//);
   }
 
   private async getTrendSegmentScores(

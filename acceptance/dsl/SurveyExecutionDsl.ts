@@ -339,4 +339,16 @@ export class SurveyExecutionDsl {
   async confirmGuidanceShowsDoraSource() {
     await this.driver.confirmGuidanceShowsDoraSource();
   }
+
+  async openDoraCapabilityInfo() {
+    await this.driver.openDoraCapabilityInfo();
+  }
+
+  async confirmDoraCapabilityDescriptionVisible() {
+    await this.driver.confirmDoraCapabilityDescriptionVisible();
+  }
+
+  async confirmDoraCapabilityDoraLinkVisible() {
+    await this.driver.confirmDoraCapabilityDoraLinkVisible();
+  }
 }

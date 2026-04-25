@@ -20,7 +20,33 @@ const { surveyRunId, questionIndex, question, totalQuestions } = Astro.props;
     <div class="absolute top-2 right-2 flex items-center gap-2">
       <span x-show="saving" class="loading loading-spinner loading-xs"></span>
     </div>
-    <h2 class="card-title">{question.capabilityName}</h2>
+    <div class="flex flex-row items-center gap-2">
+      <h2 class="card-title">{question.capabilityName}</h2>
+      <span
+        class="iconify lucide--info cursor-pointer"
+        data-testid="capability-info-trigger"
+        onclick={`my_modal_${questionIndex}.showModal()`}></span>
+      <dialog id={`my_modal_${questionIndex}`} class="modal">
+        <div class="modal-box space-y-4">
+          <h3 class="text-lg font-bold">{question.capabilityName}</h3>
+          <p class="leading-6" data-testid="capability-description">
+            {question.capabilityDescription}
+          </p>
+          <a
+            href={question.doraReference}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="capability-dora-link"
+            class="link link-primary text-sm">Learn more on dora.dev</a
+          >
+          <div class="modal-action">
+            <form method="dialog">
+              <button class="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+    </div>
     <p>{question.questionText}</p>
 
     <div class="space-y-2 mt-4">
