@@ -4,7 +4,6 @@ import type { DoraCapabilityRepository } from '@database/dora-capability-reposit
 import type {
   AssessmentResult,
   DoraCapabilityScore,
-  OverallSummary,
 } from '@models/aggregates/assessment-result.ts';
 import type { SurveyRun } from '@models/aggregates/survey-run.ts';
 import type { SurveyModel } from '@models/aggregates/survey-model.ts';
@@ -46,16 +45,10 @@ export class AssessmentService {
       doraCapabilities,
     );
 
-    const overallSummary = this.calculateOverallSummary(
-      doraCapabilityScores,
-      surveyRun.responses.length,
-    );
-
     return {
       surveyRunId: surveyRun.id,
       teamId: surveyRun.teamId,
       doraCapabilityScores,
-      overallSummary,
     };
   }
 
@@ -93,15 +86,11 @@ export class AssessmentService {
         surveyModel,
         doraCapabilities,
       );
-      const overallSummary = this.calculateOverallSummary(
-        doraCapabilityScores,
-        run.responses.length,
-      );
+
       return {
         surveyRunId: run.id,
         teamId: run.teamId,
         doraCapabilityScores,
-        overallSummary,
       };
     });
   }
@@ -152,30 +141,6 @@ export class AssessmentService {
         responseCount: answersForQuestion.length,
       };
     });
-  }
-
-  private calculateOverallSummary(
-    doraCapabilityScores: DoraCapabilityScore[],
-    totalResponses: number,
-  ): OverallSummary {
-    const scoresWithValues = doraCapabilityScores
-      .map((s) => s.score)
-      .filter((s): s is number => s !== null);
-
-    const overallScore =
-      scoresWithValues.length > 0
-        ? Math.round(
-            (scoresWithValues.reduce((a, b) => a + b, 0) /
-              scoresWithValues.length) *
-              10,
-          ) / 10
-        : null;
-
-    return {
-      overallScore,
-      totalDoraCapabilities: doraCapabilityScores.length,
-      totalResponses,
-    };
   }
 }
 

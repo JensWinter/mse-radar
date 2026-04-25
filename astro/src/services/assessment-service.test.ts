@@ -270,48 +270,6 @@ suite('AssessmentService', () => {
       expect(result!.doraCapabilityScores[0].responseCount).toBe(0);
       expect(result!.doraCapabilityScores[1].score).toBeNull();
       expect(result!.doraCapabilityScores[1].responseCount).toBe(0);
-      expect(result!.overallSummary.overallScore).toBeNull();
-      expect(result!.overallSummary.totalResponses).toBe(0);
-    });
-
-    test('calculates overall summary correctly', async () => {
-      // Arrange
-      const response = SurveyRunResponse.reconstitute('resp-1', 'user-1', [
-        { answerValue: 4, comment: null },
-        { answerValue: 6, comment: null },
-      ]);
-      const surveyRun = SurveyRun.reconstitute(
-        'run-1',
-        'team-1',
-        'model-1',
-        'Test Survey',
-        'closed',
-        [response],
-      );
-      const mockSurveyRunRepository = {
-        getById: vi.fn().mockResolvedValue(surveyRun),
-      } as any as SurveyRunRepository;
-      const mockSurveyModelRepository = {
-        getById: vi.fn().mockResolvedValue(createMockSurveyModel()),
-      } as any as SurveyModelRepository;
-      const mockDoraCapabilityRepository = {
-        getAll: vi.fn().mockResolvedValue(createMockDoraCapabilities()),
-      } as any as DoraCapabilityRepository;
-      const service = new AssessmentService(
-        mockSurveyRunRepository,
-        mockSurveyModelRepository,
-        mockDoraCapabilityRepository,
-      );
-
-      // Act
-      const result = await service.getAssessmentResults('run-1');
-
-      // Assert
-      expect(result).not.toBeNull();
-      // Overall score = (4+6)/2 = 5.0
-      expect(result!.overallSummary.overallScore).toBe(5);
-      expect(result!.overallSummary.totalDoraCapabilities).toBe(2);
-      expect(result!.overallSummary.totalResponses).toBe(1);
     });
 
     test('does not expose individual response data (privacy)', async () => {

@@ -134,11 +134,6 @@ suite('GetSurveyRunDetailsUseCase', () => {
           surveyRunId: 'run-1',
           teamId: 'team-1',
           doraCapabilityScores: [],
-          overallSummary: {
-            overallScore: 4.0,
-            totalDoraCapabilities: 2,
-            totalResponses: 1,
-          },
         } satisfies AssessmentResult),
       } as Pick<AssessmentService, 'getAssessmentResults'>);
 
