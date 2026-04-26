@@ -37,7 +37,7 @@ describe('0016-001: View Capability Profile', () => {
     // GIVEN a survey run is closed with results
     await dsl.identityAndAccess.signIn({ email: teamMember1Email });
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
-    await dsl.surveyExecution.answerSurvey({ answers: [5, 6, 4, 7, 3, 5, 6, 4, 7, 3] });
+    await dsl.surveyExecution.answerSurvey({ answers: [5, 4, 4, 5, 3, 5, 4, 4, 5, 3] });
 
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
     await dsl.surveyExecution.closeSurveyRun({ teamName });
@@ -56,8 +56,8 @@ describe('0016-001: View Capability Profile', () => {
     // GIVEN I view the capability profile with varying scores
     await dsl.identityAndAccess.signIn({ email: teamMember1Email });
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
-    // Varied answers: some high (6,7), some low (1,2), some medium (4,5)
-    await dsl.surveyExecution.answerSurvey({ answers: [7, 2, 6, 1, 5, 7, 2, 6, 1, 4] });
+    // Varied answers: some high (4,5), some low (1,2), some medium (3)
+    await dsl.surveyExecution.answerSurvey({ answers: [5, 2, 4, 1, 3, 5, 2, 4, 1, 3] });
 
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
     await dsl.surveyExecution.closeSurveyRun({ teamName });

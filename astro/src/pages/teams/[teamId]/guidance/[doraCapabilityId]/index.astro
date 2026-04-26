@@ -126,7 +126,7 @@ const breadcrumbs =
                           <div class="stat-value" data-testid="guidance-score">
                             {tailoredGuidance.score.toFixed(1)}
                             <span class="text-sm font-normal text-base-content/60">
-                              / 7
+                              / 5
                             </span>
                           </div>
                           <div class="stat-desc">
@@ -138,10 +138,10 @@ const breadcrumbs =
                                     class={`score-bucket-${scoreBucket}`}
                                   >
                                     <td
-                                      style={`--size: calc(${tailoredGuidance.score} / 7);`}
+                                      style={`--size: calc(${tailoredGuidance.score} / 5);`}
                                     />
                                     <td
-                                      style={`--size: calc(${7 - tailoredGuidance.score} / 7);`}
+                                      style={`--size: calc(${5 - tailoredGuidance.score} / 5);`}
                                     />
                                   </tr>
                                 }
@@ -224,21 +224,15 @@ const breadcrumbs =
     --color-1: #d43d51;
   }
   .dora-capability-progress-bar .bar .score-bucket-2 {
-    --color-1: #e4825d;
-  }
-  .dora-capability-progress-bar .bar .score-bucket-3 {
     --color-1: #edbb85;
   }
-  .dora-capability-progress-bar .bar .score-bucket-4 {
+  .dora-capability-progress-bar .bar .score-bucket-3 {
     --color-1: #faeec4;
   }
-  .dora-capability-progress-bar .bar .score-bucket-5 {
+  .dora-capability-progress-bar .bar .score-bucket-4 {
     --color-1: #bacb98;
   }
-  .dora-capability-progress-bar .bar .score-bucket-6 {
-    --color-1: #73a97b;
-  }
-  .dora-capability-progress-bar .bar .score-bucket-7 {
+  .dora-capability-progress-bar .bar .score-bucket-5 {
     --color-1: #00876c;
   }
 </style>

@@ -69,7 +69,7 @@ describe('0018-001: Trend View', () => {
 
     // GIVEN a team has completed multiple surveys
     await runSurveyCycle(runTitles[0], [2, 4, 3]);
-    await runSurveyCycle(runTitles[1], [6, 1, 3]);
+    await runSurveyCycle(runTitles[1], [5, 1, 3]);
 
     // WHEN I view the trend view for that team
     await dsl.identityAndAccess.signIn({ email: teamMemberEmail });

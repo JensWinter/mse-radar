@@ -73,8 +73,8 @@ suite('SurveyRun', () => {
       const responses = [
         SurveyRunResponse.reconstitute('resp-1', 'user-1', [
           { answerValue: 3, comment: null },
+          { answerValue: 4, comment: null },
           { answerValue: 5, comment: null },
-          { answerValue: 7, comment: null },
         ]),
       ];
       const surveyRun = SurveyRun.reconstitute(
@@ -90,18 +90,18 @@ suite('SurveyRun', () => {
       const result = surveyRun.calcAverageScore();
 
       // Assert
-      expect(result).toBe(5);
+      expect(result).toBe(4);
     });
 
     test('returns correct average across multiple responses', () => {
       // Arrange
       const responses = [
         SurveyRunResponse.reconstitute('resp-1', 'user-1', [
-          { answerValue: 2, comment: null },
+          { answerValue: 3, comment: null },
           { answerValue: 4, comment: null },
         ]),
         SurveyRunResponse.reconstitute('resp-2', 'user-2', [
-          { answerValue: 6, comment: null },
+          { answerValue: 5, comment: null },
           { answerValue: 4, comment: null },
         ]),
       ];
@@ -125,9 +125,9 @@ suite('SurveyRun', () => {
       // Arrange
       const responses = [
         SurveyRunResponse.reconstitute('resp-1', 'user-1', [
-          { answerValue: 3, comment: null },
+          { answerValue: 5, comment: null },
           { answerValue: null, comment: null },
-          { answerValue: 7, comment: null },
+          { answerValue: 5, comment: null },
         ]),
       ];
       const surveyRun = SurveyRun.reconstitute(
@@ -174,12 +174,12 @@ suite('SurveyRun', () => {
       // Arrange
       const responses = [
         SurveyRunResponse.reconstitute('resp-1', 'user-1', [
-          { answerValue: 4, comment: null },
+          { answerValue: 5, comment: null },
           { answerValue: null, comment: null },
         ]),
         SurveyRunResponse.reconstitute('resp-2', 'user-2', [
           { answerValue: null, comment: null },
-          { answerValue: 6, comment: null },
+          { answerValue: 5, comment: null },
         ]),
       ];
       const surveyRun = SurveyRun.reconstitute(

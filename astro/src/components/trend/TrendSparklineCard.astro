@@ -10,7 +10,7 @@ const { doraCapabilityTrend } = Astro.props;
 const points = doraCapabilityTrend.points.filter((p) => p.score !== null);
 const scores = points.map((p) => p.score) as number[];
 
-const MAX_SCORE = 7;
+const MAX_SCORE = 5;
 const normalize = (score: number | null) =>
   score === null ? null : score / (MAX_SCORE + 0.5);
 
@@ -43,7 +43,7 @@ const segments = points.slice(1).map((point, index) => {
               ? doraCapabilityTrend.latestScore.toFixed(1)
               : '?'
           }
-          <span class="text-xs font-normal text-base-content/60">/ 7</span>
+          <span class="text-xs font-normal text-base-content/60">/ 5</span>
         </div>
       </div>
     </div>

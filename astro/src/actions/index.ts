@@ -55,7 +55,7 @@ function mapInputToAnswerValue(input: number | undefined): AnswerValue | null {
     return null;
   }
 
-  if ([1, 2, 3, 4, 5, 6, 7].includes(input)) {
+  if ([1, 2, 3, 4, 5].includes(input)) {
     return input as AnswerValue;
   }
 

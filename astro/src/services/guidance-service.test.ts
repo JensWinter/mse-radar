@@ -16,8 +16,6 @@ const makeCapability = () =>
       { level: 3, text: 'Level 3 action' },
       { level: 4, text: 'Level 4 action' },
       { level: 5, text: 'Level 5 action' },
-      { level: 6, text: 'Level 6 action' },
-      { level: 7, text: 'Level 7 action' },
     ],
   );
 
@@ -75,12 +73,12 @@ suite('GuidanceService', () => {
       expect(result!.guidance?.text).toBe('Level 5 action');
     });
 
-    test('score 7.0 maps to level 7', async () => {
+    test('score above 5 clamps to level 5', async () => {
       const result = await makeService(
         makeCapability(),
       ).getGuidanceForCapability('cap-1', 7.0);
-      expect(result!.level).toBe(7);
-      expect(result!.guidance?.text).toBe('Level 7 action');
+      expect(result!.level).toBe(5);
+      expect(result!.guidance?.text).toBe('Level 5 action');
     });
 
     test('score 0 clamps to level 1', async () => {

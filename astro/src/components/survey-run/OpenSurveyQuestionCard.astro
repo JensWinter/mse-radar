@@ -63,7 +63,7 @@ const { surveyRunId, questionIndex, question, totalQuestions } = Astro.props;
     <div class="space-y-2 mt-4">
       <div class="flex gap-1">
         {
-          [1, 2, 3, 4, 5, 6, 7].map((num) => (
+          [1, 2, 3, 4, 5].map((num) => (
             <button
               type="button"
               data-testid={`answer-button-${num}`}

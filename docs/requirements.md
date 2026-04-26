@@ -53,7 +53,7 @@
 | DORA capabilities | The capability set defined by DORA (see https://dora.dev/capabilities/) that forms the basis of the survey model and guidance content.                           |
 | Guidance | Actionable improvement advice presented per capability, grounded in DORA research and tailored to the assessed level.                                            |
 | Last-write-wins | When multiple submissions exist for the same person and survey run, the most recent submission overrides earlier ones.                                           |
-| Likert scale (1–7) | The numeric answer format for survey questions in this project.                                                                                                  |
+| Likert scale (1–5) | The numeric answer format for survey questions in this project.                                                                                                  |
 | Pseudonymity (within a team) | Individual identities are hidden from other team members while still enforcing at most one effective response per member per survey run; results are aggregated. |
 | Response | A team member's submitted answers for a survey run; may include optional free-text comments (when supported).                                                    |
 | Result (aggregated) | The team-level computed scores and summaries shown after a survey run is closed (not raw individual responses).                                                  |
@@ -74,7 +74,7 @@
 - Encryption at rest: rating values and comments should be encrypted with an app-held key.
 - "Audit context" requires storing identifiers that could re-identify people. These identifiers should be protected and only accessible to authorized system components.
 - DORA capabilities are defined in https://dora.dev/capabilities/.
-- Survey questions should be defined as a Likert Scale (1-7)
+- Survey questions should be defined as a Likert Scale (1-5)
 - There can not be more than one open survey run at a time per team.
 - A survey run can be reopened. Answers can be edited after submission.
 - "Basic details" of a team include at least: team name, description, creation date, team lead(s), and member list.

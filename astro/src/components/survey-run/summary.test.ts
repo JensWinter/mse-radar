@@ -14,12 +14,12 @@ suite('buildSurveyRunSummary()', () => {
         SurveyRunResponse.reconstitute('resp-1', 'user-1', [
           { answerValue: 1, comment: null },
           { answerValue: 4, comment: null },
-          { answerValue: 7, comment: null },
+          { answerValue: 5, comment: null },
         ]),
         SurveyRunResponse.reconstitute('resp-2', 'user-2', [
           { answerValue: 4, comment: null },
           { answerValue: 4, comment: null },
-          { answerValue: 6, comment: null },
+          { answerValue: 2, comment: null },
         ]),
       ],
     );
@@ -27,7 +27,7 @@ suite('buildSurveyRunSummary()', () => {
     const result = buildSurveyRunSummary(surveyRun);
 
     expect(result).toEqual({
-      scoreCounts: [1, 0, 0, 3, 0, 1, 1],
+      scoreCounts: [1, 1, 0, 3, 1],
       totalScoredAnswers: 6,
       maxCount: 3,
     });
@@ -56,7 +56,7 @@ suite('buildSurveyRunSummary()', () => {
     const result = buildSurveyRunSummary(surveyRun);
 
     expect(result).toEqual({
-      scoreCounts: [0, 1, 0, 0, 1, 0, 0],
+      scoreCounts: [0, 1, 0, 0, 1],
       totalScoredAnswers: 2,
       maxCount: 1,
     });
@@ -79,7 +79,7 @@ suite('buildSurveyRunSummary()', () => {
     const result = buildSurveyRunSummary(surveyRun);
 
     expect(result).toEqual({
-      scoreCounts: [0, 0, 0, 0, 0, 0, 0],
+      scoreCounts: [0, 0, 0, 0, 0],
       totalScoredAnswers: 0,
       maxCount: 0,
     });

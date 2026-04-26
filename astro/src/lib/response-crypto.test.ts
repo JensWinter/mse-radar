@@ -7,7 +7,7 @@ suite('response-crypto', () => {
   const crypto = createResponseCrypto(key);
 
   test('round-trips JSON values', () => {
-    const value = [1, 2, null, 7, 3];
+    const value = [1, 2, null, 5, 3];
     const blob = crypto.encryptJson(value);
     expect(crypto.decryptJson(blob)).toEqual(value);
   });
@@ -26,9 +26,9 @@ suite('response-crypto', () => {
   });
 
   test('ciphertext does not contain plaintext bytes', () => {
-    const value = [1, 7, 3];
+    const value = [1, 5, 3];
     const blob = crypto.encryptJson(value);
-    expect(blob.toString('utf8')).not.toContain('[1,7,3]');
+    expect(blob.toString('utf8')).not.toContain('[1,5,3]');
   });
 
   test('rejects tampered ciphertext', () => {
