@@ -89,7 +89,7 @@ export type ConfirmSurveyRunCountParams = {
 };
 
 const DEFAULT_SURVEY_RUN_TITLE = 'Survey 1';
-const DEFAULT_SURVEY_RUN_ANSWERS = [1, 2, 3, 4, 5, 6, 7, 6, 5, 4];
+const DEFAULT_SURVEY_RUN_ANSWERS = [1, 2, 3, 4, 5, 4, 3, 2, 1, 2];
 
 export class SurveyExecutionDsl {
   constructor(private readonly driver: ProtocolDriver) {
@@ -149,8 +149,8 @@ export class SurveyExecutionDsl {
     await this.driver.confirmResponseSaved(params.teamName, title, answers);
   }
 
-  async confirmAllQuestionsHave7PointScale() {
-    await this.driver.confirmAllQuestionsHave7PointScale();
+  async confirmAllQuestionsHave5PointScale() {
+    await this.driver.confirmAllQuestionsHave5PointScale();
   }
 
   async confirmAllQuestionsAreAnswerable() {

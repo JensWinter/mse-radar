@@ -25,7 +25,7 @@ export class GuidanceService {
       return null;
     }
 
-    const level = Math.min(7, Math.max(1, Math.round(score)));
+    const level = Math.min(5, Math.max(1, Math.round(score)));
     const guidance =
       capability.drillDownContent.find((g) => g.level === level) ?? null;
 

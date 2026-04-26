@@ -93,7 +93,7 @@ suite('AssessmentService', () => {
       // Arrange
       const response = SurveyRunResponse.reconstitute('resp-1', 'user-1', [
         { answerValue: 5, comment: null },
-        { answerValue: 7, comment: null },
+        { answerValue: 4, comment: null },
       ]);
       const surveyRun = SurveyRun.reconstitute(
         'run-1',
@@ -135,7 +135,7 @@ suite('AssessmentService', () => {
       expect(result!.doraCapabilityScores[1]).toEqual({
         doraCapabilityId: 'cap-2',
         doraCapabilityName: 'Deployment Automation',
-        score: 7,
+        score: 4,
         responseCount: 1,
       });
     });
@@ -143,16 +143,16 @@ suite('AssessmentService', () => {
     test('calculates aggregated scores from multiple responses', async () => {
       // Arrange
       const response1 = SurveyRunResponse.reconstitute('resp-1', 'user-1', [
-        { answerValue: 5, comment: null },
-        { answerValue: 6, comment: null },
+        { answerValue: 3, comment: null },
+        { answerValue: 4, comment: null },
       ]);
       const response2 = SurveyRunResponse.reconstitute('resp-2', 'user-2', [
-        { answerValue: 6, comment: null },
-        { answerValue: 7, comment: null },
+        { answerValue: 5, comment: null },
+        { answerValue: 4, comment: null },
       ]);
       const response3 = SurveyRunResponse.reconstitute('resp-3', 'user-3', [
-        { answerValue: 7, comment: null },
-        { answerValue: 5, comment: null },
+        { answerValue: 4, comment: null },
+        { answerValue: 4, comment: null },
       ]);
       const surveyRun = SurveyRun.reconstitute(
         'run-1',
@@ -182,23 +182,23 @@ suite('AssessmentService', () => {
 
       // Assert
       expect(result).not.toBeNull();
-      // (5+6+7)/3 = 6.0
-      expect(result!.doraCapabilityScores[0].score).toBe(6);
+      // (3+5+4)/3 = 4.0
+      expect(result!.doraCapabilityScores[0].score).toBe(4);
       expect(result!.doraCapabilityScores[0].responseCount).toBe(3);
-      // (6+7+5)/3 = 6.0
-      expect(result!.doraCapabilityScores[1].score).toBe(6);
+      // (4+4+4)/3 = 4.0
+      expect(result!.doraCapabilityScores[1].score).toBe(4);
       expect(result!.doraCapabilityScores[1].responseCount).toBe(3);
     });
 
     test('handles responses with null/missing values', async () => {
       // Arrange
       const response1 = SurveyRunResponse.reconstitute('resp-1', 'user-1', [
-        { answerValue: 5, comment: null },
+        { answerValue: 3, comment: null },
         { answerValue: null, comment: null },
       ]);
       const response2 = SurveyRunResponse.reconstitute('resp-2', 'user-2', [
-        { answerValue: 7, comment: null },
-        { answerValue: 6, comment: null },
+        { answerValue: 5, comment: null },
+        { answerValue: 4, comment: null },
       ]);
       const surveyRun = SurveyRun.reconstitute(
         'run-1',
@@ -228,11 +228,11 @@ suite('AssessmentService', () => {
 
       // Assert
       expect(result).not.toBeNull();
-      // (5+7)/2 = 6.0
-      expect(result!.doraCapabilityScores[0].score).toBe(6);
+      // (3+5)/2 = 4.0
+      expect(result!.doraCapabilityScores[0].score).toBe(4);
       expect(result!.doraCapabilityScores[0].responseCount).toBe(2);
-      // Only user-2 answered question 2: 6
-      expect(result!.doraCapabilityScores[1].score).toBe(6);
+      // Only user-2 answered question 2: 4
+      expect(result!.doraCapabilityScores[1].score).toBe(4);
       expect(result!.doraCapabilityScores[1].responseCount).toBe(1);
     });
 
@@ -276,11 +276,11 @@ suite('AssessmentService', () => {
       // Arrange
       const response1 = SurveyRunResponse.reconstitute('resp-1', 'user-1', [
         { answerValue: 5, comment: 'My comment' },
-        { answerValue: 6, comment: null },
+        { answerValue: 4, comment: null },
       ]);
       const response2 = SurveyRunResponse.reconstitute('resp-2', 'user-2', [
-        { answerValue: 7, comment: null },
-        { answerValue: 4, comment: null },
+        { answerValue: 3, comment: null },
+        { answerValue: 2, comment: null },
       ]);
       const surveyRun = SurveyRun.reconstitute(
         'run-1',
@@ -327,12 +327,12 @@ suite('AssessmentService', () => {
         { answerValue: 5, comment: null },
       ]);
       const response2 = SurveyRunResponse.reconstitute('resp-2', 'user-2', [
-        { answerValue: 6, comment: null },
-        { answerValue: 6, comment: null },
+        { answerValue: 4, comment: null },
+        { answerValue: 4, comment: null },
       ]);
       const response3 = SurveyRunResponse.reconstitute('resp-3', 'user-3', [
-        { answerValue: 6, comment: null },
-        { answerValue: 6, comment: null },
+        { answerValue: 4, comment: null },
+        { answerValue: 4, comment: null },
       ]);
       const surveyRun = SurveyRun.reconstitute(
         'run-1',
@@ -362,8 +362,8 @@ suite('AssessmentService', () => {
 
       // Assert
       expect(result).not.toBeNull();
-      // (5+6+6)/3 = 5.666... should round to 5.7
-      expect(result!.doraCapabilityScores[0].score).toBe(5.7);
+      // (5+4+4)/3 = 4.333... should round to 4.3
+      expect(result!.doraCapabilityScores[0].score).toBe(4.3);
     });
   });
 
@@ -371,7 +371,7 @@ suite('AssessmentService', () => {
     test('returns the requested capability score for a closed survey run', async () => {
       const response = SurveyRunResponse.reconstitute('resp-1', 'user-1', [
         { answerValue: 5, comment: null },
-        { answerValue: 7, comment: null },
+        { answerValue: 4, comment: null },
       ]);
       const surveyRun = SurveyRun.reconstitute(
         'run-1',
@@ -401,7 +401,7 @@ suite('AssessmentService', () => {
       expect(result).toEqual({
         doraCapabilityId: 'cap-2',
         doraCapabilityName: 'Deployment Automation',
-        score: 7,
+        score: 4,
         responseCount: 1,
       });
     });

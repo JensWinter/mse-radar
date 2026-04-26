@@ -49,8 +49,8 @@ export class DoraCapability {
 
   private validateDrillDownContent(content: LevelGuidance[]) {
     for (const item of content) {
-      if (!Number.isInteger(item.level) || item.level < 1 || item.level > 7) {
-        throw new Error('Guidance level must be an integer between 1 and 7');
+      if (!Number.isInteger(item.level) || item.level < 1 || item.level > 5) {
+        throw new Error('Guidance level must be an integer between 1 and 5');
       }
       if (!item.text.trim()) {
         throw new Error('Guidance text cannot be empty');

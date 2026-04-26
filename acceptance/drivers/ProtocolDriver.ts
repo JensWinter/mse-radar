@@ -464,10 +464,10 @@ export class ProtocolDriver {
     }
   }
 
-  async confirmAllQuestionsHave7PointScale() {
+  async confirmAllQuestionsHave5PointScale() {
     const questionCards = await this.page.getByTestId('question-card').all();
     for (const card of questionCards) {
-      for (let i = 1; i <= 7; i++) {
+      for (let i = 1; i <= 5; i++) {
         await expect(card.getByRole('button', { name: i.toString(), exact: true })).toBeVisible();
       }
     }
@@ -540,7 +540,7 @@ export class ProtocolDriver {
     }
 
     for (const card of questionCards) {
-      for (let i = 1; i <= 7; i++) {
+      for (let i = 1; i <= 5; i++) {
         const button = card.getByRole('button', { name: i.toString(), exact: true });
         const isVisible = await button.isVisible();
         if (isVisible) {

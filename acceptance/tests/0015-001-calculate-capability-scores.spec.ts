@@ -57,7 +57,7 @@ describe('0015-001: Calculate Capability Scores', () => {
 
     await dsl.identityAndAccess.signIn({ email: teamMember2Email });
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
-    await dsl.surveyExecution.answerSurvey({ answers: [7, 7, 7, 7, 7, 7, 7, 7, 7, 7] });
+    await dsl.surveyExecution.answerSurvey({ answers: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3] });
 
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
     await dsl.surveyExecution.closeSurveyRun({ teamName });
@@ -70,7 +70,7 @@ describe('0015-001: Calculate Capability Scores', () => {
     await dsl.surveyExecution.confirmTotalResponsesCount({ expectedCount: 2 });
     await dsl.surveyExecution.confirmAggregatedScoreForCapability({
       capabilityName: 'Continuous Integration',
-      expectedScore: 6.0,
+      expectedScore: 4.0,
     });
   });
 
@@ -99,11 +99,11 @@ describe('0015-001: Calculate Capability Scores', () => {
     // GIVEN scores are calculated from multiple responses
     await dsl.identityAndAccess.signIn({ email: teamMember1Email });
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
-    await dsl.surveyExecution.answerSurvey({ answers: [3, 4, 5, 6, 7, 3, 4, 5, 6, 7] });
+    await dsl.surveyExecution.answerSurvey({ answers: [3, 4, 5, 4, 5, 3, 4, 5, 4, 5] });
 
     await dsl.identityAndAccess.signIn({ email: teamMember2Email });
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
-    await dsl.surveyExecution.answerSurvey({ answers: [7, 6, 5, 4, 3, 7, 6, 5, 4, 3] });
+    await dsl.surveyExecution.answerSurvey({ answers: [5, 4, 5, 4, 3, 5, 4, 5, 4, 3] });
 
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
     await dsl.surveyExecution.closeSurveyRun({ teamName });

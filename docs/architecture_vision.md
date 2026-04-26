@@ -85,7 +85,7 @@ MSE Radar is a team capability assessment application that helps software develo
 
 | ID   | Convention                    | Rationale                                                 |
 |:-----|:------------------------------|:----------------------------------------------------------|
-| CV-1 | Likert Scale (1-7)            | Standardized response format for all capability questions |
+| CV-1 | Likert Scale (1-5)            | Standardized response format for all capability questions |
 | CV-2 | One Capability = One Question | Simplifies survey model and scoring                       |
 | CV-3 | Last-Write-Wins               | Multiple submissions allowed; latest overrides previous   |
 
@@ -1059,7 +1059,7 @@ This glossary incorporates the ubiquitous language from the domain model.
 | **Guidance**                | Actionable improvement advice presented per capability, grounded in DORA research                                    |
 | **Islands (Architecture)**  | Astro's approach where most HTML is static, with interactive JavaScript "islands" added only where needed            |
 | **Last-Write-Wins**         | Policy where the most recent submission overrides earlier ones for the same person and survey run                    |
-| **Likert Scale**            | The 7-point numeric scale (1-7) used for all survey questions                                                        |
+| **Likert Scale**            | The 5-point numeric scale (1-5) used for all survey questions                                                        |
 | **Open**                    | Survey run state when responses are being accepted                                                                   |
 | **Participation**           | Whether and how completely a team member has responded to a survey run                                               |
 | **Pseudonymity**            | Individual identities hidden from other team members while enforcing one response per member                         |

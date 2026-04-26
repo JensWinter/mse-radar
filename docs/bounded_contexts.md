@@ -154,7 +154,7 @@ Defines the structure and content of surveys, including the DORA capabilities be
 - **Survey Model**: A versioned survey structure containing questions that assess DORA capabilities
 - **DORA Capability**: An independent, externally defined engineering capability from dora.dev; serves as stable reference data
 - **Question**: A survey item belonging to a survey model that assesses one DORA capability, using a Likert scale
-- **Likert Scale**: The numeric answer format (1-7) for survey questions
+- **Likert Scale**: The numeric answer format (1-5) for survey questions
 - **Question Versioning**: Tracking changes to the survey question set over time; new questions reference the same stable capabilities
 
 ### Boundaries
@@ -162,7 +162,7 @@ Defines the structure and content of surveys, including the DORA capabilities be
 **Included:**
 - DORA capabilities catalog and definitions
 - Survey question content and structure
-- Likert scale definitions (1-7)
+- Likert scale definitions (1-5)
 - Question versioning and evolution
 - Capability drill-down content (what it measures, why it matters)
 - Survey customization templates (enabling/disabling capabilities)
@@ -184,7 +184,7 @@ Defines the structure and content of surveys, including the DORA capabilities be
 | Survey                | The questionnaire template used to assess a team's capabilities                                                                   |
 | DORA Capability       | An independent, stable reference entity representing a DORA-defined engineering capability; exists independently of survey models |
 | Question              | A survey item belonging to a specific survey model version that assesses one DORA capability                                      |
-| Likert Scale          | A 7-point numeric scale (1-7) for answering questions                                                                             |
+| Likert Scale          | A 5-point numeric scale (1-5) for answering questions                                                                             |
 | Survey Model          | A versioned survey structure containing questions; each question references a DORA capability                                     |
 | Question Versioning   | The mechanism to evolve question wording while maintaining stable capability references for trend analysis                        |
 | Capability Drill-down | Detailed explanation of what a capability measures and why it matters                                                             |
@@ -208,7 +208,7 @@ Defines the structure and content of surveys, including the DORA capabilities be
 - DORA capabilities exist independently and are not owned by survey models
 - Each question in a survey model assesses exactly one DORA capability
 - Each DORA capability appears at most once per survey model (enforced by unique constraint)
-- All questions use a Likert scale (1-7)
+- All questions use a Likert scale (1-5)
 - Changes to questions create new survey model versions; existing survey runs retain their original version
 - Capabilities are based on the DORA capability set (https://dora.dev/capabilities/)
 
@@ -269,7 +269,7 @@ Manages the lifecycle of survey runs, collecting responses from team members, an
 
 #### Value Objects
 - **SurveyRunStatus**: Enum of Pending, Scheduled, Open, Closed
-- **Answer**: numericValue (1-7 or NULL if unanswered), comment (optional)
+- **Answer**: numericValue (1-5 or NULL if unanswered), comment (optional)
 
 #### Domain Events
 - `SurveyRunCreated`

@@ -114,7 +114,7 @@ describe('0006-001: Participate in Multiple Teams', () => {
     // User answers a survey for Team A with specific answers
     await dsl.identityAndAccess.signIn({ email: userEmail });
     await dsl.surveyExecution.openSurveyRunPage({ teamName: teamAName });
-    await dsl.surveyExecution.answerSurvey({ answers: [7, 7, 7, 7, 7, 7, 7, 7, 7, 7] });
+    await dsl.surveyExecution.answerSurvey({ answers: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5] });
 
     // User answers a survey for Team B with different answers
     await dsl.surveyExecution.openSurveyRunPage({ teamName: teamBName });
@@ -132,7 +132,7 @@ describe('0006-001: Participate in Multiple Teams', () => {
     await dsl.identityAndAccess.signIn({ email: userEmail });
     await dsl.surveyExecution.viewAssessmentResults({ teamName: teamAName });
 
-    // THEN I see Team A's results (with a score of 7)
+    // THEN I see Team A's results (with a score of 5)
     await dsl.surveyExecution.confirmAssessmentResultsDisplayed();
     await dsl.surveyExecution.confirmCapabilityScoresDisplayed();
 

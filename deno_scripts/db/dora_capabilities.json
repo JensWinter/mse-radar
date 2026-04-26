@@ -24,14 +24,6 @@
       {
         "level": 5,
         "text": "Broaden AI access to additional high-value internal sources, but curate them carefully so deprecated code and messy documents do not become examples the AI repeatedly uses. Enforce least-privilege access so responses are grounded in what the user is actually allowed to see. Review retrieval logs, source access rates, and query success patterns to remove weak sources and fix gaps. The next step is to operationalize the capability across more workflows with stronger data and API support."
-      },
-      {
-        "level": 6,
-        "text": "Strengthen the underlying data delivery model by keeping critical documentation current and exposing trusted sources through robust internal integrations or APIs. Use results from pilots to secure continued ownership, maintenance, and investment so retrieval stays reliable as coverage expands. Measure effects on day-to-day work, such as faster onboarding, less time spent searching for information, and easier validation against internal standards. The next step is to protect quality at scale by continuously curating sources, relevance, and access controls."
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by continuously refreshing the most important documentation, gold-standard repositories, and policy sources that feed the AI. Watch for regression signals such as higher retrieval latency, more failed queries, irrelevant context, or outputs that repeat deprecated patterns. Keep relevance-focused retrieval and least-privilege access in place so larger context windows do not become a substitute for disciplined context selection. Preserve the habit of measuring how often context is used and whether it continues to reduce information-seeking and verification effort."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/ai-accessible-internal-data/",
@@ -62,14 +54,6 @@
       {
         "level": 5,
         "text": "Create a structured feedback loop so software teams can raise edge cases, request tool reviews, and suggest updates based on real usage. Use those inputs to refine the approved-tool list, clarify guardrails, and close gaps between policy intent and delivery realities. Measure whether questions are becoming more specific and less basic, which indicates improving comprehension. Move higher by treating the stance as a maintained operating framework rather than a one-way announcement."
-      },
-      {
-        "level": 6,
-        "text": "Focus on consistency and adaptation by reviewing the stance at a regular cadence and updating it as tools, risks, and workflows change. Check whether policy updates are timely without causing constant churn that makes teams stop paying attention. Strengthen cross-functional ownership so changes reflect engineering practice as well as legal, security, and IT requirements. Progress to the highest level comes when the stance stays stable enough to use and current enough to trust."
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by continuing to monitor whether team members can quickly identify allowed tools, required controls, and the right path for clarification. Preserve the feedback loop, keep the guidance easy to find, and verify that updates remain grounded in actual software delivery work. Watch for regression signals such as renewed shadow AI use, repeated confusion about approvals, or policy changes that outpace team adoption. Maintain this level by keeping clarity, applicability, and communication aligned as AI practices evolve."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/clear-and-communicated-ai-stance/",
@@ -100,14 +84,6 @@
       {
         "level": 5,
         "text": "Adopt a regular cadence for upgrading libraries instead of waiting for major issues or security events. Provide teams with known-good dependency versions and a quick way to see which systems consume each library. Reduce duplicate or unused code that makes search, reuse, and refactoring harder across the codebase. Measure how long it takes for a library update or cross-team code change to move from proposal to release."
-      },
-      {
-        "level": 6,
-        "text": "Use tooling and process to support larger refactorings that touch multiple parts of the codebase without creating long coordination delays. Correlate dependency versions to deployed systems so vulnerable or outdated libraries can be found quickly and patched predictably. Test emergency change paths against the normal workflow and remove shortcuts that bypass review or validation without clear benefit. Focus measurement on propagation time for changes, upgrades, and vulnerability fixes so remaining bottlenecks are visible."
-      },
-      {
-        "level": 7,
-        "text": "Protect the conditions that keep code maintainable: broad searchability, low-friction change proposals, stable dependency workflows, and reliable automated testing. Review exceptions such as restricted repositories, one-off dependency rules, or manual upgrade steps to prevent them from spreading. Continue monitoring indicators such as cross-team change lead time, dependency age, duplicate code, and time to patch vulnerable libraries. Periodically rehearse dependency and emergency change scenarios to catch regressions before they slow delivery or increase breakage."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/code-maintainability/",
@@ -138,14 +114,6 @@
       {
         "level": 5,
         "text": "Reduce dependencies that force teams to coordinate every release with other teams or services. Strengthen architecture and team boundaries so applications can be tested and deployed on demand without waiting for external orchestration, and improve code maintainability so developers can safely change shared code and upgrade dependencies. Add comprehensive monitoring and observability that covers predefined metrics and system state as experienced by users. Use proactive notifications so teams can detect and mitigate problems before they become visible failures."
-      },
-      {
-        "level": 6,
-        "text": "Run value stream mapping across the full path from check-in to production and compare total elapsed time with the time when useful work is actually being done. Identify manual controls, approval layers, technical debt, and process returns that slow delivery, then remove or redesign the biggest bottlenecks first. Reserve team capacity for process simplification, architectural improvement, and capability development instead of relying on tooling alone. Make the regular release path good enough that urgent fixes can use the same process during normal business hours."
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by continuously tracking lead time, change fail rate, time to restore service, release frequency, deployment pain, and time spent on rework or unplanned work. Keep improving test suites, observability, security practices, database change management, and architectural coupling as the system evolves. Repeat value stream mapping when delays or handoffs grow, and protect time for daily improvement work so manual controls and technical debt do not build up again. Use lessons from deployments, incidents, and system behavior to keep releases routine, low risk, and feasible during regular working hours."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/continuous-delivery/",
@@ -176,14 +144,6 @@
       {
         "level": 5,
         "text": "Adopt a clear rule that a broken build interrupts normal work until the problem is fixed or the change is reverted. Measure the time between a build failure and restoration of a healthy build, and treat long delays as a process problem. Ensure current builds are consistently available for testers so exploratory testing can happen on recent code. Provide developers with at least daily feedback from acceptance and performance tests, not just unit tests. "
-      },
-      {
-        "level": 6,
-        "text": "Increase test coverage for new functionality so integration does not depend on manual checking of recent changes. Improve the reliability and speed of the suite by parallelizing tests, adding compute capacity, or moving longer-running checks into a separate pipeline while preserving a fast commit path. Confirm that quick automated tests still finish within about ten minutes and preferably within a few minutes. Review commit-triggered build rates, automated test execution rates, and daily success rates together to find weak points in the system. "
-      },
-      {
-        "level": 7,
-        "text": "Protect the habits that keep integration routine: small batches, daily merges to trunk or main, automatic builds and tests on every commit, and visible status for everyone. Continue to fix broken builds immediately, and remove new sources of delay such as manual steps, flaky tests, or hidden failures before they become normal. Keep monitoring restoration time, build and test automation coverage, tester build availability, and daily feedback from acceptance and performance tests. Use those signals to catch regression early and preserve a stable mainline that others can trust. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/continuous-integration/",
@@ -214,14 +174,6 @@
       {
         "level": 5,
         "text": "Strengthen the loop between delivery and product decisions by reviewing feedback and customer measures after release, not just before build. Give the delivery team room to change designs or specifications when evidence shows the current approach is not solving the problem. Compare outcomes against the intended business or user result, not only against completion of the planned work. Use the results to choose the next iteration and remove features or changes that do not help."
-      },
-      {
-        "level": 6,
-        "text": "Run customer feedback as a continuous operating rhythm rather than as occasional checkpoints. Combine regular satisfaction data, usage or retention measures, and targeted experiments to learn which changes improve outcomes. Iterate quickly on the smallest solution that addresses the confirmed problem and monitor whether the chosen metrics move in the expected direction. Look for patterns showing where feedback is late, ignored, or misinterpreted, and correct the process immediately."
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by keeping user research, feedback review, and customer-centered measures embedded in normal delivery work. Continue validating major changes before full build, and re-check released features to confirm they still solve the problem as customer behavior changes. Protect the team's ability to revise or discard solutions when evidence shows a weak outcome. Watch for regression signals such as falling satisfaction, weak adoption, or feature work proceeding without recent customer input."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/customer-feedback/",
@@ -252,14 +204,6 @@
       {
         "level": 5,
         "text": "Reduce release risk by separating application rollout from risky schema changes where possible. Use techniques such as online schema migration tools or parallel changes that keep old and new structures available during transition. Test each schema change against scrubbed production-like data, and use multi-node test setups when production is distributed. Review large tables for partitioning or archiving needs so migrations do not become excessively long or blocking. "
-      },
-      {
-        "level": 6,
-        "text": "Standardize the approach across teams and database owners so shared schemas are not changed through competing processes. For applications that share a database, agree on one version-controlled mechanism and rollout plan for all participating teams. Strengthen rollback safety by keeping old and new database structures synchronized until the application transition is complete. Track the percentage of changes executed through a fully automated push-button path and the share of incidents where database changes were a factor. "
-      },
-      {
-        "level": 7,
-        "text": "Keep every database schema change flowing through the same version-controlled, automated migration path across environments. Continue routine discussion with production database owners and preserve visible status for pending, tested, and applied changes so exceptions do not accumulate. Review failed changes, lead time impact, scheduled downtime cost, and any out-of-hours deployment work to catch regression early. Revalidate zero-downtime and production-like testing practices as architecture, scale, and data volumes change. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/database-change-management/",
@@ -290,14 +234,6 @@
       {
         "level": 5,
         "text": "Improve reliability by making deployment steps idempotent, so rerunning them does not create inconsistent states after partial failure. Remove unnecessary ordering constraints where possible and design services to tolerate temporarily unavailable dependencies rather than failing uncontrollably. Automate related tasks such as configuration generation, middleware setup, and database migrations within the deployment flow. Review failure cases from recent deployments and simplify the process instead of adding more fragile workaround logic."
-      },
-      {
-        "level": 6,
-        "text": "Work on reducing architectural dependencies that force tightly synchronized, multi-service deployment orchestration. Strengthen backward compatibility and independent deployability so one service can be released without requiring lock-step changes elsewhere. Ensure environments can be recreated from version-controlled information, improving repeatability and disaster recovery readiness. Measure the percentage of the deployment pipeline that is automated and the time lost to waiting or stalled steps."
-      },
-      {
-        "level": 7,
-        "text": "Sustain the capability by regularly reviewing deployment logs, automation coverage, manual step counts, and pipeline delays for signs of regression. Keep scripts, configuration, and environment recreation data current in version control as systems, platforms, and dependencies evolve. Protect the use of the same automated deployment process across environments, and challenge any new manual exception before it becomes standard practice. Continue simplifying the deployment path so automation remains understandable, repeatable, and easy for both development and operations to maintain."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/deployment-automation/",
@@ -328,14 +264,6 @@
       {
         "level": 5,
         "text": "Documentation is generally clear and dependable, and people use it regularly during software work. Strengthen this level by measuring whether important content is current, easy to find, and actually used in real tasks. Close the remaining gaps where people still rely on private notes, side channels, or repeated explanations. Use any available documentation guidelines, training, or documentation-focused support to improve consistency across contributors."
-      },
-      {
-        "level": 6,
-        "text": "Documentation is actively maintained and supports a wide range of technical practices. Move toward the highest level by assigning explicit ownership for high-value documents and reviewing them at regular points in the work cycle. Compare documentation against recent changes and recurring questions to catch drift early. Consolidate duplicate material so there is one reliable source for each important topic."
-      },
-      {
-        "level": 7,
-        "text": "Documentation is clear, findable, reliable, and maintained as a normal part of software development. Sustain this level by continuing to update documentation whenever technical practices, tools, or workflows change, and by removing content that no longer reflects reality. Periodically confirm that critical information can still be found quickly and used with confidence. Watch for regression signals such as repeated clarification requests, duplicate notes, or declining use of the main documentation source."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/documentation-quality/",
@@ -366,14 +294,6 @@
       {
         "level": 5,
         "text": "Teams usually have meaningful choice, and new tools are considered with some structure, but learning is not yet broadly shared. Create regular forums where teams present new technologies, lessons from experiments, and hidden costs found during use. Strengthen cross-team visibility so useful exceptions can inform future baseline updates instead of remaining isolated local decisions. Stop treating tool selection as a one-time decision and make re-evaluation part of normal delivery work. "
-      },
-      {
-        "level": 6,
-        "text": "Tool choice is well supported, and teams usually balance autonomy with ownership, but consistency depends on continued discipline. Tighten the feedback loop between experiments, exception documentation, and baseline changes so proven choices become easier for other teams to adopt. Check whether different tool chains are creating avoidable communication or integration friction across shared systems. Use team feedback directly to confirm that perceived choice reflects real day-to-day practice rather than policy alone. "
-      },
-      {
-        "level": 7,
-        "text": "Teams consistently choose tools that fit their work within a well-understood baseline, and exceptions are handled with clear ownership and documentation. Sustain this by continuing periodic reviews of the baseline, maintaining lightweight exception processes, and preserving regular discussion of new technologies. Guard against regression by watching for two failure modes: renewed top-down mandates that remove practical choice, and uncontrolled tool sprawl that increases fragility and maintenance cost. Keep asking team members whether they genuinely feel empowered, because perceived autonomy is the clearest check that the capability is still present. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/teams-empowered-to-choose-tools/",
@@ -404,14 +324,6 @@
       {
         "level": 5,
         "text": "Broaden the approach so infrastructure can scale outward or inward as demand changes, rather than being sized and adjusted manually. Strengthen tagging, ownership, or chargeback-style mechanisms so usage data is connected to the relevant team, product, or environment. Replace long-lived, manually tuned hosts where possible with reproducible provisioning patterns. Measure whether teams can obtain environments and make routine changes fast enough to support frequent, reliable delivery."
-      },
-      {
-        "level": 6,
-        "text": "Use the automation path as the normal way of working across most environments, not just for selected services. Review exceptions regularly and remove remaining cases where infrastructure changes still require specialist intervention without a clear reason. Instrument the process to track request volume, change lead time, provisioning speed, scaling behavior, and cost visibility in a consistent way. For systems that still block these outcomes, prioritize architectural changes that better fit cloud-native operation."
-      },
-      {
-        "level": 7,
-        "text": "Sustain the capability by continuously checking that self-service, elasticity, traceability, and measured usage still hold in daily work. Watch for regression signals such as growing ticket queues, more direct production changes, poor cost attribution, or increasing numbers of long-lived manually maintained hosts. Keep platform workflows, approval rules, and logging aligned with current security and regulatory needs while preserving fast automated execution. Regularly review outcome measures such as provisioning time, infrastructure change time, availability support, and cost visibility so the capability remains effective as systems evolve."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/flexible-infrastructure/",
@@ -442,14 +354,6 @@
       {
         "level": 5,
         "text": "Strengthen routines that encourage people to bring bad news early and share risks before issues grow. Check whether responsibility is actually shared for quality, availability, reliability, and security, and correct gaps where ownership remains narrow. Protect time for experimentation so new ideas can become small trials, internal demos, process changes, or product improvements. "
-      },
-      {
-        "level": 6,
-        "text": "Measure the culture directly with short survey items about seeking information, shared responsibilities, cross-functional collaboration, learning from failure, and welcoming new ideas. Review the results with the team, identify the lowest-scoring behaviors, and assign concrete follow-up actions with owners and dates. Check that managers and leaders are providing the support needed so these practices continue beyond individual effort. "
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by keeping cross-functional cooperation, shared responsibility, blameless inquiry, and experimentation part of normal delivery work rather than occasional initiatives. Watch for regression signals such as ignored bad news, renewed silos, blame after failures, or resistance to novel ideas, and address them quickly. Repeat the survey periodically and use the results to refresh collaboration practices, automation, and connections across functions as the work changes. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/generative-organizational-culture/",
@@ -480,14 +384,6 @@
       {
         "level": 5,
         "text": "Expand access through a secure paved road that lets teams and tools discover approved datasets, metadata, and usage rules without repeated manual intervention. Strengthen ownership by making stewards responsible for metadata quality, access policies, and correction of recurring issues. Review whether definitive answers can usually be found within about an hour and whether access delays are shrinking for the targeted domains. "
-      },
-      {
-        "level": 6,
-        "text": "Apply the same practices across multiple critical data domains so the experience is consistent instead of limited to one pilot area. Regularly inspect freshness indicators, access times, and data incidents to detect regressions and gaps between systems. Challenge tool-specific structures that recreate silos, and adjust integrations or schemas to preserve a unified view across sources. "
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by keeping data ownership, local documentation, automated checks, and governed access current as systems and teams change. Watch leading indicators such as access delay, freshness, and data-related incidents so fragmentation or quality decay is detected early. Review new tools and workflows against the shared data architecture to prevent the return of isolated copies, hidden pathways, or undocumented sources. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/healthy-data-ecosystems/",
@@ -518,14 +414,6 @@
       {
         "level": 5,
         "text": "Refine work allocation so people regularly take on tasks that use their expertise and require thoughtful judgment, not only execution. Strengthen support during change by planning time for adaptation when new tools, automation, or delivery practices are introduced. Measure job satisfaction directly through team feedback and review patterns in the responses for specific operational causes. Use those findings to adjust resources, work design, and improvement priorities in the next cycle."
-      },
-      {
-        "level": 6,
-        "text": "Protect the conditions that make the capability visible in daily work by reviewing whether teams still control the tools and resources they depend on. Watch for regression during reorganizations or delivery pressure, when meaningful work and practitioner judgment are often reduced first. Strengthen continuous improvement by keeping time available for process changes and by building skill in improvement work itself. Compare survey feedback over time to confirm that support, meaningful work, and effective execution remain aligned."
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by continuing to ask team members directly about their ability to do meaningful work with the right tools, resources, and authority. Keep tool choice, learning support, and improvement capacity under regular review so they do not erode as priorities change. Guard against regression by treating new friction, reduced autonomy, or less meaningful task allocation as early warning signs. Maintain visible follow-through on feedback so strong job satisfaction remains an active team practice rather than an assumption."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/job-satisfaction/",
@@ -556,14 +444,6 @@
       {
         "level": 5,
         "text": "Learning is becoming embedded in day-to-day team practice. People regularly bring back ideas from external training or conferences, knowledge is shared across the team, and blameless reviews are used to improve how work is done rather than to assign fault. Move higher by linking learning activities more directly to operational follow-through, such as tracked actions from post-mortems or experiments inspired by new knowledge. Strengthen study groups, presentation rotation, and time for side exploration so learning remains active and broad."
-      },
-      {
-        "level": 6,
-        "text": "Learning is clearly treated as an investment and is supported across multiple channels. Formal education, informal exploration, regular knowledge exchange, and blameless learning from failure are all part of normal work, and people can point to changes that resulted from them. Advance by protecting these practices against schedule pressure and by checking for weak spots such as low participation, limited topic diversity, or follow-up actions that stall. Use periodic surveys or simple indicators to confirm that people still feel learning is encouraged and supported."
-      },
-      {
-        "level": 7,
-        "text": "Learning is consistently sustained as a strategic part of software delivery. Time, budget, continued education, information sharing, and safe reflection after failure are all stable, expected, and visible in everyday work. Sustain this level by monitoring participation, reviewing whether post-mortem actions and learning commitments are completed, and refreshing learning formats so they remain useful. Avoid regression by protecting learning capacity during deadlines, leadership changes, or incidents, and by watching for signs that experimentation or open discussion is becoming less safe."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/learning-culture/",
@@ -594,14 +474,6 @@
       {
         "level": 5,
         "text": "Focus on the dependencies that still create unplanned work. Measure how often upstream failures degrade the service, how often upstream changes force local changes, and how often contract tests fail. Strengthen observability and API usage analytics so teams can see who depends on older versions and plan migrations before breaking changes. Remove remaining manual bottlenecks in testing or deployment that many teams rely on. "
-      },
-      {
-        "level": 6,
-        "text": "Use the architecture as a living system that is improved iteratively, not through occasional large redesigns. For new work, enforce service boundaries around a single business capability and require that each service be buildable, testable, and deployable on its own. Standardize the basics needed to operate many services effectively, such as service discovery, quotas or throttling, and a debuggable runtime. Review coordination hours, wait times, coordinated deployment rates, and isolated test coverage regularly to catch weak points before they spread. "
-      },
-      {
-        "level": 7,
-        "text": "Sustain the capability by treating independent testability and deployability as non-negotiable design constraints. Keep service contracts, contract tests, and API versioning discipline current, including limiting supported versions and retiring deprecated ones on a clear timeline. Watch for regressions in coordinated releases, downtime, approval rates, and cross-team wait times, and act when any of them trend upward. Continue evolving the architecture as requirements change so small teams can keep delivering quickly and safely. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/loosely-coupled-teams/",
@@ -632,14 +504,6 @@
       {
         "level": 5,
         "text": "Treat monitoring configuration as an actively maintained part of the delivery system. Put alert rules, dashboards, and related configuration under version control, review changes, and deploy them through automation so updates are consistent and fast. Use postmortems or retrospectives to add or refine monitoring after failures and unexpected side effects. Measure how often monitoring changes are made and how quickly they reach production. "
-      },
-      {
-        "level": 6,
-        "text": "Tune the operating model so alerts are actionable, routed clearly, and supported by useful runbooks and visualizations. Reduce noisy or unactionable alerts, review suppressed alerts carefully, and separate operational views from executive or product reporting views. Check whether alerts are acknowledged within the expected time and whether out-of-hours pages indicate missing leading indicators. Strengthen usability by making it easy to move from an alert to the relevant dashboard, trace, and playbook. "
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by regularly reviewing whether monitoring still reflects current architecture, dependencies, and user-impacting risks as the system changes. Keep instrumentation, alerting, and correlation current through normal development work rather than periodic cleanups. Watch for regression through measures such as false positives, false negatives, acknowledgement time, MTTD, MTTR, and customer impact. Preserve broad developer access and proficiency so the capability does not collapse back into a single expert function. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/monitoring-and-observability/",
@@ -670,14 +534,6 @@
       {
         "level": 5,
         "text": "Strengthen the link between monitored signals and specific business or delivery decisions by defining where each metric is reviewed and what actions it can trigger. Match the presentation format to the audience, such as real-time views for operational work and periodic summaries for longer-term decisions. Check for gaps in coverage across the value chain and close them deliberately rather than adding more data everywhere. This improves usefulness without creating unnecessary volume. "
-      },
-      {
-        "level": 6,
-        "text": "Treat learnings from production issues, deployment problems, and customer usage patterns as inputs for other teams that build, test, or plan the product. Compare current data with historical reports so changes can be explained rather than merely noticed. Watch for local optimizations by asking whether an improvement in one service or area benefits the broader system. At this stage, monitoring should support shared understanding across the organization, not isolated reporting. "
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by regularly confirming that monitoring data remains relevant, timely, accurate, and easy for each audience to understand. Keep pruning metrics, alerts, and reports that no longer inform decisions so the system does not drift into noise. Continue sharing context with the numbers and refreshing how insights are fed into meetings, briefings, and cross-team communication. The focus is to preserve decision usefulness and prevent regression into reactive or fragmented monitoring. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/monitoring-systems/",
@@ -708,14 +564,6 @@
       {
         "level": 5,
         "text": "Broaden security integration across the full value stream. Include information security feedback in design reviews, automated tests, software demos, and release readiness so the same expectations appear at each stage. Measure the percentage of security requirements covered by automation and the actual use of approved tools, then target the largest gaps. Remove local exceptions that bypass the standard approach unless they are explicitly reviewed. "
-      },
-      {
-        "level": 6,
-        "text": "Make the capability reliable at scale. Use automated controls and tests to generate evidence on demand that required security checks are running, and review that evidence with the people who depend on it. Keep reducing the elapsed time added by security review while maintaining early involvement and automated coverage. Refresh approved libraries, packages, and toolchains as teams learn where developers still need custom or manual work. "
-      },
-      {
-        "level": 7,
-        "text": "Protect the habits that make security pervasive. Continue tracking early review coverage, lifecycle involvement, automated security coverage, review time, and use of approved tools so regression is visible quickly. Revisit tests, standards, and approved components as systems and risks evolve, and keep information security engaged in design and demos rather than only during exceptions. When new work patterns appear, fold them into the same security workflow instead of creating parallel processes. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/pervasive-security/",
@@ -746,14 +594,6 @@
       {
         "level": 5,
         "text": "The platform is helping delivery work, but it risks becoming a bottleneck if only one team can change it. Define clear APIs, extension points, and contribution rules so other teams can add services and capabilities in a consistent way. Keep the core workflow opinionated where it reduces complexity, while allowing controlled flexibility for teams with different technical needs."
-      },
-      {
-        "level": 6,
-        "text": "The platform is broadly useful and supports many day-to-day tasks, but sustained improvement now depends on disciplined feedback loops. Review delivery metrics together with developer sentiment to spot cases where convenience is improving but throughput, stability, or recovery are not. Strengthen feedback on task outcomes and prioritize fixes that let teams troubleshoot, recover, and continue work without waiting on the platform team."
-      },
-      {
-        "level": 7,
-        "text": "The platform operates as a reliable internal product that consistently reduces friction in software delivery. Sustain this level by regularly revisiting user journeys, refreshing the roadmap from developer needs, and monitoring adoption, task success, delivery performance, and sentiment together. Avoid regression by resisting ticket-driven operating modes, rigid top-down standards, and large all-at-once releases that outpace real team workflows."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/platform-engineering/",
@@ -784,14 +624,6 @@
       {
         "level": 5,
         "text": "Make alert review a regular team practice rather than an occasional cleanup task. Check whether notifications consistently reach the people who can diagnose and fix the problem quickly. Monitor key system health indicators in more than one way, such as threshold warnings and rate-of-change warnings. Use incident post-mortems to update alert rules, thresholds, and routing based on observed failure patterns."
-      },
-      {
-        "level": 6,
-        "text": "Measure whether notifications are arriving early enough to prevent escalation to external operations groups or customers. Refine thresholds using evidence about when user-facing impact begins, and trigger warnings before that point is crossed. Watch for alert fatigue by tracking notification volume during incidents and removing alerts that cannot be acted upon. Strengthen automation and routing so human attention is reserved for signals that need judgment."
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by continuously validating that alerts still predict meaningful issues as systems, traffic patterns, and user expectations change. Keep post-mortem findings tightly connected to monitoring updates so new failure indicators are captured quickly. Regularly prune non-actionable notifications and verify that automated responses still behave correctly. Guard against regression by reviewing whether important problems are still detected internally before they are reported by external teams or customers."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/proactive-failure-notification/",
@@ -822,14 +654,6 @@
       {
         "level": 5,
         "text": "Look at the approval process end to end and remove bottlenecks that keep changes waiting outside the development workflow. Shift validations into the platform and toolchain where possible, including security and other controls that can be checked automatically. Track lead time, waiting time for approval, and change fail rate so teams can see whether the process is becoming faster and safer."
-      },
-      {
-        "level": 6,
-        "text": "Use monitoring and observability after changes are committed so teams can detect and correct bad changes quickly in production. Make the regular approval path reliable enough that the same mechanism can be used for emergency changes instead of creating separate exceptions. Keep the role of leadership and change boards focused on coordination and business trade-offs rather than detailed gatekeeping."
-      },
-      {
-        "level": 7,
-        "text": "Protect the capability by reviewing measures regularly, especially waiting time for approvals, use of external approvals, and outcomes for different risk profiles. Continue improving the platform so developers receive fast feedback on security, performance, stability, and defects without adding heavyweight manual steps. Watch for regression patterns, such as treating all changes the same or responding to incidents by adding extra approvals, and correct them quickly."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/streamlining-change-approval/",
@@ -860,14 +684,6 @@
       {
         "level": 5,
         "text": "Increase the quality of team decisions by improving access to customer context and outcome information. Create regular opportunities for developers and operators to observe or talk to customers so problem understanding does not depend only on written requirements. Encourage iteration when the first solution is not sufficient, and check that teams are using what they learn to refine the product or service. Look for patterns in permission requests that still slow down independent changes and remove them. "
-      },
-      {
-        "level": 6,
-        "text": "Strengthen autonomy so experimentation covers both what is built and how the work is carried out. Leave more implementation details to the people doing the work, including changes to stories, specifications, and technical approaches when they are appropriate. Use regular team practices such as hackathons or dedicated experiment time to surface and test new ideas in a quick, low-friction way. Measure whether learning from these experiments is consistently incorporated into product or service design. "
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by protecting the team's freedom to pursue new ideas and make informed changes without reverting to outside approval for routine decisions. Keep outcome and customer information visible so experimentation remains grounded in real problems and not isolated technical activity. Continue reviewing whether teams can still prototype, test, and revise work quickly as complexity, scale, or governance demands increase. Watch for signs that stories are becoming fixed instructions again and correct that regression early. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/team-experimentation/",
@@ -898,14 +714,6 @@
       {
         "level": 5,
         "text": "Increase trust in the pipeline by making automated tests reliable and meaningful. Stop tolerating flaky tests and poorly coded failures, because a failed test should indicate a real defect and a passing suite should support release confidence. Rebalance the suite so fast unit tests catch most defects before slower acceptance tests or manual checks are needed. Also track and reduce the time spent fixing acceptance test failures so developers can recover quickly when the pipeline breaks. "
-      },
-      {
-        "level": 6,
-        "text": "Use explicit measures to tune the testing system instead of relying on general impressions. Track who writes and maintains unit and acceptance tests, where bugs are found over time, how often automated failures represent real defects, and whether all suites run on every pipeline trigger. Use those measures to move defect discovery into earlier, cheaper test phases and to close gaps where tests are skipped or slow to repair. Keep testers and developers jointly reviewing the data so coverage and workflow improve together. "
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by protecting the practices that keep feedback fast, trustworthy, and continuous. Keep all relevant suites running on every pipeline trigger, preserve short feedback times on local and CI workflows, and continue collaboration between testers and developers on both automation and exploratory testing. When defects escape late or release confidence drops, update the pipeline by adding or refining tests that catch those problems earlier. Watch for regression signals such as broken pipelines, flaky tests, rising repair time for test failures, or more bugs appearing in late testing and production. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/test-automation/",
@@ -936,14 +744,6 @@
       {
         "level": 5,
         "text": "Reduce dependence on persistent database fixtures where they are not essential. Use in-memory or more local data stores when appropriate, and keep database-backed data limited to the minimum needed for realistic higher-level tests. Export only the relevant sections of data instead of cloning whole production databases. Measure how many automated tests can run without acquiring additional data beyond the standard test setup."
-      },
-      {
-        "level": 6,
-        "text": "Make self-service access to key datasets routine for the full automated suite. Refresh those datasets on a predictable schedule, and monitor access frequency so gaps in availability are visible early. Mask or hash sensitive information in any data derived from production-like sources. Review whether missing data still prevents certain scenarios, environments, or parallel runs, and close those gaps systematically."
-      },
-      {
-        "level": 7,
-        "text": "Sustain the capability by keeping test data small, current, relevant, and easy for automated suites to acquire on demand. Watch for regression signals such as rising time spent manipulating data, renewed use of full production copies, or more tests depending on shared database state. Periodically confirm that tests still control their own setup and can run in parallel without data collisions. Continue pruning obsolete datasets and updating representative ones as interfaces and user journeys change."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/test-data-management/",
@@ -974,14 +774,6 @@
       {
         "level": 5,
         "text": "The capability is strong in many interactions, but it can still depend on a few individuals or a few situations. Spread the behaviors by asking senior engineers, product managers, and other influencers to model clear direction, supportive questions, and specific recognition in their own daily interactions. Check whether different team members describe the same vision and can point to recent examples of obstacle removal, experiments, or help given to other teams. "
-      },
-      {
-        "level": 6,
-        "text": "Transformational leadership is embedded, and the next step is to make it consistently effective under changing conditions. Review at a regular cadence whether delivery goals are still clear, obstacles are surfaced early, and recognition is reinforcing learning, experimentation, and help across team boundaries. Watch for drift toward directive behavior during incidents or deadlines, and correct it quickly by returning to clear communication, thoughtful support, and inquiry. "
-      },
-      {
-        "level": 7,
-        "text": "The capability is sustained and broadly visible across the project. Preserve it by continuing clear vision, inspirational communication, intellectual stimulation, supportive behavior, and personal recognition in normal work and under stress. Periodically test whether people can describe the direction consistently and cite recent examples of obstacle removal, thoughtful support, and recognition tied to learning, and avoid regression to instruction-and-compliance management. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/transformational-leadership/",
@@ -1012,14 +804,6 @@
       {
         "level": 5,
         "text": "Small-batch development and daily merges are normal, with few active branches and a working shared branch most of the time. Tighten the feedback loop by keeping build and test execution to a few minutes and protecting trunk with automated checks before changes land. Remove any remaining routine code freezes or dedicated integration phases, and use data to target outliers such as slow approvals or branches that remain open too long. "
-      },
-      {
-        "level": 6,
-        "text": "Trunk-based development is practiced consistently, with rapid reviews, short branch lifetime, and quick recovery when problems appear. Extend the same discipline across all repositories and contributors so exceptions do not create hidden long-lived branches or delayed merges. Strengthen coaching on slicing work into mergeable batches and keep release changes flowing back to trunk promptly so extra development lines do not accumulate. "
-      },
-      {
-        "level": 7,
-        "text": "Trunk is the clear current line of development, changes are small and frequent, and the shared branch stays usable through fast tests and immediate fixes. Sustain this by continuing to measure active branches, daily merge frequency, code freeze time, and approval delay, and by acting quickly when trends worsen. Preserve synchronous review habits, quick fix-or-revert decisions, and coaching on small-batch work so long-lived branches and stabilization phases do not return. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/trunk-based-development/",
@@ -1050,14 +834,6 @@
       {
         "level": 5,
         "text": "User needs are regularly considered and visible in team practices. Improve further by shortening the time between collecting feedback and changing priorities, so the team can respond while context is still fresh. Expand engineer participation in research, testing, or observation to deepen shared understanding. Use specifications to capture user needs and constraints clearly before implementation when AI tooling is involved."
-      },
-      {
-        "level": 6,
-        "text": "User-centric behavior is strong and usually shapes what gets built. To reach the next level, tighten the link between user signals and measurable product outcomes such as retention, adoption, satisfaction, or task completion. Look for places where teams still default to shipping activity instead of user value, and remove those incentives. Standardize how feedback leads to reprioritization so the practice survives staffing changes and delivery pressure."
-      },
-      {
-        "level": 7,
-        "text": "User needs consistently guide planning, implementation, and evaluation across the team. Sustain this level by keeping feedback channels low-latency, maintaining visible user metrics, and continuing direct engineer exposure to user research. Guard against regression into feature-factory behavior by reviewing whether shipped work changed user outcomes, not just output. When using AI, keep specifications and validation tied to real user requirements so faster delivery does not drift away from user value."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/user-centric-focus/",
@@ -1088,14 +864,6 @@
       {
         "level": 5,
         "text": "Increase reliability by making recovery and rollback routine, not exceptional. Make sure previous known states can be identified quickly and restored with the exact versions of code, configuration, and dependencies that produced them. Add any missing artifacts that still prevent predictable re-creation of environments or releases. Track how long it takes to restore service or recreate an environment from version-controlled assets."
-      },
-      {
-        "level": 6,
-        "text": "Refine day-to-day working habits so version history stays useful as change volume grows. Strengthen the practice of making small, frequent, reviewable commits at clean states rather than delaying commits until large work is complete. Version AI-related artifacts, such as prompts and agent configuration files, if they affect how software is produced or changed. Watch for recurring merge conflicts, delayed commits, or missing artifacts as signals that the workflow is weakening."
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by regularly checking that version control still covers everything required to build, test, deploy, recover, and audit the system. Review new tools, platforms, dependencies, and AI-assisted workflows to ensure their key artifacts are added before gaps appear. Keep measuring commit frequency, recovery capability, rollback readiness, and artifact coverage so regressions are visible early. When exceptions or manual workarounds appear, remove them quickly so reproducibility and traceability do not erode over time."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/version-control/",
@@ -1126,14 +894,6 @@
       {
         "level": 5,
         "text": "Broaden the view to the full value stream from idea through operations and support. Include people from business, design, testing, QA, operations, and support in regular mapping and review sessions so the whole flow is represented. Create a future-state map with agreed changes and confirm that the people involved can actually make those changes. Re-run the exercise on a regular schedule and check whether targeted waiting and rework points are improving. "
-      },
-      {
-        "level": 6,
-        "text": "Make end-to-end visibility widely available and routinely used for decisions. Share current maps, boards, and related artifacts broadly so people across the organization can see the flow of product development work and its present state. Compare lead time, process time, and percent complete and accurate by process block to identify where poor upstream quality creates downstream rework. Stop prioritizing local efficiency changes that do not improve overall flow through the value stream. "
-      },
-      {
-        "level": 7,
-        "text": "Sustain performance by keeping current or recent value stream maps available and keeping live visual displays accurate and accessible. Continue measuring actual flow data on a regular cadence and update responsibilities, stages, and metrics when the value stream changes. Use reviews to detect new bottlenecks, hidden handoffs, or rising rework before they become normal. Maintain cross-functional participation and decision-making authority so visibility remains end to end rather than drifting back to isolated team views. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/work-visibility-in-value-stream/",
@@ -1164,14 +924,6 @@
       {
         "level": 5,
         "text": "Evolve the display to reflect the team's current context instead of keeping the same metrics indefinitely. Remove indicators that no longer help and introduce new ones when goals, risks, or constraints change. Use retrospectives to ask whether the display is current, actionable, and contributing to measurable progress. Treat the display as a working tool that changes as obstacles are removed and new ones appear. "
-      },
-      {
-        "level": 6,
-        "text": "Use the display to address underlying system problems rather than only fixing visible symptoms. When an indicator turns red or shows a negative trend, trace the issue to its root cause and capture the constraint that keeps it recurring. Include information that helps the team connect delivery flow, pipeline health, and production behavior to broader outcomes. Strengthen the habit of responding with problem solving, not metric management. "
-      },
-      {
-        "level": 7,
-        "text": "Sustain the capability by regularly checking that every visible indicator still matters, stays current, and leads to action when needed. Continue reviewing the display in retrospectives and remove anything that has become noise, inaccurate, or disconnected from team goals. Watch for regression into stale boards, overly complex dashboards, or pressure to optimize the display instead of the underlying system. Preserve simple, well-understood visuals and keep adapting them as the work and constraints change. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/visual-management/",
@@ -1202,14 +954,6 @@
       {
         "level": 5,
         "text": "The team is showing consistent signs of healthier delivery, but weak spots still surface under pressure. Standardize the working patterns that keep deployments routine, and document how urgent patches and break-fix work are handled so they do not crowd out new work. Review workload, recognition, team support, fairness, and value conflicts as part of regular team management rather than only after problems escalate. Measure whether planned value-adding work is continuing to grow while reactive work is shrinking."
-      },
-      {
-        "level": 6,
-        "text": "Well-being is strong in normal delivery, and improvement now depends on disciplined maintenance. Treat increases in deployment disruption, end-user defects, support load, or urgent audit and remediation work as early warnings that quality is slipping. Respond by adjusting the work environment quickly, for example by reducing overload or restoring team control where it has eroded. Keep checking that most effort is still going into structured new work rather than correction and recovery."
-      },
-      {
-        "level": 7,
-        "text": "Well-being is deeply embedded in how software is delivered and managed. Sustain it by continuing to watch deployment pain, work mix, and burnout risk factors so regression is detected before it becomes normal. Preserve the technical practices that make deployments low-stress and the management practices that keep workload, control, fairness, community, rewards, and values aligned. Recheck these conditions whenever team structure, delivery pace, or support demands change."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/well-being/",
@@ -1240,14 +984,6 @@
       {
         "level": 5,
         "text": "Start measuring flow directly by recording when each item starts and when it finishes, then review mean lead time and variability across the full stream. Use aging cards, blocked work, and lead-time patterns to identify where the main delays occur. Simplify the delivery path by reducing unnecessary columns, hand-offs, and manual steps that slow movement between stages. The next step is to turn those observations into routine process changes that increase flow. "
-      },
-      {
-        "level": 6,
-        "text": "Run a weekly prioritization meeting with stakeholders so work enters the system in a clear order and low-priority items do not crowd active work. Use lead-time data to choose one or two constraints to address, such as slow environment preparation, excessive hand-offs, or tasks that could be automated. After an obstacle is reduced, lower limits again if flow feels too comfortable, so the next constraint becomes visible. The next step is to make this cycle of prioritizing, measuring, and process improvement a stable operating habit. "
-      },
-      {
-        "level": 7,
-        "text": "Keep the board accurate, the limits current, and the pull rules visible whenever capacity or support load changes. Continue reviewing mean lead time, variability, blocked work, and surfaced obstacles during retrospectives, and act quickly before delays become normal again. Avoid regression by resisting pressure to add hidden work, extra columns, or relaxed limits when demand spikes. Sustain performance by continuing to simplify, automate, and collaborate across the value stream while using single-piece flow as a guiding direction. "
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/wip-limits/",
@@ -1278,14 +1014,6 @@
       {
         "level": 5,
         "text": "Use MVP thinking for larger initiatives so product and business assumptions are tested through minimal slices instead of long delivery cycles. Measure how often releases are possible, what share of features finish within a week, and which larger items create delays. Use those measurements to target the remaining work types that still depend on long-lived branches or bundled releases."
-      },
-      {
-        "level": 6,
-        "text": "Refine decomposition skills so most work can be completed in hours to a couple of days, checked into trunk, and deployed independently. Apply feature toggles, dark launching, or branch by abstraction deliberately when architecture changes would otherwise force batching. Compare feedback timing across automated tests, monitoring, QA, and user signals, then shorten the slowest paths."
-      },
-      {
-        "level": 7,
-        "text": "Protect the discipline that keeps batches small by watching for regression into oversized pull requests, long-lived branches, or downstream bundling. Keep measuring release readiness, time to feedback, and the proportion of work completed within a week or less, and review outliers quickly. Continue strengthening decomposition skills and safe hidden-release techniques so higher delivery speed does not erode review, test, or integration quality."
       }
     ],
     "dora_reference": "https://dora.dev/capabilities/working-in-small-batches/",

@@ -27,12 +27,12 @@ describe('0011-002: Edit Survey Response', () => {
     assertExists(dsl.surveyExecution);
 
     // GIVEN user has submitted a response with initial answers
-    const initialAnswers = [1, 2, 3, 4, 5, 6, 7, 1, 2];
+    const initialAnswers = [1, 2, 3, 4, 5, 4, 3, 1, 2];
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
     await dsl.surveyExecution.answerSurvey({ answers: initialAnswers });
 
     // WHEN user edits with new answers
-    const updatedAnswers = [7, 6, 5, 4, 3, 2, 1, 7, 6];
+    const updatedAnswers = [5, 4, 3, 2, 1, 2, 1, 5, 4];
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
     await dsl.surveyExecution.answerSurvey({ answers: updatedAnswers });
 
@@ -57,7 +57,7 @@ describe('0011-002: Edit Survey Response', () => {
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
     await dsl.surveyExecution.answerSurvey({ answers: secondAnswers });
 
-    const finalAnswers = [7, 7, 7, 7, 7, 7, 7, 7, 7];
+    const finalAnswers = [5, 5, 5, 5, 5, 5, 5, 5, 5];
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
     await dsl.surveyExecution.answerSurvey({ answers: finalAnswers });
 
@@ -65,7 +65,7 @@ describe('0011-002: Edit Survey Response', () => {
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
     await dsl.surveyExecution.closeSurveyRun({ teamName });
 
-    // THEN results reflect only the most recent submission (all 7s = score of 7)
+    // THEN results reflect only the most recent submission (all 5s = score of 5)
     await dsl.surveyExecution.viewAssessmentResults({ teamName });
     await dsl.surveyExecution.confirmTotalResponsesCount({ expectedCount: 1 });
   });
@@ -90,12 +90,12 @@ describe('0011-002: Edit Survey Response', () => {
     assertExists(dsl.surveyExecution);
 
     // GIVEN user has submitted a response
-    const initialAnswers = [1, 2, 3, null, 5, 6, 7, null, 1];
+    const initialAnswers = [1, 2, 3, null, 5, 4, 3, null, 1];
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
     await dsl.surveyExecution.answerSurvey({ answers: initialAnswers });
 
     // WHEN user edits their response
-    const updatedAnswers = [7, 6, 5, 4, 3, 2, 1, null, 7];
+    const updatedAnswers = [5, 4, 3, 2, 1, 2, 1, null, 5];
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
     await dsl.surveyExecution.answerSurvey({ answers: updatedAnswers });
 

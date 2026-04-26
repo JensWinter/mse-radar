@@ -36,7 +36,7 @@ describe('0011-001: Submit Survey Response', () => {
     await dsl.surveyExecution.confirmResponseSaved({ teamName });
   });
 
-  it('should allow selecting values from 7-point scale for each question', async () => {
+  it('should allow selecting values from 5-point scale for each question', async () => {
     assertExists(dsl.surveyExecution);
 
     // GIVEN
@@ -46,7 +46,7 @@ describe('0011-001: Submit Survey Response', () => {
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
 
     // THEN
-    await dsl.surveyExecution.confirmAllQuestionsHave7PointScale();
+    await dsl.surveyExecution.confirmAllQuestionsHave5PointScale();
   });
 
   it('should allow answering all questions', async () => {
@@ -66,7 +66,7 @@ describe('0011-001: Submit Survey Response', () => {
     assertExists(dsl.surveyExecution);
 
     // GIVEN
-    const answers = [1, 2, 3, null, 4, 5, 6, 7, null];
+    const answers = [1, 2, 3, null, 4, 5, 4, 3, null];
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
     await dsl.surveyExecution.answerSurvey({ answers });
 

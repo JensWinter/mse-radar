@@ -1,7 +1,7 @@
 import type { AnswerValue, SurveyRun } from '@models/aggregates/survey-run.ts';
 
 export type SurveyRunSummaryData = {
-  scoreCounts: [number, number, number, number, number, number, number];
+  scoreCounts: [number, number, number, number, number];
   totalScoredAnswers: number;
   maxCount: number;
 };
@@ -9,9 +9,7 @@ export type SurveyRunSummaryData = {
 export function buildSurveyRunSummary(
   surveyRun: SurveyRun,
 ): SurveyRunSummaryData {
-  const scoreCounts: SurveyRunSummaryData['scoreCounts'] = [
-    0, 0, 0, 0, 0, 0, 0,
-  ];
+  const scoreCounts: SurveyRunSummaryData['scoreCounts'] = [0, 0, 0, 0, 0];
 
   const scoredAnswers = surveyRun.responses
     .flatMap((response) => response.answers)

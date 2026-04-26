@@ -11,9 +11,7 @@ const { summary } = Astro.props;
 const scoreLabels = [
   'Strongly Disagree',
   'Disagree',
-  'Somewhat Disagree',
   'Neutral',
-  'Somewhat Agree',
   'Agree',
   'Strongly Agree',
 ];
@@ -53,11 +51,9 @@ const { scoreCounts, totalScoredAnswers, maxCount } = summary;
 <style>
   #my-chart .column {
     --color-1: #d43d51;
-    --color-2: #e4825d;
-    --color-3: #edbb85;
-    --color-4: #faeec4;
-    --color-5: #bacb98;
-    --color-6: #73a97b;
-    --color-7: #00876c;
+    --color-2: #edbb85;
+    --color-3: #faeec4;
+    --color-4: #bacb98;
+    --color-5: #00876c;
   }
 </style>

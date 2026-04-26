@@ -47,7 +47,7 @@ describe('0010-001: Survey Run Isolation', () => {
     await dsl.surveyExecution.openSurveyRun({ teamName, title: secondSurveyTitle });
     await dsl.identityAndAccess.signIn({ email: teamMemberEmail });
     await dsl.surveyExecution.openSurveyRunPage({ teamName, title: secondSurveyTitle });
-    await dsl.surveyExecution.answerSurvey({ answers: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6] });
+    await dsl.surveyExecution.answerSurvey({ answers: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4] });
 
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
     await dsl.surveyExecution.closeSurveyRun({ teamName, title: secondSurveyTitle });
@@ -121,7 +121,7 @@ describe('0010-001: Survey Run Isolation', () => {
       teamName,
       title: secondSurveyTitle,
     });
-    await dsl.surveyExecution.answerSurvey({ answers: [7, 7, 7, 7, 7, 7, 7, 7, 7, 7] });
+    await dsl.surveyExecution.answerSurvey({ answers: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5] });
 
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
     await dsl.surveyExecution.closeSurveyRun({
@@ -135,7 +135,7 @@ describe('0010-001: Survey Run Isolation', () => {
       title: firstSurveyTitle,
     });
 
-    // THEN my old responses remain unchanged (score should still be 3.0, not 7.0)
+    // THEN my old responses remain unchanged (score should still be 3.0, not 5.0)
     await dsl.surveyExecution.confirmAssessmentResultsDisplayed();
     await dsl.surveyExecution.confirmAggregatedScoreForCapability({
       capabilityName: 'Continuous integration',
@@ -218,11 +218,11 @@ describe('0010-001: Survey Run Isolation', () => {
       title: secondSurveyTitle,
     });
 
-    // THEN it shows its own independent calculated results (score should be 6.0)
+    // THEN it shows its own independent calculated results (score should be 4.0)
     await dsl.surveyExecution.confirmAssessmentResultsDisplayed();
     await dsl.surveyExecution.confirmAggregatedScoreForCapability({
       capabilityName: 'Continuous integration',
-      expectedScore: 6.0,
+      expectedScore: 4.0,
     });
   });
 });

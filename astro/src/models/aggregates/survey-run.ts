@@ -183,5 +183,5 @@ export type SurveyAnswer = {
   comment: string | null;
 };
 
-export type AnswerValue = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export type AnswerValue = 1 | 2 | 3 | 4 | 5;
 export type SurveyRunStatus = 'pending' | 'open' | 'closed';

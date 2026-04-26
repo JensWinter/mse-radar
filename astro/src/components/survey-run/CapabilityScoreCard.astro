@@ -36,7 +36,7 @@ const scoreBucket = score === 0 ? 0 : Math.max(1, Math.round(score));
               ? capabilityScore.score.toFixed(1)
               : '?'
           }
-          <span class="text-sm font-normal text-base-content/60">/ 7</span>
+          <span class="text-sm font-normal text-base-content/60">/ 5</span>
         </div>
         <div class="stat-desc">
           <div class="dora-capability-progress-bar grow flex items-center">
@@ -47,8 +47,8 @@ const scoreBucket = score === 0 ? 0 : Math.max(1, Math.round(score));
                     data-testid={`score-bucket-${scoreBucket}`}
                     class={`score-bucket-${scoreBucket}`}
                   >
-                    <td style={`--size: calc(${score} / 7);`} />
-                    <td style={`--size: calc(${7 - score} / 7);`} />
+                    <td style={`--size: calc(${score} / 5);`} />
+                    <td style={`--size: calc(${5 - score} / 5);`} />
                   </tr>
                 )
               }
@@ -68,21 +68,15 @@ const scoreBucket = score === 0 ? 0 : Math.max(1, Math.round(score));
     --color-1: #d43d51;
   }
   .dora-capability-progress-bar .bar .score-bucket-2 {
-    --color-1: #e4825d;
-  }
-  .dora-capability-progress-bar .bar .score-bucket-3 {
     --color-1: #edbb85;
   }
-  .dora-capability-progress-bar .bar .score-bucket-4 {
+  .dora-capability-progress-bar .bar .score-bucket-3 {
     --color-1: #faeec4;
   }
-  .dora-capability-progress-bar .bar .score-bucket-5 {
+  .dora-capability-progress-bar .bar .score-bucket-4 {
     --color-1: #bacb98;
   }
-  .dora-capability-progress-bar .bar .score-bucket-6 {
-    --color-1: #73a97b;
-  }
-  .dora-capability-progress-bar .bar .score-bucket-7 {
+  .dora-capability-progress-bar .bar .score-bucket-5 {
     --color-1: #00876c;
   }
 </style>

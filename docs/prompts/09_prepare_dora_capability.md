@@ -16,9 +16,9 @@ Task 2: Create one survey question
 Write exactly one survey question for members of software project teams. The question should assess the extent to which the capability is demonstrated in day-to-day team practices.
 
 Requirements for the survey question:
-- The response scale is a 7-point Likert scale:
+- The response scale is a 5-point Likert scale:
   1 = Strongly disagree
-  7 = Strongly agree
+  5 = Strongly agree
 - The question must be answerable against that scale
 - Length must be 30 to 40 words
 - Cover the most important aspects of the capability, prioritizing concrete and observable team behaviors
@@ -27,15 +27,15 @@ Requirements for the survey question:
 - Avoid vague, abstract, or overly broad wording
 
 Task 3: Create guidance for each response level
-Write guidance for Levels 1 through 7, where each level corresponds to the survey response selected by a team member:
+Write guidance for Levels 1 through 5, where each level corresponds to the survey response selected by a team member:
 - Level 1 = Strongly disagree
-- Level 7 = Strongly agree
+- Level 5 = Strongly agree
 
 Requirements for the guidance:
-- Provide one guidance statement for each level from 1 to 7
+- Provide one guidance statement for each level from 1 to 5
 - Each level must contain 3 to 5 sentences
 - Guidance should help a software development team improve to the next level
-- For Level 7, describe how to sustain performance and avoid regression
+- For Level 5, describe how to sustain performance and avoid regression
 - Base the guidance only on the DORA capability text
 - Make the advice specific, practical, and action-oriented
 - Focus on what teams can start, stop, strengthen, or measure
@@ -50,12 +50,12 @@ Output Requirements:
     - question
     - description
     - guidance
-- guidance must contain exactly 7 items
+- guidance must contain exactly 5 items
 - Each item must contain:
     - level
     - text
 - name must contain the name of the DORA capability being assessed
-- level must be an integer from 1 to 7
+- level must be an integer from 1 to 5
 - question must contain 30 to 40 words
 - Each guidance text must contain 3 to 5 sentences
 - description must contain 4 to 6 sentences (explanation of Task 1)
@@ -65,7 +65,7 @@ Quality checks before finalizing:
 - Ensure the question reflects the capability’s central behaviors, not secondary details
 - Ensure the question can realistically be answered by individual dev team members
 - Ensure guidance describes how to progress to the next level
-- Ensure wording is consistent with a 7-point agreement scale
+- Ensure wording is consistent with a 5-point agreement scale
 
 General rules:
 - The target audience is software developers and other members of software project teams with varying levels of professional experience. Assume a baseline understanding of common software development concepts and practices. Use clear, precise, technically credible language. Established software engineering terms may be used where they improve accuracy, but avoid unnecessary jargon, niche framework terminology, and overly academic wording.
