@@ -1,5 +1,5 @@
 ---
-import BaseLayout2 from '@layouts/BaseLayout2.astro';
+import NavBarLayout from '@layouts/NavBarLayout.astro';
 import Breadcrumb from '@components/navigation/Breadcrumb.astro';
 
 type BreadcrumbItem = {
@@ -15,7 +15,7 @@ type Props = {
 const { title, breadcrumbs } = Astro.props;
 ---
 
-<BaseLayout2 title={title}>
+<NavBarLayout title={title}>
   <div class="max-w-3xl mx-auto space-y-6">
     {
       breadcrumbs && breadcrumbs.length > 0 && (
@@ -27,4 +27,4 @@ const { title, breadcrumbs } = Astro.props;
       <slot />
     </div>
   </div>
-</BaseLayout2>
+</NavBarLayout>
