@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
+import BaseLayout2 from '@layouts/BaseLayout2.astro';
 import Alert from '@components/ui/Alert.astro';
 import { actions } from 'astro:actions';
 import assert from 'node:assert';
@@ -57,62 +57,58 @@ const breadcrumbs = team
   : undefined;
 ---
 
-<BaseLayout title="Survey Details" breadcrumbs={breadcrumbs}>
-  <div class="flex-1 py-8">
-    <div class="container mx-auto px-4">
-      <div class="max-w-4xl mx-auto space-y-6">
-        {
-          notAuthorized ? (
-            <div class="card bg-base-100 shadow-xl">
-              <div class="card-body">
-                <h1 class="card-title text-2xl">Access Denied</h1>
-                <Alert type="warning">
-                  You do not have permission to view this survey run. Only team
-                  members can access this page.
-                </Alert>
-                <div class="card-actions justify-end">
-                  <a href="/" class="btn btn-primary">
-                    Back to Home
-                  </a>
-                </div>
-              </div>
+<BaseLayout2 title="Survey Details" breadcrumbs={breadcrumbs}>
+  <div class="space-y-6">
+    {
+      notAuthorized ? (
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h1 class="card-title text-2xl">Access Denied</h1>
+            <Alert type="warning">
+              You do not have permission to view this survey run. Only team
+              members can access this page.
+            </Alert>
+            <div class="card-actions justify-end">
+              <a href="/" class="btn btn-primary">
+                Back to Home
+              </a>
             </div>
-          ) : (
-            surveyRun && (
-              <>
-                <SurveyRunPageHeader
-                  title={surveyRun.title}
-                  status={surveyRun.status}
-                />
+          </div>
+        </div>
+      ) : (
+        surveyRun && (
+          <div class="space-y-6">
+            <SurveyRunPageHeader
+              title={surveyRun.title}
+              status={surveyRun.status}
+            />
 
-                {isTeamLead && (
-                  <SurveyRunLeadActions
-                    status={surveyRun.status}
-                    surveyRunId={surveyRunId}
-                    hasOtherOpenSurveyRun={hasOtherOpenSurveyRun}
-                    actions={actions}
-                  />
-                )}
+            {isTeamLead && (
+              <SurveyRunLeadActions
+                status={surveyRun.status}
+                surveyRunId={surveyRunId}
+                hasOtherOpenSurveyRun={hasOtherOpenSurveyRun}
+                actions={actions}
+              />
+            )}
 
-                {surveyRun.status === 'open' && (
-                  <SurveyRunResponseSection
-                    surveyRunId={surveyRunId}
-                    questionAnswers={questionAnswers}
-                  />
-                )}
+            {surveyRun.status === 'open' && (
+              <SurveyRunResponseSection
+                surveyRunId={surveyRunId}
+                questionAnswers={questionAnswers}
+              />
+            )}
 
-                {surveyRun.status === 'closed' && (
-                  <SurveyRunAssessmentSection
-                    surveyRun={surveyRun}
-                    assessmentError={assessmentError}
-                    assessmentResult={assessmentResult}
-                  />
-                )}
-              </>
-            )
-          )
-        }
-      </div>
-    </div>
+            {surveyRun.status === 'closed' && (
+              <SurveyRunAssessmentSection
+                surveyRun={surveyRun}
+                assessmentError={assessmentError}
+                assessmentResult={assessmentResult}
+              />
+            )}
+          </div>
+        )
+      )
+    }
   </div>
-</BaseLayout>
+</BaseLayout2>

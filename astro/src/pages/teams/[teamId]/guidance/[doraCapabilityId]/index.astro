@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
+import BaseLayout2 from '@layouts/BaseLayout2.astro';
 import Alert from '@components/ui/Alert.astro';
 import assert from 'node:assert';
 import { AuthorizationError } from '@services/authorization-service.ts';
@@ -70,151 +70,144 @@ const breadcrumbs =
     : undefined;
 ---
 
-<BaseLayout
+<BaseLayout2
   title={tailoredGuidance
     ? `${tailoredGuidance.capabilityName} Guidance`
     : 'Guidance'}
   breadcrumbs={breadcrumbs}
 >
-  <div class="flex-1 py-8">
-    <div class="container mx-auto px-4">
-      <div class="max-w-4xl mx-auto space-y-6">
-        {
-          notAuthorized ? (
-            <div class="card bg-base-100 shadow-xl">
-              <div class="card-body">
-                <h1 class="card-title text-2xl">Access Denied</h1>
-                <Alert type="warning">
-                  You do not have permission to view this guidance. Only team
-                  members can access this page.
-                </Alert>
-                <div class="card-actions justify-end">
-                  <a href="/" class="btn btn-primary">
-                    Back to Home
-                  </a>
-                </div>
-              </div>
+  <div class="space-y-6">
+    {
+      notAuthorized ? (
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h1 class="card-title text-2xl">Access Denied</h1>
+            <Alert type="warning">
+              You do not have permission to view this guidance. Only team
+              members can access this page.
+            </Alert>
+            <div class="card-actions justify-end">
+              <a href="/" class="btn btn-primary">
+                Back to Home
+              </a>
             </div>
-          ) : (
-            tailoredGuidance &&
-            team && (
-              <>
-                <section
-                  class="card bg-base-100 shadow-xl"
-                  data-testid="guidance-page"
-                >
-                  <div class="card-body gap-6">
-                    <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                      <div class="space-y-2">
-                        <h1
-                          class="text-3xl font-bold"
-                          data-testid="guidance-capability-name"
-                        >
-                          {tailoredGuidance.capabilityName}
-                        </h1>
-                        <p
-                          class="text-base-content/70"
-                          data-testid="guidance-context"
-                        >
-                          {team.name} · {tailoredGuidance.surveyTitle}
-                        </p>
-                      </div>
+          </div>
+        </div>
+      ) : (
+        tailoredGuidance &&
+        team && (
+          <>
+            <section
+              class="card bg-base-100 shadow-xl"
+              data-testid="guidance-page"
+            >
+              <div class="card-body gap-6">
+                <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                  <div class="space-y-2">
+                    <h1
+                      class="text-3xl font-bold"
+                      data-testid="guidance-capability-name"
+                    >
+                      {tailoredGuidance.capabilityName}
+                    </h1>
+                    <p
+                      class="text-base-content/70"
+                      data-testid="guidance-context"
+                    >
+                      {team.name} · {tailoredGuidance.surveyTitle}
+                    </p>
+                  </div>
 
-                      <div class="stats min-w-60 shadow bg-base-200">
-                        <div class="stat">
-                          <div class="stat-title">Score</div>
-                          <div class="stat-value" data-testid="guidance-score">
-                            {tailoredGuidance.score.toFixed(1)}
-                            <span class="text-sm font-normal text-base-content/60">
-                              / 5
-                            </span>
-                          </div>
-                          <div class="stat-desc">
-                            <div class="dora-capability-progress-bar grow flex items-center">
-                              <table class="charts-css bar multiple stacked">
-                                {
-                                  <tr
-                                    data-testid={`score-bucket-${scoreBucket}`}
-                                    class={`score-bucket-${scoreBucket}`}
-                                  >
-                                    <td
-                                      style={`--size: calc(${tailoredGuidance.score} / 5);`}
-                                    />
-                                    <td
-                                      style={`--size: calc(${5 - tailoredGuidance.score} / 5);`}
-                                    />
-                                  </tr>
-                                }
-                              </table>
-                            </div>
-                          </div>
+                  <div class="stats min-w-60 shadow bg-base-200">
+                    <div class="stat">
+                      <div class="stat-title">Score</div>
+                      <div class="stat-value" data-testid="guidance-score">
+                        {tailoredGuidance.score.toFixed(1)}
+                        <span class="text-sm font-normal text-base-content/60">
+                          / 5
+                        </span>
+                      </div>
+                      <div class="stat-desc">
+                        <div class="dora-capability-progress-bar grow flex items-center">
+                          <table class="charts-css bar multiple stacked">
+                            {
+                              <tr
+                                data-testid={`score-bucket-${scoreBucket}`}
+                                class={`score-bucket-${scoreBucket}`}
+                              >
+                                <td
+                                  style={`--size: calc(${tailoredGuidance.score} / 5);`}
+                                />
+                                <td
+                                  style={`--size: calc(${5 - tailoredGuidance.score} / 5);`}
+                                />
+                              </tr>
+                            }
+                          </table>
                         </div>
                       </div>
                     </div>
-
-                    <div
-                      class="rounded-2xl border border-base-300 bg-base-200 p-6 space-y-4"
-                      data-testid="guidance-section"
-                    >
-                      <div class="flex items-center gap-3">
-                        <span class="iconify lucide--compass text-primary h-6 w-6" />
-                        <h2 class="text-xl font-semibold">
-                          Next improvement step
-                        </h2>
-                      </div>
-
-                      {tailoredGuidance.guidance ? (
-                        <p
-                          class="text-base leading-7 text-base-content/85"
-                          data-testid="guidance-text"
-                        >
-                          {tailoredGuidance.guidance.text}
-                        </p>
-                      ) : (
-                        <Alert type="warning">
-                          Guidance for this capability score is not available
-                          yet.
-                        </Alert>
-                      )}
-                    </div>
-
-                    <div class="flex flex-col gap-4 rounded-2xl border border-base-300 p-5 md:flex-row md:items-center md:justify-between">
-                      <div>
-                        <p class="font-medium">DORA source</p>
-                        <p class="text-sm text-base-content/70">
-                          Review the capability guidance and supporting research
-                          from DORA.
-                        </p>
-                      </div>
-                      <a
-                        href={tailoredGuidance.doraReference}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="btn btn-primary"
-                        data-testid="guidance-dora-source"
-                      >
-                        Open DORA source
-                      </a>
-                    </div>
-
-                    <div class="card-actions justify-end">
-                      <a
-                        href={`/teams/${teamId}/surveys/${tailoredGuidance.surveyRunId}`}
-                        class="btn btn-ghost"
-                      >
-                        Back to survey results
-                      </a>
-                    </div>
                   </div>
-                </section>
-              </>
-            )
-          )
-        }
-      </div>
-    </div>
+                </div>
+
+                <div
+                  class="rounded-2xl border border-base-300 bg-base-200 p-6 space-y-4"
+                  data-testid="guidance-section"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="iconify lucide--compass text-primary h-6 w-6" />
+                    <h2 class="text-xl font-semibold">Next improvement step</h2>
+                  </div>
+
+                  {tailoredGuidance.guidance ? (
+                    <p
+                      class="text-base leading-7 text-base-content/85"
+                      data-testid="guidance-text"
+                    >
+                      {tailoredGuidance.guidance.text}
+                    </p>
+                  ) : (
+                    <Alert type="warning">
+                      Guidance for this capability score is not available yet.
+                    </Alert>
+                  )}
+                </div>
+
+                <div class="flex flex-col gap-4 rounded-2xl border border-base-300 p-5 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <p class="font-medium">DORA source</p>
+                    <p class="text-sm text-base-content/70">
+                      Review the capability guidance and supporting research
+                      from DORA.
+                    </p>
+                  </div>
+                  <a
+                    href={tailoredGuidance.doraReference}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-primary"
+                    data-testid="guidance-dora-source"
+                  >
+                    Open DORA source
+                  </a>
+                </div>
+
+                <div class="card-actions justify-end">
+                  <a
+                    href={`/teams/${teamId}/surveys/${tailoredGuidance.surveyRunId}`}
+                    class="btn btn-ghost"
+                  >
+                    Back to survey results
+                  </a>
+                </div>
+              </div>
+            </section>
+          </>
+        )
+      )
+    }
   </div>
-</BaseLayout>
+</BaseLayout2>
 
 <style>
   .dora-capability-progress-bar .bar {

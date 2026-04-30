@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
+import BaseLayout2 from '@layouts/BaseLayout2.astro';
 import Alert from '@components/ui/Alert.astro';
 import EmptyState from '@components/ui/EmptyState.astro';
 import assert from 'node:assert';
@@ -42,131 +42,125 @@ const breadcrumbs = team
   : undefined;
 ---
 
-<BaseLayout title="Team Details" breadcrumbs={breadcrumbs}>
-  <div class="flex-1 py-8">
-    <div class="container mx-auto px-4">
-      <div class="max-w-4xl mx-auto space-y-6">
-        {
-          notAuthorized ? (
-            <div class="card bg-base-100 shadow-xl">
-              <div class="card-body">
-                <h1 class="card-title text-2xl">Access Denied</h1>
-                <Alert type="warning">
-                  You do not have permission to view this team. Only team
-                  members can access this page.
-                </Alert>
-                <div class="card-actions justify-end">
-                  <a href="/" class="btn btn-primary">
-                    Back to Home
-                  </a>
+<BaseLayout2 title="Team Details" breadcrumbs={breadcrumbs}>
+  <div class="space-y-6">
+    {
+      notAuthorized ? (
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h1 class="card-title text-2xl">Access Denied</h1>
+            <Alert type="warning">
+              You do not have permission to view this team. Only team members
+              can access this page.
+            </Alert>
+            <div class="card-actions justify-end">
+              <a href="/" class="btn btn-primary">
+                Back to Home
+              </a>
+            </div>
+          </div>
+        </div>
+      ) : (
+        team && (
+          <>
+            <div class="flex">
+              <div class="flex-1 space-y-2">
+                <h1 class="text-3xl font-bold">{team.name}</h1>
+                {team.description && (
+                  <p class="text-sm text-base-content/60">{team.description}</p>
+                )}
+              </div>
+              <div class="dropdown dropdown-end">
+                <div
+                  tabindex="0"
+                  role="button"
+                  class="btn btn-ghost btn-square"
+                  data-testid="team-options-button"
+                >
+                  <span class="iconify lucide--ellipsis-vertical h-5 w-5" />
                 </div>
+                <ul
+                  tabindex="0"
+                  class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-xl"
+                >
+                  {isTeamLead && (
+                    <li>
+                      <a href={`/teams/${team.id}/edit`} class="gap-2">
+                        <span class="iconify lucide--edit" />
+                        Edit team details
+                      </a>
+                    </li>
+                  )}
+                  <li>
+                    <a href={`/teams/${team.id}/members`} class="gap-2">
+                      <span class="iconify lucide--users" />
+                      {isTeamLead ? 'Manage members' : 'View members'}
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
-          ) : (
-            team && (
-              <>
-                <div class="flex items-start justify-between gap-4 mb-6">
-                  <div class="flex-1">
-                    <h1 class="text-3xl font-bold mb-2">{team.name}</h1>
-                    {team.description && (
-                      <p class="text-lg text-base-content/70">
-                        {team.description}
-                      </p>
+
+            <div class="card bg-base-100 shadow-xl">
+              <div class="card-body">
+                <div class="flex items-center justify-between mb-4">
+                  <h2 class="card-title text-xl">Surveys</h2>
+                  <div class="flex items-center gap-2">
+                    <a
+                      href={`/teams/${team.id}/trend`}
+                      data-testid="view-trend-link"
+                      class="btn btn-ghost btn-sm gap-2"
+                    >
+                      <span class="iconify lucide--trending-up" />
+                      View trend
+                    </a>
+                    {isTeamLead && (
+                      <a
+                        href={`/teams/${team.id}/surveys/new`}
+                        class="btn btn-primary btn-sm gap-2"
+                      >
+                        <span class="iconify lucide--plus" />
+                        New Survey
+                      </a>
                     )}
                   </div>
-                  <div class="dropdown dropdown-end">
-                    <div
-                      tabindex="0"
-                      role="button"
-                      class="btn btn-ghost btn-square"
-                      data-testid="team-options-button"
-                    >
-                      <span class="iconify lucide--menu h-5 w-5" />
-                    </div>
-                    <ul
-                      tabindex="0"
-                      class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-xl"
-                    >
-                      {isTeamLead && (
-                        <li>
-                          <a href={`/teams/${team.id}/edit`} class="gap-2">
-                            <span class="iconify lucide--edit" />
-                            Edit team details
-                          </a>
-                        </li>
-                      )}
-                      <li>
-                        <a href={`/teams/${team.id}/members`} class="gap-2">
-                          <span class="iconify lucide--users" />
-                          {isTeamLead ? 'Manage members' : 'View members'}
+                </div>
+
+                {surveyRuns.length === 0 ? (
+                  <EmptyState
+                    icon="survey"
+                    title="No surveys yet"
+                    message={
+                      isTeamLead
+                        ? 'Create your first survey to get started'
+                        : undefined
+                    }
+                  />
+                ) : (
+                  <ul class="divide-y divide-base-300">
+                    {surveyRuns.map((run) => (
+                      <li class="py-3">
+                        <a
+                          href={`/teams/${team.id}/surveys/${run.id}`}
+                          data-testid="survey-run-link"
+                          class="flex items-center justify-between hover:bg-base-200 -mx-4 px-4 py-2 rounded-lg transition-colors"
+                        >
+                          <div class="flex items-center gap-3">
+                            <span>{run.title}</span>
+                          </div>
+                          <span class="badge badge-soft badge-info">
+                            {run.status}
+                          </span>
                         </a>
                       </li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div class="card bg-base-100 shadow-xl">
-                  <div class="card-body">
-                    <div class="flex items-center justify-between mb-4">
-                      <h2 class="card-title text-xl">Surveys</h2>
-                      <div class="flex items-center gap-2">
-                        <a
-                          href={`/teams/${team.id}/trend`}
-                          data-testid="view-trend-link"
-                          class="btn btn-ghost btn-sm gap-2"
-                        >
-                          <span class="iconify lucide--trending-up" />
-                          View trend
-                        </a>
-                        {isTeamLead && (
-                          <a
-                            href={`/teams/${team.id}/surveys/new`}
-                            class="btn btn-primary btn-sm gap-2"
-                          >
-                            <span class="iconify lucide--plus" />
-                            New Survey
-                          </a>
-                        )}
-                      </div>
-                    </div>
-
-                    {surveyRuns.length === 0 ? (
-                      <EmptyState
-                        icon="survey"
-                        title="No surveys yet"
-                        message={
-                          isTeamLead
-                            ? 'Create your first survey to get started'
-                            : undefined
-                        }
-                      />
-                    ) : (
-                      <ul class="divide-y divide-base-300">
-                        {surveyRuns.map((run) => (
-                          <li class="py-3">
-                            <a
-                              href={`/teams/${team.id}/surveys/${run.id}`}
-                              data-testid="survey-run-link"
-                              class="flex items-center justify-between hover:bg-base-200 -mx-4 px-4 py-2 rounded-lg transition-colors"
-                            >
-                              <div class="flex items-center gap-3">
-                                <span>{run.title}</span>
-                              </div>
-                              <span class="badge badge-soft badge-info">
-                                {run.status}
-                              </span>
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-              </>
-            )
-          )
-        }
-      </div>
-    </div>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </>
+        )
+      )
+    }
   </div>
-</BaseLayout>
+</BaseLayout2>

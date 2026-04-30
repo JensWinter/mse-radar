@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
+import BaseLayout2 from '@layouts/BaseLayout2.astro';
 import Alert from '@components/ui/Alert.astro';
 import EmptyState from '@components/ui/EmptyState.astro';
 import TrendGrid from '@components/trend/TrendGrid.astro';
@@ -44,62 +44,58 @@ const breadcrumbs = team
   : undefined;
 ---
 
-<BaseLayout title="Trend" breadcrumbs={breadcrumbs}>
-  <div class="flex-1 py-8">
-    <div class="container mx-auto px-4">
-      <div class="max-w-5xl mx-auto space-y-6">
-        {
-          notAuthorized ? (
-            <div class="card bg-base-100 shadow-xl">
-              <div class="card-body">
-                <h1 class="card-title text-2xl">Access Denied</h1>
-                <Alert type="warning">
-                  You do not have permission to view this team's trend. Only
-                  team members can access this page.
-                </Alert>
-                <div class="card-actions justify-end">
-                  <a href="/" class="btn btn-primary">
-                    Back to Home
-                  </a>
+<BaseLayout2 title="Trend" breadcrumbs={breadcrumbs}>
+  <div class="space-y-6">
+    {
+      notAuthorized ? (
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h1 class="card-title text-2xl">Access Denied</h1>
+            <Alert type="warning">
+              You do not have permission to view this team's trend. Only team
+              members can access this page.
+            </Alert>
+            <div class="card-actions justify-end">
+              <a href="/" class="btn btn-primary">
+                Back to Home
+              </a>
+            </div>
+          </div>
+        </div>
+      ) : (
+        team && (
+          <>
+            <div class="space-y-2">
+              <h1 class="text-3xl font-bold">{team.name}</h1>
+              <p class="text-sm text-base-content/60">
+                Capability trends across closed survey runs
+              </p>
+            </div>
+
+            {surveyCount === 0 ? (
+              <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                  <EmptyState
+                    icon="survey"
+                    title="No completed surveys yet"
+                    message="Close a survey run to start building trend data."
+                  />
                 </div>
               </div>
-            </div>
-          ) : (
-            team && (
+            ) : (
               <>
-                <div>
-                  <h1 class="text-3xl font-bold mb-1">{team.name}</h1>
-                  <p class="text-base-content/70">
-                    Capability trends across closed survey runs
-                  </p>
-                </div>
-
-                {surveyCount === 0 ? (
-                  <div class="card bg-base-100 shadow-xl">
-                    <div class="card-body">
-                      <EmptyState
-                        icon="survey"
-                        title="No completed surveys yet"
-                        message="Close a survey run to start building trend data."
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    {surveyCount === 1 && (
-                      <Alert type="info">
-                        Trends appear after the second closed survey run.
-                        Showing the latest scores so far.
-                      </Alert>
-                    )}
-                    <TrendGrid doraCapabilityTrends={capabilityTrends} />
-                  </>
+                {surveyCount === 1 && (
+                  <Alert type="info">
+                    Trends appear after the second closed survey run. Showing
+                    the latest scores so far.
+                  </Alert>
                 )}
+                <TrendGrid doraCapabilityTrends={capabilityTrends} />
               </>
-            )
-          )
-        }
-      </div>
-    </div>
+            )}
+          </>
+        )
+      )
+    }
   </div>
-</BaseLayout>
+</BaseLayout2>
