@@ -1,18 +1,11 @@
 ---
-import Breadcrumb from '@components/navigation/Breadcrumb.astro';
 import '../styles/global.css';
-
-type BreadcrumbItem = {
-  label: string;
-  href?: string;
-};
 
 type Props = {
   title: string;
-  breadcrumbs?: BreadcrumbItem[];
 };
 
-const { title, breadcrumbs } = Astro.props as Props;
+const { title } = Astro.props as Props;
 
 const { user } = Astro.locals;
 ---
@@ -77,17 +70,7 @@ const { user } = Astro.locals;
     </div>
 
     <main class="container mx-auto p-8">
-      <div class="max-w-3xl mx-auto space-y-6">
-        {
-          breadcrumbs && breadcrumbs.length > 0 && (
-            <Breadcrumb items={breadcrumbs} />
-          )
-        }
-
-        <div class="flex flex-col flex-1">
-          <slot />
-        </div>
-      </div>
+        <slot />
     </main>
   </body>
 </html>

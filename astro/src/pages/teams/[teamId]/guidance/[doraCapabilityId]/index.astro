@@ -1,5 +1,5 @@
 ---
-import BaseLayout2 from '@layouts/BaseLayout2.astro';
+import DefaultMainLayout from '@layouts/DefaultMainLayout.astro';
 import Alert from '@components/ui/Alert.astro';
 import assert from 'node:assert';
 import { AuthorizationError } from '@services/authorization-service.ts';
@@ -70,7 +70,7 @@ const breadcrumbs =
     : undefined;
 ---
 
-<BaseLayout2
+<DefaultMainLayout
   title={tailoredGuidance
     ? `${tailoredGuidance.capabilityName} Guidance`
     : 'Guidance'}
@@ -207,7 +207,7 @@ const breadcrumbs =
       )
     }
   </div>
-</BaseLayout2>
+</DefaultMainLayout>
 
 <style>
   .dora-capability-progress-bar .bar {

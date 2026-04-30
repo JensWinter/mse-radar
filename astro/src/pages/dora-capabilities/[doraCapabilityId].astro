@@ -1,5 +1,5 @@
 ---
-import BaseLayout2 from '@layouts/BaseLayout2.astro';
+import DefaultMainLayout from '@layouts/DefaultMainLayout.astro';
 import assert from 'node:assert';
 import { createDoraCapabilitiesService } from '@lib/composition.ts';
 
@@ -21,7 +21,7 @@ if (!capability) {
 }
 ---
 
-<BaseLayout2 title={capability.name}>
+<DefaultMainLayout title={capability.name}>
   <div class="space-y-6">
     <div class="flex items-center justify-between flex-wrap gap-4">
       <h1 class="text-3xl font-bold">{capability.name}</h1>
@@ -82,4 +82,4 @@ if (!capability) {
       </div>
     </div>
   </div>
-</BaseLayout2>
+</DefaultMainLayout>

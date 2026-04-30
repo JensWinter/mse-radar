@@ -1,5 +1,5 @@
 ---
-import BaseLayout2 from '@layouts/BaseLayout2.astro';
+import DefaultMainLayout from '@layouts/DefaultMainLayout.astro';
 import Alert from '@components/ui/Alert.astro';
 import EmptyState from '@components/ui/EmptyState.astro';
 import TrendGrid from '@components/trend/TrendGrid.astro';
@@ -44,7 +44,7 @@ const breadcrumbs = team
   : undefined;
 ---
 
-<BaseLayout2 title="Trend" breadcrumbs={breadcrumbs}>
+<DefaultMainLayout title="Trend" breadcrumbs={breadcrumbs}>
   <div class="space-y-6">
     {
       notAuthorized ? (
@@ -98,4 +98,4 @@ const breadcrumbs = team
       )
     }
   </div>
-</BaseLayout2>
+</DefaultMainLayout>

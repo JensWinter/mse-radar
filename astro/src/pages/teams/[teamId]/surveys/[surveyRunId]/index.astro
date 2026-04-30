@@ -1,5 +1,5 @@
 ---
-import BaseLayout2 from '@layouts/BaseLayout2.astro';
+import DefaultMainLayout from '@layouts/DefaultMainLayout.astro';
 import Alert from '@components/ui/Alert.astro';
 import { actions } from 'astro:actions';
 import assert from 'node:assert';
@@ -57,7 +57,7 @@ const breadcrumbs = team
   : undefined;
 ---
 
-<BaseLayout2 title="Survey Details" breadcrumbs={breadcrumbs}>
+<DefaultMainLayout title="Survey Details" breadcrumbs={breadcrumbs}>
   <div class="space-y-6">
     {
       notAuthorized ? (
@@ -111,4 +111,4 @@ const breadcrumbs = team
       )
     }
   </div>
-</BaseLayout2>
+</DefaultMainLayout>

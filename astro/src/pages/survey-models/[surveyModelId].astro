@@ -1,5 +1,5 @@
 ---
-import BaseLayout2 from '@layouts/BaseLayout2.astro';
+import DefaultMainLayout from '@layouts/DefaultMainLayout.astro';
 import assert from 'node:assert';
 import {
   createDoraCapabilitiesService,
@@ -40,7 +40,7 @@ const questionsWithDoraCapabilities = surveyModel.questions.map((question) => {
 });
 ---
 
-<BaseLayout2 title={`Survey Model ${surveyModel.version}`}>
+<DefaultMainLayout title={`Survey Model ${surveyModel.version}`}>
   <div class="space-y-6">
     <div class="flex items-center justify-between flex-wrap gap-4">
       <h1 class="text-3xl font-bold">Survey Model {surveyModel.version}</h1>
@@ -102,4 +102,4 @@ const questionsWithDoraCapabilities = surveyModel.questions.map((question) => {
       </div>
     </div>
   </div>
-</BaseLayout2>
+</DefaultMainLayout>

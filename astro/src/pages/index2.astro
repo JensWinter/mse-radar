@@ -1,5 +1,5 @@
 ---
-import BaseLayout2 from '@layouts/BaseLayout2.astro';
+import DefaultMainLayout from '@layouts/DefaultMainLayout.astro';
 import type { TeamDto } from '@services/teams-service.ts';
 import { createTeamsService } from '@lib/composition.ts';
 import EmptyState from '@components/ui/EmptyState.astro';
@@ -13,7 +13,7 @@ if (user) {
 }
 ---
 
-<BaseLayout2 title="Home">
+<DefaultMainLayout title="Home">
   {
     user ? (
       <div class="space-y-6">
@@ -130,4 +130,4 @@ if (user) {
       </div>
     )
   }
-</BaseLayout2>
+</DefaultMainLayout>
