@@ -1,5 +1,5 @@
 ---
-import BaseLayout2 from '@layouts/BaseLayout2.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 
 type Props = {
   title: string;
@@ -10,7 +10,7 @@ const { title } = Astro.props as Props;
 const { user } = Astro.locals;
 ---
 
-<BaseLayout2 title={title}>
+<BaseLayout title={title}>
   <div class="navbar bg-base-100 shadow-sm flex-none">
     <div class="navbar-start">
       <a class="btn btn-ghost text-xl" href="/" aria-label="Main page">MSE</a>
@@ -64,7 +64,7 @@ const { user } = Astro.locals;
   <main class="container mx-auto p-8">
     <slot />
   </main>
-</BaseLayout2>
+</BaseLayout>
 
 <script>
   import { signOut } from '../lib/auth-client.ts';

@@ -62,13 +62,7 @@ export const onRequest = sequence(
   }),
 
   defineMiddleware(async (context, next) => {
-    const publicPages = [
-      '/',
-      '/index2',
-      '/login',
-      '/register',
-      '/api/auth/[...all]',
-    ];
+    const publicPages = ['/', '/login', '/register', '/api/auth/[...all]'];
     if (publicPages.includes(context.routePattern) || !!context.locals.user) {
       return next();
     }
