@@ -4,11 +4,19 @@ import Alert from '@components/ui/Alert.astro';
 import EmptyState from '@components/ui/EmptyState.astro';
 import assert from 'node:assert';
 import { AuthorizationError } from '@services/authorization-service.ts';
-import { createGetTeamOverviewUseCase } from '@lib/composition.ts';
+import {
+  createGetTeamOverviewUseCase,
+  createGetTeamTrendUseCase,
+} from '@lib/composition.ts';
 import {
   type TeamOverview,
   TeamOverviewNotFoundError,
 } from '@use-cases/get-team-overview.ts';
+import {
+  type TeamTrend,
+  TeamTrendNotFoundError,
+} from '@use-cases/get-team-trend.ts';
+import TrendGrid from '@components/trend/TrendGrid.astro';
 
 const { user } = Astro.locals;
 assert(user, 'User must be logged in.');
@@ -33,9 +41,25 @@ try {
   }
 }
 
+let teamTrend: TeamTrend | null = null;
+
+try {
+  teamTrend = await createGetTeamTrendUseCase(Astro.locals).execute(teamId);
+} catch (error) {
+  if (error instanceof AuthorizationError) {
+    notAuthorized = true;
+  } else if (error instanceof TeamTrendNotFoundError) {
+    return new Response('Not Found', { status: 404 });
+  } else {
+    return new Response('Not Found', { status: 404 });
+  }
+}
+
 const team = teamOverview?.team ?? null;
 const surveyRuns = teamOverview?.surveyRuns ?? [];
 const isTeamLead = teamOverview?.isTeamLead ?? false;
+const capabilityTrends = teamTrend?.capabilityTrends ?? [];
+const surveyCount = teamTrend?.surveyCount ?? 0;
 
 const breadcrumbs = team
   ? [{ label: 'Home', href: '/' }, { label: team.name }]
@@ -62,7 +86,7 @@ const breadcrumbs = team
         </div>
       ) : (
         team && (
-          <>
+          <div class="space-y-4">
             <div class="flex">
               <div class="flex-1 space-y-2">
                 <h1 class="text-3xl font-bold">{team.name}</h1>
@@ -70,6 +94,15 @@ const breadcrumbs = team
                   <p class="text-sm text-base-content/60">{team.description}</p>
                 )}
               </div>
+              {isTeamLead && (
+                <a
+                  href={`/teams/${team.id}/surveys/new`}
+                  class="btn btn-primary gap-2"
+                >
+                  <span class="iconify lucide--plus" />
+                  New Survey
+                </a>
+              )}
               <div class="dropdown dropdown-end">
                 <div
                   tabindex="0"
@@ -77,7 +110,7 @@ const breadcrumbs = team
                   class="btn btn-ghost btn-square"
                   data-testid="team-options-button"
                 >
-                  <span class="iconify lucide--ellipsis-vertical h-5 w-5" />
+                  <span class="iconify lucide--ellipsis-vertical" />
                 </div>
                 <ul
                   tabindex="0"
@@ -101,31 +134,15 @@ const breadcrumbs = team
               </div>
             </div>
 
-            <div class="card bg-base-100 shadow-xl">
-              <div class="card-body">
-                <div class="flex items-center justify-between mb-4">
-                  <h2 class="card-title text-xl">Surveys</h2>
-                  <div class="flex items-center gap-2">
-                    <a
-                      href={`/teams/${team.id}/trend`}
-                      data-testid="view-trend-link"
-                      class="btn btn-ghost btn-sm gap-2"
-                    >
-                      <span class="iconify lucide--trending-up" />
-                      View trend
-                    </a>
-                    {isTeamLead && (
-                      <a
-                        href={`/teams/${team.id}/surveys/new`}
-                        class="btn btn-primary btn-sm gap-2"
-                      >
-                        <span class="iconify lucide--plus" />
-                        New Survey
-                      </a>
-                    )}
-                  </div>
-                </div>
-
+            <div class="tabs tabs-border">
+              <input
+                type="radio"
+                name="teams-tabs"
+                class="tab"
+                aria-label="Surveys"
+                checked="checked"
+              />
+              <div class="tab-content border-base-300 bg-base-100 p-6">
                 {surveyRuns.length === 0 ? (
                   <EmptyState
                     icon="survey"
@@ -137,17 +154,15 @@ const breadcrumbs = team
                     }
                   />
                 ) : (
-                  <ul class="divide-y divide-base-300">
+                  <ul class="space-y-2">
                     {surveyRuns.map((run) => (
-                      <li class="py-3">
+                      <li>
                         <a
                           href={`/teams/${team.id}/surveys/${run.id}`}
                           data-testid="survey-run-link"
                           class="flex items-center justify-between hover:bg-base-200 -mx-4 px-4 py-2 rounded-lg transition-colors"
                         >
-                          <div class="flex items-center gap-3">
-                            <span>{run.title}</span>
-                          </div>
+                          <span>{run.title}</span>
                           <span class="badge badge-soft badge-info">
                             {run.status}
                           </span>
@@ -157,8 +172,32 @@ const breadcrumbs = team
                   </ul>
                 )}
               </div>
+
+              <input
+                type="radio"
+                name="teams-tabs"
+                class="tab"
+                aria-label="Trend"
+              />
+              <div class="tab-content border-base-300 bg-base-100 p-6">
+                {surveyCount === 0 ? (
+                  <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                      <EmptyState
+                        icon="survey"
+                        title="No completed surveys yet"
+                        message="Close a survey run to start building trend data."
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <TrendGrid doraCapabilityTrends={capabilityTrends} />
+                  </>
+                )}
+              </div>
             </div>
-          </>
+          </div>
         )
       )
     }

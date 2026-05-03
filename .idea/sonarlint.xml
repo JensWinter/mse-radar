@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SonarLintProjectSettings">
+    <option name="bindingEnabled" value="true" />
+    <option name="projectKey" value="JensWinter_mse-radar_b0d2a074-7e9d-42e4-91fa-ca1c57d728a8" />
+    <option name="serverId" value="Quasar" />
+  </component>
+</project>

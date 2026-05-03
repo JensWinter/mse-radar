@@ -11,7 +11,6 @@ export class ProtocolDriver {
   private lastClosedSurveyRunUrl: string | null = null;
   private lastOpenedTeamUrl: string | null = null;
   private lastSurveyRunUrl: string | null = null;
-  private lastTrendViewUrl: string | null = null;
 
   constructor(private readonly page: Page) {
   }
@@ -686,11 +685,11 @@ export class ProtocolDriver {
 
   async openTrendView(teamName: string) {
     await this.openTeamDetails(teamName);
-    const trendLink = this.page.getByTestId('view-trend-link');
-    await expect(trendLink).toBeVisible();
-    await trendLink.click();
-    await this.page.waitForLoadState('networkidle');
-    this.lastTrendViewUrl = this.page.url();
+    const trendTab = this.page.locator(
+      'input[name="teams-tabs"][aria-label="Trend"]',
+    );
+    await expect(trendTab).toBeVisible();
+    await trendTab.click();
   }
 
   async confirmTrendVisualizationDisplayed() {
@@ -808,12 +807,12 @@ export class ProtocolDriver {
   }
 
   async attemptToViewTrendView() {
-    if (!this.lastTrendViewUrl) {
+    if (!this.lastOpenedTeamUrl) {
       throw new Error(
         'No trend view URL has been stored. Make sure openTrendView was called first.',
       );
     }
-    await this.page.goto(this.lastTrendViewUrl);
+    await this.page.goto(this.lastOpenedTeamUrl);
   }
 
   // Improvement Guidance
