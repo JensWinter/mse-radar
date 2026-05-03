@@ -16,7 +16,7 @@ if (createTeamResult && !createTeamResult.error) {
 <ModalLayout title="New Team">
   {
     createTeamResult?.error && (
-      <Alert type="error" class="mb-4" messageClass="error-message">
+      <Alert type="error" messageClass="error-message">
         {createTeamResult.error.message}
       </Alert>
     )
@@ -28,10 +28,8 @@ if (createTeamResult && !createTeamResult.error) {
     action={actions.createTeam}
     class="space-y-4"
   >
-    <div class="form-control w-full">
-      <label class="label" for="name">
-        <span class="label-text font-medium">Team Name</span>
-      </label>
+    <div class="space-y-2">
+      <label class="label" for="name">Team Name</label>
       <input
         type="text"
         id="name"
@@ -39,23 +37,14 @@ if (createTeamResult && !createTeamResult.error) {
         required
         minlength="3"
         maxlength="100"
-        class="input input-bordered w-full"
-        placeholder="Enter team name"
+        class="input w-full"
       />
-      <label class="label">
-        <span class="label-text-alt"> Minimum 3 characters, maximum 100 </span>
-      </label>
     </div>
 
-    <div class="form-control w-full">
-      <label class="label" for="description">
-        <span class="label-text font-medium">Description</span>
-      </label>
-      <textarea
-        id="description"
-        name="description"
-        class="textarea textarea-bordered w-full h-24"
-        placeholder="Enter team description (optional)"></textarea>
+    <div class="space-y-2">
+      <label class="label" for="description">Description</label>
+      <textarea id="description" name="description" class="textarea w-full"
+      ></textarea>
     </div>
   </form>
 

@@ -41,84 +41,72 @@ if (result?.data?.success) {
 ---
 
 <ModalLayout title="Edit Team">
-  <div class="space-y-6">
-    {
-      notAuthorized || notTeamLead ? (
-        <div class="card bg-base-100 shadow-xl">
-          <div class="card-body">
-            <h1 class="card-title text-2xl">Access Denied</h1>
-            <Alert type="warning">
-              You do not have permission to edit this team. Only team leads can
-              edit team details.
-            </Alert>
-            <div class="card-actions justify-end">
-              <a href={`/teams/${teamId}`} class="btn btn-primary">
-                Back to Team Details
-              </a>
-            </div>
+  {
+    notAuthorized || notTeamLead ? (
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+          <h1 class="card-title text-2xl">Access Denied</h1>
+          <Alert type="warning">
+            You do not have permission to edit this team. Only team leads can
+            edit team details.
+          </Alert>
+          <div class="card-actions justify-end">
+            <a href={`/teams/${teamId}`} class="btn btn-primary">
+              Back to Team Details
+            </a>
           </div>
         </div>
-      ) : (
-        team && (
-          <>
-            {result?.error && (
-              <Alert type="error" class="mb-4" messageClass="error-message">
-                {result.error.message}
-              </Alert>
-            )}
+      </div>
+    ) : (
+      team && (
+        <>
+          {result?.error && (
+            <Alert type="error" messageClass="error-message">
+              {result.error.message}
+            </Alert>
+          )}
 
-            <form
-              id="edit-team-form"
-              method="POST"
-              action={actions.updateTeam}
-              class="space-y-4"
-            >
-              <input type="hidden" name="teamId" value={team.id} />
+          <form
+            id="edit-team-form"
+            method="POST"
+            action={actions.updateTeam}
+            class="space-y-4"
+          >
+            <input type="hidden" name="teamId" value={team.id} />
 
-              <div class="form-control w-full">
-                <label class="label" for="name">
-                  <span class="label-text font-medium">Team Name</span>
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={team.name}
-                  required
-                  minlength="3"
-                  maxlength="100"
-                  class="input input-bordered w-full"
-                  placeholder="Enter team name"
-                />
-                <label class="label">
-                  <span class="label-text-alt">
-                    Minimum 3 characters, maximum 100
-                  </span>
-                </label>
-              </div>
+            <div class="space-y-2">
+              <label class="label" for="name">
+                Team Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={team.name}
+                required
+                minlength="3"
+                maxlength="100"
+                class="input w-full"
+              />
+            </div>
 
-              <div class="form-control w-full">
-                <label class="label" for="description">
-                  <span class="label-text font-medium">Description</span>
-                </label>
-                <textarea
-                  id="description"
-                  name="description"
-                  class="textarea textarea-bordered w-full h-24"
-                  placeholder="Enter team description (optional)"
-                >
-                  {team.description ?? ''}
-                </textarea>
-                <label class="label">
-                  <span class="label-text-alt">Optional</span>
-                </label>
-              </div>
-            </form>
-          </>
-        )
+            <div class="space-y-2">
+              <label class="label" for="description">
+                Description
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                class="textarea w-full"
+              >
+                {team.description ?? ''}
+              </textarea>
+            </div>
+          </form>
+        </>
       )
-    }
-  </div>
+    )
+  }
   <div slot="actions" class="flex flex-1 justify-center">
     <a href={`/teams/${teamId}`} class="btn btn-ghost"> Cancel </a>
     <button type="submit" form="edit-team-form" class="btn btn-primary">
