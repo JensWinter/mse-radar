@@ -137,10 +137,10 @@ export class ProtocolDriver {
 
   async addTeamMember(teamName: string, email: string) {
     await this.openTeamMembers(teamName);
-    const addTeamMemberForm = this.page.getByRole('form', { name: 'Add Team Member Form' });
-    await expect(addTeamMemberForm).toBeVisible();
-    await addTeamMemberForm.locator('input[name="teamMemberEmail"]').fill(email);
-    await addTeamMemberForm.getByRole('button', { name: 'Add' }).click();
+    const formContainer = this.page.getByTestId('add-team-member-form-container');
+    await expect(formContainer).toBeVisible();
+    await formContainer.locator('input[name="teamMemberEmail"]').fill(email);
+    await formContainer.getByRole('button', { name: 'Add' }).click();
   }
 
   async openHomePage() {
@@ -149,13 +149,9 @@ export class ProtocolDriver {
 
   async openTeamMembers(teamName: string) {
     await this.openTeamDetails(teamName);
-    const dropdownButton = this.page.getByTestId('team-options-button');
-    await dropdownButton.click();
-    const manageMembersLink = this.page.getByRole('link', { name: 'Manage members' });
-    const viewMembersLink = this.page.getByRole('link', { name: 'View members' });
-    const membersLink = manageMembersLink.or(viewMembersLink);
-    await expect(membersLink).toBeVisible();
-    await membersLink.click();
+    const membersTab = this.page.getByRole('radio', { name: 'Members' });
+    await expect(membersTab).toBeVisible();
+    await membersTab.click();
   }
 
   async confirmTeamInList(teamName: string) {
@@ -189,13 +185,13 @@ export class ProtocolDriver {
   }
 
   async confirmTeamMemberInList(email: string) {
-    const memberElement = this.page.getByText(`Regular Member: ${email}`);
-    await expect(memberElement).toBeVisible();
+    const row = this.page.locator('li').filter({ hasText: email });
+    await expect(row.getByText('Member', { exact: true })).toBeVisible();
   }
 
   async confirmTeamLeadInList(email: string) {
-    const teamLeadElement = this.page.getByText(`Team Lead: ${email}`);
-    await expect(teamLeadElement).toBeVisible();
+    const row = this.page.locator('li').filter({ hasText: email });
+    await expect(row.getByText('Team Lead', { exact: true })).toBeVisible();
   }
 
   async openTeamDetailsDirectly() {
@@ -244,14 +240,17 @@ export class ProtocolDriver {
 
   async removeTeamMember(teamName: string, email: string) {
     await this.openTeamMembers(teamName);
-    const removeButton = this.page.locator(`[data-testid="remove-member-${email}"]`);
+    const row = this.page.locator('li').filter({ hasText: email });
+    const optionsButton = row.getByTestId('team-member-options-button');
+    await optionsButton.click();
+    const removeButton = row.getByTestId(/^remove-member-/);
     await expect(removeButton).toBeVisible();
     await removeButton.click();
   }
 
   async confirmTeamMemberNotInList(email: string) {
-    const memberElement = this.page.getByText(`Regular Member: ${email}`);
-    await expect(memberElement).not.toBeVisible();
+    const row = this.page.locator('li').filter({ hasText: email });
+    await expect(row).not.toBeVisible();
   }
 
   async confirmTeamNotInList(teamName: string) {
@@ -271,14 +270,20 @@ export class ProtocolDriver {
 
   async promoteMemberToTeamLead(teamName: string, email: string) {
     await this.openTeamMembers(teamName);
-    const promoteButton = this.page.locator(`[data-testid="promote-member-${email}"]`);
+    const row = this.page.locator('li').filter({ hasText: email });
+    const optionsButton = row.getByTestId('team-member-options-button');
+    await optionsButton.click();
+    const promoteButton = row.getByTestId(/^promote-member-/);
     await expect(promoteButton).toBeVisible();
     await promoteButton.click();
   }
 
   async demoteTeamLeadToMember(teamName: string, email: string) {
     await this.openTeamMembers(teamName);
-    const demoteButton = this.page.locator(`[data-testid="demote-member-${email}"]`);
+    const row = this.page.locator('li').filter({ hasText: email });
+    const optionsButton = row.getByTestId('team-member-options-button');
+    await optionsButton.click();
+    const demoteButton = row.getByTestId(/^demote-member-/);
     await expect(demoteButton).toBeVisible();
     await demoteButton.click();
   }

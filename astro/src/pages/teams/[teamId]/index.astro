@@ -17,6 +17,7 @@ import {
   TeamTrendNotFoundError,
 } from '@use-cases/get-team-trend.ts';
 import TrendGrid from '@components/trend/TrendGrid.astro';
+import { actions } from 'astro:actions';
 
 const { user } = Astro.locals;
 assert(user, 'User must be logged in.');
@@ -60,6 +61,16 @@ const surveyRuns = teamOverview?.surveyRuns ?? [];
 const isTeamLead = teamOverview?.isTeamLead ?? false;
 const capabilityTrends = teamTrend?.capabilityTrends ?? [];
 const surveyCount = teamTrend?.surveyCount ?? 0;
+
+const addTeamMemberResult = Astro.getActionResult(actions.addTeamMember);
+const removeTeamMemberResult = Astro.getActionResult(actions.removeTeamMember);
+const changeMemberRoleResult = Astro.getActionResult(actions.changeMemberRole);
+
+const hasTeamManagementAction = !!(
+  addTeamMemberResult ||
+  removeTeamMemberResult ||
+  changeMemberRoleResult
+);
 
 const breadcrumbs = team
   ? [{ label: 'Home', href: '/' }, { label: team.name }]
@@ -124,12 +135,6 @@ const breadcrumbs = team
                       </a>
                     </li>
                   )}
-                  <li>
-                    <a href={`/teams/${team.id}/members`} class="gap-2">
-                      <span class="iconify lucide--users" />
-                      {isTeamLead ? 'Manage members' : 'View members'}
-                    </a>
-                  </li>
                 </ul>
               </div>
             </div>
@@ -140,7 +145,7 @@ const breadcrumbs = team
                 name="teams-tabs"
                 class="tab"
                 aria-label="Surveys"
-                checked="checked"
+                checked={!hasTeamManagementAction ? 'checked' : undefined}
               />
               <div class="tab-content border-base-300 bg-base-100 p-6">
                 {surveyRuns.length === 0 ? (
@@ -181,20 +186,195 @@ const breadcrumbs = team
               />
               <div class="tab-content border-base-300 bg-base-100 p-6">
                 {surveyCount === 0 ? (
-                  <div class="card bg-base-100 shadow-xl">
-                    <div class="card-body">
-                      <EmptyState
-                        icon="survey"
-                        title="No completed surveys yet"
-                        message="Close a survey run to start building trend data."
-                      />
-                    </div>
-                  </div>
+                  <EmptyState
+                    icon="survey"
+                    title="No completed surveys yet"
+                    message="Close a survey run to start building trend data."
+                  />
                 ) : (
                   <>
                     <TrendGrid doraCapabilityTrends={capabilityTrends} />
                   </>
                 )}
+              </div>
+
+              <input
+                type="radio"
+                name="teams-tabs"
+                class="tab"
+                aria-label="Members"
+                checked={hasTeamManagementAction ? 'checked' : undefined}
+              />
+              <div class="tab-content border-base-300 bg-base-100 p-6 space-y-4">
+                {isTeamLead && (
+                  <div class="flex flex-col">
+                    <div class="flex justify-end">
+                      {addTeamMemberResult?.error && (
+                        <Alert type="error" class="mb-4">
+                          {addTeamMemberResult.error.message}
+                        </Alert>
+                      )}
+                      {removeTeamMemberResult?.error && (
+                        <Alert type="error" class="mb-4">
+                          {removeTeamMemberResult.error.message}
+                        </Alert>
+                      )}
+                      {changeMemberRoleResult?.error && (
+                        <Alert type="error" class="mb-4">
+                          {changeMemberRoleResult.error.message}
+                        </Alert>
+                      )}
+                    </div>
+                    <div
+                      class="join flex justify-end"
+                      data-testid="add-team-member-form-container"
+                    >
+                      <form
+                        method="POST"
+                        id="add-team-member-form"
+                        aria-label="Add Team Member Form"
+                        action={actions.addTeamMember}
+                        class="w-64"
+                      >
+                        <input type="hidden" name="teamId" value={team.id} />
+                        <label class="input validator join-item">
+                          <input
+                            type="email"
+                            id="teamMemberEmail"
+                            name="teamMemberEmail"
+                            required
+                            placeholder="Email address"
+                          />
+                        </label>
+                        <div class="validator-hint hidden">
+                          Enter a valid email address
+                        </div>
+                      </form>
+                      <button
+                        type="submit"
+                        form="add-team-member-form"
+                        class="btn btn-primary join-item"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                )}
+                <ul class="space-y-2">
+                  {team.members.map((member) => {
+                    return (
+                      <li class="flex items-center py-2">
+                        <span class="flex-1">{member.userEmail}</span>
+                        <span class="badge badge-soft badge-info">
+                          {member.role === 'team-lead' ? 'Team Lead' : 'Member'}
+                        </span>
+                        {isTeamLead && (
+                          <div class="dropdown dropdown-end">
+                            <div
+                              tabindex="0"
+                              role="button"
+                              class="btn btn-ghost btn-square"
+                              data-testid="team-member-options-button"
+                            >
+                              <span class="iconify lucide--ellipsis-vertical" />
+                            </div>
+                            <ul
+                              tabindex="0"
+                              class="dropdown-content menu bg-base-100 rounded-box z-1 p-2 shadow-xl"
+                            >
+                              <li>
+                                {member.role === 'team-lead' ? (
+                                  <form
+                                    method="POST"
+                                    action={actions.changeMemberRole}
+                                  >
+                                    <input
+                                      type="hidden"
+                                      name="teamId"
+                                      value={team.id}
+                                    />
+                                    <input
+                                      type="hidden"
+                                      name="memberEmail"
+                                      value={member.userEmail}
+                                    />
+                                    <input
+                                      type="hidden"
+                                      name="newRole"
+                                      value="regular-member"
+                                    />
+                                    <button
+                                      type="submit"
+                                      class="flex items-center gap-2"
+                                      data-testid={`demote-member-${member.userId}`}
+                                    >
+                                      <span class="iconify lucide--chevrons-up" />
+                                      Demote
+                                    </button>
+                                  </form>
+                                ) : (
+                                  <form
+                                    method="POST"
+                                    action={actions.changeMemberRole}
+                                  >
+                                    <input
+                                      type="hidden"
+                                      name="teamId"
+                                      value={team.id}
+                                    />
+                                    <input
+                                      type="hidden"
+                                      name="memberEmail"
+                                      value={member.userEmail}
+                                    />
+                                    <input
+                                      type="hidden"
+                                      name="newRole"
+                                      value="team-lead"
+                                    />
+                                    <button
+                                      type="submit"
+                                      class="flex items-center gap-2"
+                                      data-testid={`promote-member-${member.userId}`}
+                                    >
+                                      <span class="iconify lucide--chevrons-up" />
+                                      Promote
+                                    </button>
+                                  </form>
+                                )}
+                              </li>
+                              <li>
+                                <form
+                                  method="POST"
+                                  action={actions.removeTeamMember}
+                                >
+                                  <input
+                                    type="hidden"
+                                    name="teamId"
+                                    value={team.id}
+                                  />
+                                  <input
+                                    type="hidden"
+                                    name="memberEmail"
+                                    value={member.userEmail}
+                                  />
+                                  <button
+                                    type="submit"
+                                    class="flex items-center gap-2 text-warning"
+                                    data-testid={`remove-member-${member.userId}`}
+                                  >
+                                    <span class="iconify lucide--x-circle" />
+                                    Remove
+                                  </button>
+                                </form>
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
             </div>
           </div>
