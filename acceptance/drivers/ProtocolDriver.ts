@@ -531,10 +531,10 @@ export class ProtocolDriver {
   }
 
   async confirmNoSurveyAvailable() {
-    const heading = this.page.getByRole('heading', { name: 'No Surveys yet' });
+    const heading = this.page.getByRole('heading', { name: 'No surveys yet' });
     await expect(heading).toBeVisible();
-    const message = this.page.getByText('Create your first survey to get started');
-    await expect(message).toBeVisible();
+    const newSurveyLink = this.page.getByRole('link', { name: 'New Survey' });
+    await expect(newSurveyLink).toBeVisible();
   }
 
   async confirmCannotAnswerSurvey() {

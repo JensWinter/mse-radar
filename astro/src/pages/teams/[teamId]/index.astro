@@ -105,15 +105,6 @@ const breadcrumbs = team
                   <p class="text-sm text-base-content/60">{team.description}</p>
                 )}
               </div>
-              {isTeamLead && (
-                <a
-                  href={`/teams/${team.id}/surveys/new`}
-                  class="btn btn-primary gap-2"
-                >
-                  <span class="iconify lucide--plus" />
-                  New Survey
-                </a>
-              )}
               <div class="dropdown dropdown-end">
                 <div
                   tabindex="0"
@@ -149,32 +140,47 @@ const breadcrumbs = team
               />
               <div class="tab-content border-base-300 bg-base-100 p-6">
                 {surveyRuns.length === 0 ? (
-                  <EmptyState
-                    icon="survey"
-                    title="No surveys yet"
-                    message={
-                      isTeamLead
-                        ? 'Create your first survey to get started'
-                        : undefined
-                    }
-                  />
+                  <EmptyState icon="survey" title="No surveys yet">
+                    {isTeamLead && (
+                      <a
+                        href={`/teams/${team.id}/surveys/new`}
+                        class="btn btn-primary gap-2"
+                      >
+                        <span class="iconify lucide--plus" />
+                        New Survey
+                      </a>
+                    )}
+                  </EmptyState>
                 ) : (
-                  <ul class="space-y-2">
-                    {surveyRuns.map((run) => (
-                      <li>
+                  <>
+                    {isTeamLead && (
+                      <div class="flex justify-end mb-4">
                         <a
-                          href={`/teams/${team.id}/surveys/${run.id}`}
-                          data-testid="survey-run-link"
-                          class="flex items-center justify-between hover:bg-base-200 -mx-4 px-4 py-2 rounded-lg transition-colors"
+                          href={`/teams/${team.id}/surveys/new`}
+                          class="btn btn-primary gap-2"
                         >
-                          <span>{run.title}</span>
-                          <span class="badge badge-soft badge-info">
-                            {run.status}
-                          </span>
+                          <span class="iconify lucide--plus" />
+                          New Survey
                         </a>
-                      </li>
-                    ))}
-                  </ul>
+                      </div>
+                    )}
+                    <ul class="space-y-2">
+                      {surveyRuns.map((run) => (
+                        <li>
+                          <a
+                            href={`/teams/${team.id}/surveys/${run.id}`}
+                            data-testid="survey-run-link"
+                            class="flex items-center justify-between hover:bg-base-200 -mx-4 px-4 py-2 rounded-lg transition-colors"
+                          >
+                            <span>{run.title}</span>
+                            <span class="badge badge-soft badge-info">
+                              {run.status}
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
                 )}
               </div>
 
