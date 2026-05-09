@@ -7,10 +7,12 @@ Keep your replies extremely concise and focus on conveying the key information. 
 ## Quick Start
 
 ```bash
-deno task db:migrate && deno task db:seed     # Setup database
-deno task run:astro:dev                       # Dev server (http://localhost:4321)
-deno task test:acceptance                     # Run acceptance tests
-deno task test:astro:unit                     # Run unit tests
+docker compose up -d                                                                       # Start PostgreSQL
+deno task db:setup                                                                         # Run migrations + seed
+deno task run:astro:dev                                                                    # Dev server (http://localhost:4321)
+deno task test:acceptance                                                                  # Run all acceptance tests
+deno test --env-file=.env.acceptance --allow-all acceptance/tests/aaaa-bbb-<title>.spec.ts # Run a single acceptance test
+deno task test:astro:unit                                                                  # Run unit tests
 ```
 
 **Tech stack:** Deno (root tasks, scripts, tests) + npm (Astro app in `astro/` directory)
