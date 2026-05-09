@@ -215,8 +215,6 @@ export class ProtocolDriver {
 
   async openEditTeamPage(teamName: string) {
     await this.openTeamDetails(teamName);
-    const dropdownButton = this.page.getByTestId('team-options-button');
-    await dropdownButton.click();
     const editLink = this.page.getByRole('link', { name: 'Edit team details' });
     await expect(editLink).toBeVisible();
     await editLink.click();

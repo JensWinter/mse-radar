@@ -105,29 +105,17 @@ const breadcrumbs = team
                   <p class="text-sm text-base-content/60">{team.description}</p>
                 )}
               </div>
-              <div class="dropdown dropdown-end">
-                <div
-                  tabindex="0"
-                  role="button"
-                  class="btn btn-ghost btn-square"
-                  data-testid="team-options-button"
+              {isTeamLead && (
+                <a
+                  href={`/teams/${team.id}/edit`}
+                  class="btn btn-square"
+                  aria-label="Edit team details"
+                  title="Edit team details"
+                  data-testid="team-settings-button"
                 >
-                  <span class="iconify lucide--ellipsis-vertical" />
-                </div>
-                <ul
-                  tabindex="0"
-                  class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-xl"
-                >
-                  {isTeamLead && (
-                    <li>
-                      <a href={`/teams/${team.id}/edit`} class="gap-2">
-                        <span class="iconify lucide--edit" />
-                        Edit team details
-                      </a>
-                    </li>
-                  )}
-                </ul>
-              </div>
+                  <span class="iconify lucide--settings" />
+                </a>
+              )}
             </div>
 
             <div class="tabs tabs-border">
