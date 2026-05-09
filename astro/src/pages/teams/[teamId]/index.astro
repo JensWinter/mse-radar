@@ -62,15 +62,13 @@ const isTeamLead = teamOverview?.isTeamLead ?? false;
 const capabilityTrends = teamTrend?.capabilityTrends ?? [];
 const surveyCount = teamTrend?.surveyCount ?? 0;
 
-const addTeamMemberResult = Astro.getActionResult(actions.addTeamMember);
 const removeTeamMemberResult = Astro.getActionResult(actions.removeTeamMember);
 const changeMemberRoleResult = Astro.getActionResult(actions.changeMemberRole);
 
-const hasTeamManagementAction = !!(
-  addTeamMemberResult ||
-  removeTeamMemberResult ||
-  changeMemberRoleResult
-);
+const tabParam = Astro.url.searchParams.get('tab');
+const membersTabActive =
+  tabParam === 'members' ||
+  !!(removeTeamMemberResult || changeMemberRoleResult);
 
 const breadcrumbs = team
   ? [{ label: 'Home', href: '/' }, { label: team.name }]
@@ -124,7 +122,7 @@ const breadcrumbs = team
                 name="teams-tabs"
                 class="tab"
                 aria-label="Surveys"
-                checked={!hasTeamManagementAction ? 'checked' : undefined}
+                checked={!membersTabActive ? 'checked' : undefined}
               />
               <div class="tab-content border-base-300 bg-base-100 p-6">
                 {surveyRuns.length === 0 ? (
@@ -197,17 +195,12 @@ const breadcrumbs = team
                 name="teams-tabs"
                 class="tab"
                 aria-label="Members"
-                checked={hasTeamManagementAction ? 'checked' : undefined}
+                checked={membersTabActive ? 'checked' : undefined}
               />
               <div class="tab-content border-base-300 bg-base-100 p-6 space-y-4">
                 {isTeamLead && (
                   <div class="flex flex-col">
                     <div class="flex justify-end">
-                      {addTeamMemberResult?.error && (
-                        <Alert type="error" class="mb-4">
-                          {addTeamMemberResult.error.message}
-                        </Alert>
-                      )}
                       {removeTeamMemberResult?.error && (
                         <Alert type="error" class="mb-4">
                           {removeTeamMemberResult.error.message}
@@ -219,38 +212,15 @@ const breadcrumbs = team
                         </Alert>
                       )}
                     </div>
-                    <div
-                      class="join flex justify-end"
-                      data-testid="add-team-member-form-container"
-                    >
-                      <form
-                        method="POST"
-                        id="add-team-member-form"
-                        aria-label="Add Team Member Form"
-                        action={actions.addTeamMember}
-                        class="w-64"
+                    <div class="flex justify-end">
+                      <a
+                        href={`/teams/${team.id}/members/new`}
+                        class="btn btn-primary gap-2"
+                        data-testid="add-team-member-button"
                       >
-                        <input type="hidden" name="teamId" value={team.id} />
-                        <label class="input validator join-item">
-                          <input
-                            type="email"
-                            id="teamMemberEmail"
-                            name="teamMemberEmail"
-                            required
-                            placeholder="Email address"
-                          />
-                        </label>
-                        <div class="validator-hint hidden">
-                          Enter a valid email address
-                        </div>
-                      </form>
-                      <button
-                        type="submit"
-                        form="add-team-member-form"
-                        class="btn btn-primary join-item"
-                      >
-                        Add
-                      </button>
+                        <span class="iconify lucide--plus" />
+                        Add Member
+                      </a>
                     </div>
                   </div>
                 )}

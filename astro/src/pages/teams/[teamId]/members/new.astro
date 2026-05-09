@@ -1,0 +1,101 @@
+---
+import ModalLayout from '@layouts/ModalLayout.astro';
+import Alert from '@components/ui/Alert.astro';
+import { actions } from 'astro:actions';
+import assert from 'node:assert';
+import { AuthorizationError } from '@services/authorization-service.ts';
+import type { TeamDto } from '@services/teams-service.ts';
+import { createTeamsService } from '@lib/composition.ts';
+
+const { user } = Astro.locals;
+assert(user, 'User must be logged in.');
+
+const { teamId } = Astro.params as { teamId: string };
+
+const addTeamMemberResult = Astro.getActionResult(actions.addTeamMember);
+if (addTeamMemberResult && !addTeamMemberResult.error) {
+  return Astro.redirect(`/teams/${teamId}?tab=members`);
+}
+
+let team: TeamDto | null = null;
+let notAuthorized = false;
+
+try {
+  const teamsService = createTeamsService(Astro.locals);
+  team = await teamsService.getTeam(teamId);
+  if (!team) {
+    return new Response('Not Found', { status: 404 });
+  }
+
+  const isTeamLead = team.members.some(
+    (m) => m.userId === user.id && m.role === 'team-lead',
+  );
+  if (!isTeamLead) {
+    notAuthorized = true;
+  }
+} catch (error) {
+  if (error instanceof AuthorizationError) {
+    notAuthorized = true;
+  } else {
+    return new Response('Not Found', { status: 404 });
+  }
+}
+---
+
+<ModalLayout title="Add Team Member">
+  {
+    notAuthorized ? (
+      <Alert type="warning">
+        You do not have permission to add members to this team. Only team leads
+        can add members.
+      </Alert>
+    ) : (
+      <>
+        {addTeamMemberResult?.error && (
+          <Alert type="error" messageClass="error-message">
+            {addTeamMemberResult.error.message}
+          </Alert>
+        )}
+
+        <form
+          method="POST"
+          id="add-team-member-form"
+          aria-label="Add Team Member Form"
+          action={actions.addTeamMember}
+          class="space-y-4"
+        >
+          <input type="hidden" name="teamId" value={teamId} />
+          <div class="space-y-2">
+            <label class="label" for="teamMemberEmail">
+              Email address
+            </label>
+            <label class="input validator w-full">
+              <input
+                type="email"
+                id="teamMemberEmail"
+                name="teamMemberEmail"
+                required
+                autofocus
+              />
+            </label>
+            <div class="validator-hint hidden">Enter a valid email address</div>
+          </div>
+        </form>
+      </>
+    )
+  }
+  <div slot="actions" class="flex flex-1 justify-center">
+    <a href={`/teams/${teamId}?tab=members`} class="btn btn-ghost">Cancel</a>
+    {
+      !notAuthorized && (
+        <button
+          type="submit"
+          form="add-team-member-form"
+          class="btn btn-primary"
+        >
+          Add
+        </button>
+      )
+    }
+  </div>
+</ModalLayout>

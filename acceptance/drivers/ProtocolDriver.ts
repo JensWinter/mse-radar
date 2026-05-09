@@ -137,10 +137,11 @@ export class ProtocolDriver {
 
   async addTeamMember(teamName: string, email: string) {
     await this.openTeamMembers(teamName);
-    const formContainer = this.page.getByTestId('add-team-member-form-container');
-    await expect(formContainer).toBeVisible();
-    await formContainer.locator('input[name="teamMemberEmail"]').fill(email);
-    await formContainer.getByRole('button', { name: 'Add' }).click();
+    const addMemberButton = this.page.getByTestId('add-team-member-button');
+    await expect(addMemberButton).toBeVisible();
+    await addMemberButton.click();
+    await this.page.locator('input[name="teamMemberEmail"]').fill(email);
+    await this.page.getByRole('button', { name: 'Add' }).click();
   }
 
   async openHomePage() {
@@ -226,9 +227,9 @@ export class ProtocolDriver {
     await this.page.getByRole('button', { name: 'Save Changes' }).click();
   }
 
-  async confirmAddMemberFormNotVisible() {
-    const addTeamMemberForm = this.page.getByRole('form', { name: 'Add Team Member Form' });
-    await expect(addTeamMemberForm).not.toBeVisible();
+  async confirmAddMemberButtonNotVisible() {
+    const addMemberButton = this.page.getByTestId('add-team-member-button');
+    await expect(addMemberButton).not.toBeVisible();
   }
 
   async confirmAddMemberErrorMessage(expectedMessage: string) {
