@@ -4,6 +4,7 @@ import CapabilityScoreGrid from './CapabilityScoreGrid.astro';
 import SurveyRunSummary from '@components/survey-run/SurveyRunSummary.astro';
 import type { SurveyRun } from '@models/aggregates/survey-run.ts';
 import type { AssessmentResult } from '@models/aggregates/assessment-result.ts';
+import EmptyState from '@components/ui/EmptyState.astro';
 
 interface Props {
   surveyRun: SurveyRun;
@@ -23,8 +24,6 @@ const hasScores = assessmentResult?.doraCapabilityScores.some(
   class="card bg-base-100 shadow-xl"
 >
   <div class="card-body">
-    <h2 class="card-title text-2xl mb-6">Assessment Results</h2>
-
     {
       assessmentError && (
         <Alert type="error" data-testid="results-error">
@@ -35,23 +34,13 @@ const hasScores = assessmentResult?.doraCapabilityScores.some(
 
     {
       !assessmentError && !assessmentResult && (
-        <p
-          data-testid="no-results-message"
-          class="text-center py-8 text-base-content/60"
-        >
-          No assessment results available.
-        </p>
+        <EmptyState icon="survey" title="No assessment results available" />
       )
     }
 
     {
       assessmentResult && !hasScores && (
-        <p
-          data-testid="no-responses-message"
-          class="text-center py-8 text-base-content/60"
-        >
-          No responses have been submitted for this survey run.
-        </p>
+        <EmptyState icon="survey" title="No responses submitted" />
       )
     }
 

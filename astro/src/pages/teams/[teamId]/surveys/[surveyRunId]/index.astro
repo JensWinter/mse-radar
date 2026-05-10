@@ -1,6 +1,7 @@
 ---
 import DefaultMainLayout from '@layouts/DefaultMainLayout.astro';
 import Alert from '@components/ui/Alert.astro';
+import EmptyState from '@components/ui/EmptyState.astro';
 import { actions } from 'astro:actions';
 import assert from 'node:assert';
 import { AuthorizationError } from '@services/authorization-service.ts';
@@ -75,7 +76,7 @@ const breadcrumbs = team
         </div>
       ) : (
         surveyRun && (
-          <div class="space-y-6">
+          <div class="space-y-4">
             <div class="flex">
               <div class="flex-1 space-y-2">
                 <h1 class="text-3xl font-bold">{surveyRun.title}</h1>
@@ -92,7 +93,7 @@ const breadcrumbs = team
                 <form method="POST" action={actions.openSurveyRun}>
                   <input type="hidden" name="surveyRunId" value={surveyRunId} />
                   <button type="submit" class="btn btn-soft gap-2">
-                    <span class="iconify lucide--circle-play" />
+                    <span class="iconify lucide--play" />
                     Open Survey
                   </button>
                 </form>
@@ -101,7 +102,7 @@ const breadcrumbs = team
                 <form method="POST" action={actions.closeSurveyRun}>
                   <input type="hidden" name="surveyRunId" value={surveyRunId} />
                   <button type="submit" class="btn btn-soft gap-2">
-                    <span class="iconify lucide--circle-stop" />
+                    <span class="iconify lucide--stop" />
                     Close Survey
                   </button>
                 </form>
@@ -122,6 +123,14 @@ const breadcrumbs = team
                   </form>
                 )}
             </div>
+
+            {surveyRun.status === 'pending' && (
+              <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                  <EmptyState icon="hourglass" title="Survey not open yet" />
+                </div>
+              </div>
+            )}
 
             {surveyRun.status === 'open' && (
               <SurveyRunResponseSection
