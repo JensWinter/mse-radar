@@ -92,10 +92,23 @@ const breadcrumbs = team
               {isTeamLead && surveyRun.status === 'pending' && (
                 <form method="POST" action={actions.openSurveyRun}>
                   <input type="hidden" name="surveyRunId" value={surveyRunId} />
-                  <button type="submit" class="btn btn-soft gap-2">
-                    <span class="iconify lucide--play" />
-                    Open Survey
-                  </button>
+                  <span
+                    class={hasOtherOpenSurveyRun ? 'tooltip tooltip-left' : ''}
+                    data-tip={
+                      hasOtherOpenSurveyRun
+                        ? 'Another survey is currently open for this team. Close it before opening a new one.'
+                        : undefined
+                    }
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-soft gap-2"
+                      disabled={hasOtherOpenSurveyRun}
+                    >
+                      <span class="iconify lucide--play" />
+                      Open Survey
+                    </button>
+                  </span>
                 </form>
               )}
               {isTeamLead && surveyRun.status === 'open' && (
@@ -107,21 +120,28 @@ const breadcrumbs = team
                   </button>
                 </form>
               )}
-              {isTeamLead &&
-                surveyRun.status === 'closed' &&
-                !hasOtherOpenSurveyRun && (
-                  <form method="POST" action={actions.reopenSurveyRun}>
-                    <input
-                      type="hidden"
-                      name="surveyRunId"
-                      value={surveyRunId}
-                    />
-                    <button type="submit" class="btn btn-soft gap-2">
+              {isTeamLead && surveyRun.status === 'closed' && (
+                <form method="POST" action={actions.reopenSurveyRun}>
+                  <input type="hidden" name="surveyRunId" value={surveyRunId} />
+                  <span
+                    class={hasOtherOpenSurveyRun ? 'tooltip tooltip-left' : ''}
+                    data-tip={
+                      hasOtherOpenSurveyRun
+                        ? 'Another survey is currently open for this team. Close it before reopening this one.'
+                        : undefined
+                    }
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-soft gap-2"
+                      disabled={hasOtherOpenSurveyRun}
+                    >
                       <span class="iconify lucide--repeat-2" />
                       Reopen Survey
                     </button>
-                  </form>
-                )}
+                  </span>
+                </form>
+              )}
             </div>
 
             {surveyRun.status === 'pending' && (
