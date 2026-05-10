@@ -5,8 +5,6 @@ import { actions } from 'astro:actions';
 import assert from 'node:assert';
 import { AuthorizationError } from '@services/authorization-service.ts';
 import type { AssessmentResult } from '@models/aggregates/assessment-result.ts';
-import SurveyRunPageHeader from '@components/survey-run/SurveyRunPageHeader.astro';
-import SurveyRunLeadActions from '@components/survey-run/SurveyRunLeadActions.astro';
 import SurveyRunResponseSection from '@components/survey-run/SurveyRunResponseSection.astro';
 import SurveyRunAssessmentSection from '@components/survey-run/SurveyRunAssessmentSection.astro';
 import { createGetSurveyRunDetailsUseCase } from '@lib/composition.ts';
@@ -78,19 +76,52 @@ const breadcrumbs = team
       ) : (
         surveyRun && (
           <div class="space-y-6">
-            <SurveyRunPageHeader
-              title={surveyRun.title}
-              status={surveyRun.status}
-            />
-
-            {isTeamLead && (
-              <SurveyRunLeadActions
-                status={surveyRun.status}
-                surveyRunId={surveyRunId}
-                hasOtherOpenSurveyRun={hasOtherOpenSurveyRun}
-                actions={actions}
-              />
-            )}
+            <div class="flex">
+              <div class="flex-1 space-y-2">
+                <h1 class="text-3xl font-bold">{surveyRun.title}</h1>
+                <div>
+                  <span
+                    data-testid="survey-run-status"
+                    class="badge badge-soft badge-info"
+                  >
+                    {surveyRun.status}
+                  </span>
+                </div>
+              </div>
+              {isTeamLead && surveyRun.status === 'pending' && (
+                <form method="POST" action={actions.openSurveyRun}>
+                  <input type="hidden" name="surveyRunId" value={surveyRunId} />
+                  <button type="submit" class="btn btn-soft gap-2">
+                    <span class="iconify lucide--circle-play" />
+                    Open Survey
+                  </button>
+                </form>
+              )}
+              {isTeamLead && surveyRun.status === 'open' && (
+                <form method="POST" action={actions.closeSurveyRun}>
+                  <input type="hidden" name="surveyRunId" value={surveyRunId} />
+                  <button type="submit" class="btn btn-soft gap-2">
+                    <span class="iconify lucide--circle-stop" />
+                    Close Survey
+                  </button>
+                </form>
+              )}
+              {isTeamLead &&
+                surveyRun.status === 'closed' &&
+                !hasOtherOpenSurveyRun && (
+                  <form method="POST" action={actions.reopenSurveyRun}>
+                    <input
+                      type="hidden"
+                      name="surveyRunId"
+                      value={surveyRunId}
+                    />
+                    <button type="submit" class="btn btn-soft gap-2">
+                      <span class="iconify lucide--repeat-2" />
+                      Reopen Survey
+                    </button>
+                  </form>
+                )}
+            </div>
 
             {surveyRun.status === 'open' && (
               <SurveyRunResponseSection
