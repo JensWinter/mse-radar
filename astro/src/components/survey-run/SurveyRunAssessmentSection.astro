@@ -19,42 +19,45 @@ const hasScores = assessmentResult?.doraCapabilityScores.some(
 );
 ---
 
-<div
-  data-testid="assessment-results-section"
-  class="card bg-base-100 shadow-md"
->
-  <div class="card-body">
-    {
-      assessmentError && (
-        <Alert type="error" data-testid="results-error">
-          {assessmentError}
-        </Alert>
-      )
-    }
+<div class="space-y-6" data-testid="assessment-results-section">
+  {
+    assessmentError && (
+      <Alert type="error" data-testid="results-error">
+        {assessmentError}
+      </Alert>
+    )
+  }
 
-    {
-      !assessmentError && !assessmentResult && (
-        <EmptyState icon="survey" title="No assessment results available" />
-      )
-    }
+  {
+    !assessmentError && !assessmentResult && (
+      <div class="card bg-base-100 shadow-md">
+        <div class="card-body">
+          <EmptyState icon="survey" title="No assessment results available" />
+        </div>
+      </div>
+    )
+  }
 
-    {
-      assessmentResult && !hasScores && (
-        <EmptyState icon="survey" title="No responses submitted" />
-      )
-    }
+  {
+    assessmentResult && !hasScores && (
+      <div class="card bg-base-100 shadow-md">
+        <div class="card-body">
+          <EmptyState icon="survey" title="No responses submitted" />
+        </div>
+      </div>
+    )
+  }
 
-    {
-      assessmentResult && hasScores && (
-        <>
-          <SurveyRunSummary surveyRun={surveyRun} />
-          <CapabilityScoreGrid
-            teamId={surveyRun.teamId}
-            surveyRunId={surveyRun.id}
-            assessmentResult={assessmentResult}
-          />
-        </>
-      )
-    }
-  </div>
+  {
+    assessmentResult && hasScores && (
+      <>
+        <SurveyRunSummary surveyRun={surveyRun} />
+        <CapabilityScoreGrid
+          teamId={surveyRun.teamId}
+          surveyRunId={surveyRun.id}
+          assessmentResult={assessmentResult}
+        />
+      </>
+    )
+  }
 </div>
