@@ -12,11 +12,11 @@ const { surveyRunId, questionIndex, question, totalQuestions } = Astro.props;
 ---
 
 <div
-  class="card bg-base-200 border border-base-300 relative"
+  class="card bg-base-100 relative shadow-md"
   data-testid="question-card"
   x-data={`surveyAnswer('${surveyRunId}', ${questionIndex}, ${question.answerValue}, ${JSON.stringify(question.comment ?? '')}, ${totalQuestions})`}
 >
-  <div class="card-body p-4">
+  <div class="card-body p-6">
     <div class="absolute top-2 right-2 flex items-center gap-2">
       <span x-show="saving" class="loading loading-spinner loading-xs"></span>
     </div>

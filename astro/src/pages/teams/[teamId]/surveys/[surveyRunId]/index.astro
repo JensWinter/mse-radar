@@ -60,7 +60,7 @@ const breadcrumbs = team
   <div class="space-y-6">
     {
       notAuthorized ? (
-        <div class="card bg-base-100 shadow-xl">
+        <div class="card bg-base-100 shadow-md">
           <div class="card-body">
             <h1 class="card-title text-2xl">Access Denied</h1>
             <Alert type="warning">
@@ -145,7 +145,7 @@ const breadcrumbs = team
             </div>
 
             {surveyRun.status === 'pending' && (
-              <div class="card bg-base-100 shadow-xl">
+              <div class="card bg-base-100 shadow-md">
                 <div class="card-body">
                   <EmptyState icon="hourglass" title="Survey not open yet" />
                 </div>
