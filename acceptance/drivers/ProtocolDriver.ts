@@ -342,7 +342,7 @@ export class ProtocolDriver {
       const capabilityContainerElements = this.page.getByTestId('dora-capability-item');
       const capabilityElement = capabilityContainerElements.filter({
         has: this.page.getByRole('heading', {
-          level: 3,
+          level: 2,
           name: question.doraCapabilityName,
           exact: true,
         }),
@@ -352,13 +352,13 @@ export class ProtocolDriver {
     }
   }
 
-  async confirmQuestionIndicatesDoraCapability(
+  async confirmQuestionIndicatesDoraCapabilityName(
     questions: QuestionWithDoraCapability[],
   ): Promise<void> {
     await this.navigateTo('/dora-capabilities');
     for (const question of questions) {
-      const doraCapabilityElement = this.page.getByTestId('dora-capability-description').filter({
-        hasText: question.doraCapabilityDescription,
+      const doraCapabilityElement = this.page.getByTestId('dora-capability-name').filter({
+        hasText: question.doraCapabilityName,
       });
       await expect(doraCapabilityElement).toBeVisible();
     }

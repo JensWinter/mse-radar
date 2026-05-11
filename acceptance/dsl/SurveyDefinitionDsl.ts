@@ -14,7 +14,7 @@ export type ConfirmQuestionsMapToDoraCapabilitiesParams = {
   }[];
 };
 
-export type ConfirmQuestionsShowDoraCapabilityDescription = {
+export type ConfirmQuestionsShowDoraCapabilityName = {
   questions: {
     questionText: string;
     doraCapabilityName: string;
@@ -47,10 +47,10 @@ export class SurveyDefinitionDsl {
     await this.driver.confirmQuestionsMapToDoraCapabilities(params.questions);
   }
 
-  async confirmQuestionsShowDoraCapabilityDescription(
-    params: ConfirmQuestionsShowDoraCapabilityDescription,
+  async confirmQuestionsShowDoraCapabilityName(
+    params: ConfirmQuestionsShowDoraCapabilityName,
   ) {
-    await this.driver.confirmQuestionIndicatesDoraCapability(params.questions);
+    await this.driver.confirmQuestionIndicatesDoraCapabilityName(params.questions);
   }
 
   async confirmAllDoraCapabilitiesAreCovered(params: ConfirmAllDoraCapabilitesAreCoveredParams) {
