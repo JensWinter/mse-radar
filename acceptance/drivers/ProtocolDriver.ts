@@ -11,7 +11,6 @@ export class ProtocolDriver {
   private lastClosedSurveyRunUrl: string | null = null;
   private lastOpenedTeamUrl: string | null = null;
   private lastSurveyRunUrl: string | null = null;
-  private lastTrendViewUrl: string | null = null;
 
   constructor(private readonly page: Page) {
   }
@@ -138,10 +137,11 @@ export class ProtocolDriver {
 
   async addTeamMember(teamName: string, email: string) {
     await this.openTeamMembers(teamName);
-    const addTeamMemberForm = this.page.getByRole('form', { name: 'Add Team Member Form' });
-    await expect(addTeamMemberForm).toBeVisible();
-    await addTeamMemberForm.locator('input[name="teamMemberEmail"]').fill(email);
-    await addTeamMemberForm.getByRole('button', { name: 'Add' }).click();
+    const addMemberButton = this.page.getByTestId('add-team-member-button');
+    await expect(addMemberButton).toBeVisible();
+    await addMemberButton.click();
+    await this.page.locator('input[name="teamMemberEmail"]').fill(email);
+    await this.page.getByRole('button', { name: 'Add' }).click();
   }
 
   async openHomePage() {
@@ -150,13 +150,9 @@ export class ProtocolDriver {
 
   async openTeamMembers(teamName: string) {
     await this.openTeamDetails(teamName);
-    const dropdownButton = this.page.getByTestId('team-options-button');
-    await dropdownButton.click();
-    const manageMembersLink = this.page.getByRole('link', { name: 'Manage members' });
-    const viewMembersLink = this.page.getByRole('link', { name: 'View members' });
-    const membersLink = manageMembersLink.or(viewMembersLink);
-    await expect(membersLink).toBeVisible();
-    await membersLink.click();
+    const membersTab = this.page.getByRole('radio', { name: 'Members' });
+    await expect(membersTab).toBeVisible();
+    await membersTab.click();
   }
 
   async confirmTeamInList(teamName: string) {
@@ -190,13 +186,13 @@ export class ProtocolDriver {
   }
 
   async confirmTeamMemberInList(email: string) {
-    const memberElement = this.page.getByText(`Regular Member: ${email}`);
-    await expect(memberElement).toBeVisible();
+    const row = this.page.locator('li').filter({ hasText: email });
+    await expect(row.getByText('Member', { exact: true })).toBeVisible();
   }
 
   async confirmTeamLeadInList(email: string) {
-    const teamLeadElement = this.page.getByText(`Team Lead: ${email}`);
-    await expect(teamLeadElement).toBeVisible();
+    const row = this.page.locator('li').filter({ hasText: email });
+    await expect(row.getByText('Team Lead', { exact: true })).toBeVisible();
   }
 
   async openTeamDetailsDirectly() {
@@ -220,8 +216,6 @@ export class ProtocolDriver {
 
   async openEditTeamPage(teamName: string) {
     await this.openTeamDetails(teamName);
-    const dropdownButton = this.page.getByTestId('team-options-button');
-    await dropdownButton.click();
     const editLink = this.page.getByRole('link', { name: 'Edit team details' });
     await expect(editLink).toBeVisible();
     await editLink.click();
@@ -233,9 +227,9 @@ export class ProtocolDriver {
     await this.page.getByRole('button', { name: 'Save Changes' }).click();
   }
 
-  async confirmAddMemberFormNotVisible() {
-    const addTeamMemberForm = this.page.getByRole('form', { name: 'Add Team Member Form' });
-    await expect(addTeamMemberForm).not.toBeVisible();
+  async confirmAddMemberButtonNotVisible() {
+    const addMemberButton = this.page.getByTestId('add-team-member-button');
+    await expect(addMemberButton).not.toBeVisible();
   }
 
   async confirmAddMemberErrorMessage(expectedMessage: string) {
@@ -245,14 +239,17 @@ export class ProtocolDriver {
 
   async removeTeamMember(teamName: string, email: string) {
     await this.openTeamMembers(teamName);
-    const removeButton = this.page.locator(`[data-testid="remove-member-${email}"]`);
+    const row = this.page.locator('li').filter({ hasText: email });
+    const optionsButton = row.getByTestId('team-member-options-button');
+    await optionsButton.click();
+    const removeButton = row.getByTestId(/^remove-member-/);
     await expect(removeButton).toBeVisible();
     await removeButton.click();
   }
 
   async confirmTeamMemberNotInList(email: string) {
-    const memberElement = this.page.getByText(`Regular Member: ${email}`);
-    await expect(memberElement).not.toBeVisible();
+    const row = this.page.locator('li').filter({ hasText: email });
+    await expect(row).not.toBeVisible();
   }
 
   async confirmTeamNotInList(teamName: string) {
@@ -272,14 +269,20 @@ export class ProtocolDriver {
 
   async promoteMemberToTeamLead(teamName: string, email: string) {
     await this.openTeamMembers(teamName);
-    const promoteButton = this.page.locator(`[data-testid="promote-member-${email}"]`);
+    const row = this.page.locator('li').filter({ hasText: email });
+    const optionsButton = row.getByTestId('team-member-options-button');
+    await optionsButton.click();
+    const promoteButton = row.getByTestId(/^promote-member-/);
     await expect(promoteButton).toBeVisible();
     await promoteButton.click();
   }
 
   async demoteTeamLeadToMember(teamName: string, email: string) {
     await this.openTeamMembers(teamName);
-    const demoteButton = this.page.locator(`[data-testid="demote-member-${email}"]`);
+    const row = this.page.locator('li').filter({ hasText: email });
+    const optionsButton = row.getByTestId('team-member-options-button');
+    await optionsButton.click();
+    const demoteButton = row.getByTestId(/^demote-member-/);
     await expect(demoteButton).toBeVisible();
     await demoteButton.click();
   }
@@ -339,7 +342,7 @@ export class ProtocolDriver {
       const capabilityContainerElements = this.page.getByTestId('dora-capability-item');
       const capabilityElement = capabilityContainerElements.filter({
         has: this.page.getByRole('heading', {
-          level: 3,
+          level: 2,
           name: question.doraCapabilityName,
           exact: true,
         }),
@@ -349,13 +352,13 @@ export class ProtocolDriver {
     }
   }
 
-  async confirmQuestionIndicatesDoraCapability(
+  async confirmQuestionIndicatesDoraCapabilityName(
     questions: QuestionWithDoraCapability[],
   ): Promise<void> {
     await this.navigateTo('/dora-capabilities');
     for (const question of questions) {
-      const doraCapabilityElement = this.page.getByTestId('dora-capability-description').filter({
-        hasText: question.doraCapabilityDescription,
+      const doraCapabilityElement = this.page.getByTestId('dora-capability-name').filter({
+        hasText: question.doraCapabilityName,
       });
       await expect(doraCapabilityElement).toBeVisible();
     }
@@ -527,10 +530,10 @@ export class ProtocolDriver {
   }
 
   async confirmNoSurveyAvailable() {
-    const heading = this.page.getByRole('heading', { name: 'No Surveys yet' });
+    const heading = this.page.getByRole('heading', { name: 'No surveys yet' });
     await expect(heading).toBeVisible();
-    const message = this.page.getByText('Create your first survey to get started');
-    await expect(message).toBeVisible();
+    const newSurveyLink = this.page.getByRole('link', { name: 'New Survey' });
+    await expect(newSurveyLink).toBeVisible();
   }
 
   async confirmCannotAnswerSurvey() {
@@ -686,11 +689,11 @@ export class ProtocolDriver {
 
   async openTrendView(teamName: string) {
     await this.openTeamDetails(teamName);
-    const trendLink = this.page.getByTestId('view-trend-link');
-    await expect(trendLink).toBeVisible();
-    await trendLink.click();
-    await this.page.waitForLoadState('networkidle');
-    this.lastTrendViewUrl = this.page.url();
+    const trendTab = this.page.locator(
+      'input[name="teams-tabs"][aria-label="Trend"]',
+    );
+    await expect(trendTab).toBeVisible();
+    await trendTab.click();
   }
 
   async confirmTrendVisualizationDisplayed() {
@@ -808,12 +811,12 @@ export class ProtocolDriver {
   }
 
   async attemptToViewTrendView() {
-    if (!this.lastTrendViewUrl) {
+    if (!this.lastOpenedTeamUrl) {
       throw new Error(
         'No trend view URL has been stored. Make sure openTrendView was called first.',
       );
     }
-    await this.page.goto(this.lastTrendViewUrl);
+    await this.page.goto(this.lastOpenedTeamUrl);
   }
 
   // Improvement Guidance

@@ -1,7 +1,7 @@
 ---
 type Props = {
-  icon: 'team' | 'survey' | 'document';
-  title: string;
+  icon: 'team' | 'survey' | 'document' | 'hourglass';
+  title?: string;
   message?: string;
   class?: string;
 };
@@ -25,7 +25,12 @@ const { icon, title, message, class: className = '' } = Astro.props;
       <span class="iconify lucide--file-text mx-auto h-12 w-12 mb-3 opacity-50" />
     )
   }
-  <h1 class="text-2xl font-bold mb-4">{title}</h1>
+  {
+    icon === 'hourglass' && (
+      <span class="iconify lucide--hourglass h-12 w-12 mb-3 opacity-50" />
+    )
+  }
+  {title && <h1 class="text-2xl font-bold mb-4">{title}</h1>}
   {message && <p class="text-base-content/60 mb-6">{message}</p>}
   <slot />
 </div>

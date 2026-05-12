@@ -1,0 +1,30 @@
+---
+import NavBarLayout from '@layouts/NavBarLayout.astro';
+import Breadcrumb from '@components/navigation/Breadcrumb.astro';
+
+type BreadcrumbItem = {
+  label: string;
+  href?: string;
+};
+
+type Props = {
+  title: string;
+  breadcrumbs?: BreadcrumbItem[];
+};
+
+const { title, breadcrumbs } = Astro.props;
+---
+
+<NavBarLayout title={title}>
+  <div class="max-w-3xl mx-auto space-y-6">
+    {
+      breadcrumbs && breadcrumbs.length > 0 && (
+        <Breadcrumb items={breadcrumbs} />
+      )
+    }
+
+    <div class="flex flex-col flex-1">
+      <slot />
+    </div>
+  </div>
+</NavBarLayout>

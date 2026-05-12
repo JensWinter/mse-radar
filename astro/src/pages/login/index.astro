@@ -1,62 +1,45 @@
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
+import ModalLayout from '@layouts/ModalLayout.astro';
 import Alert from '@components/ui/Alert.astro';
 ---
 
-<BaseLayout title="Log in">
-  <div class="flex-1 py-8">
-    <div class="container mx-auto px-4">
-      <div class="max-w-md mx-auto">
-        <div class="card bg-base-100 shadow-xl">
-          <div class="card-body">
-            <h1 class="card-title text-2xl mb-4">Log in</h1>
-
-            <div id="error-message-container" class="hidden">
-              <Alert type="error" class="mb-4" messageClass="error-message">
-                <span id="error-message"></span>
-              </Alert>
-            </div>
-
-            <form id="login-form" class="space-y-4">
-              <div class="form-control w-full">
-                <label class="label" for="email">
-                  <span class="label-text font-medium">Email</span>
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  class="input input-bordered w-full"
-                  placeholder="Enter your email"
-                />
-              </div>
-
-              <div class="form-control w-full">
-                <label class="label" for="password">
-                  <span class="label-text font-medium">Password</span>
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  required
-                  class="input input-bordered w-full"
-                  placeholder="Enter your password"
-                />
-              </div>
-
-              <div class="card-actions justify-end gap-2 pt-4">
-                <a href="/register" class="btn btn-ghost"> Need an account? </a>
-                <button type="submit" class="btn btn-primary"> Log in </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+<ModalLayout title="Log in">
+  <div id="error-message-container" class="hidden">
+    <Alert type="error" messageClass="error-message">
+      <span id="error-message"></span>
+    </Alert>
   </div>
-</BaseLayout>
+
+  <form id="login-form" class="space-y-4">
+    <div class="space-y-2">
+      <label class="label" for="email">Email Address</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        class="input w-full"
+      />
+    </div>
+
+    <div class="space-y-2">
+      <label class="label" for="password">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        required
+        class="input w-full"
+      />
+    </div>
+  </form>
+
+  <div slot="actions" class="flex flex-1 justify-center">
+    <button type="submit" form="login-form" class="btn btn-primary">
+      Log in
+    </button>
+  </div>
+</ModalLayout>
 
 <script>
   import { signIn } from '../../lib/auth-client.ts';

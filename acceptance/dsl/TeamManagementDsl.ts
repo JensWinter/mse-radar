@@ -163,8 +163,8 @@ export class TeamManagementDsl {
     await this.driver.confirmEditButtonNotVisible();
   }
 
-  async confirmAddMemberFormNotVisible() {
-    await this.driver.confirmAddMemberFormNotVisible();
+  async confirmAddMemberButtonNotVisible() {
+    await this.driver.confirmAddMemberButtonNotVisible();
   }
 
   async confirmAddMemberErrorMessage(params: ConfirmAddMemberErrorMessageParams) {

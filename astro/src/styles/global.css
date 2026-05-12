@@ -9,3 +9,7 @@
   prefixes: lucide;
   scale: 1.2;
 }
+
+[x-cloak] {
+  display: none !important;
+}

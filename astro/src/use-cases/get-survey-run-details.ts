@@ -66,7 +66,8 @@ export class GetSurveyRunDetailsUseCase {
       currentUserId,
     );
     const hasOtherOpenSurveyRun =
-      surveyRun.status === 'closed' && isTeamLead
+      (surveyRun.status === 'closed' || surveyRun.status === 'pending') &&
+      isTeamLead
         ? await this.hasOtherOpenSurveyRun(teamId, surveyRunId)
         : false;
 

@@ -37,7 +37,7 @@ describe('0007-001: DORA Capabilities-Based Survey', () => {
     const questions = await dsl.surveyDefinition.readSurveyQuestions();
 
     // Then
-    await dsl.surveyDefinition.confirmQuestionsShowDoraCapabilityDescription({ questions });
+    await dsl.surveyDefinition.confirmQuestionsShowDoraCapabilityName({ questions });
   });
 
   it('should cover the full set of DORA capabilities defined by the survey model', async () => {

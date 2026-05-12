@@ -64,8 +64,8 @@ describe('0004-001: Add Team Member', () => {
     await dsl.identityAndAccess.signIn({ email: regularMemberEmail });
     await dsl.teamManagement.openTeamMembers({ teamName });
 
-    // THEN I cannot add a member (add member form is not visible)
-    await dsl.teamManagement.confirmAddMemberFormNotVisible();
+    // THEN I cannot add a member (add member button is not visible)
+    await dsl.teamManagement.confirmAddMemberButtonNotVisible();
   });
 
   it('should show an error when trying to add a non-registered user as a team member', async () => {

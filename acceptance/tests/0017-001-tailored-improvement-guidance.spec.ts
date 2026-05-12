@@ -10,7 +10,7 @@ describe('0017-001: Tailored Improvement Guidance', () => {
   const teamName = 'Road Runners';
   const capabilityName = 'Code maintainability';
   const level4GuidanceText =
-    'Run automated tests on normal code changes and on dependency upgrades before changes are merged or released. Strengthen review workflows so cross-team changes can be proposed, reviewed, and audited without needing special side channels. Make it easier to search for examples and reusable components so teams can reuse existing code instead of reimplementing it. Track how often dependency updates fail and where manual coordination still slows changes.';
+    'Expand maintainability practices across more of the organization’s codebase rather than relying on team-specific habits. Standardize dependency update processes so teams can consume known-good versions and respond quickly when vulnerabilities are patched. Strengthen tooling that shows which services are affected by a dependency or code change before it reaches production. Track metrics such as searchable code coverage, dependency version age, upgrade frequency, and lead time for cross-team changes.';
 
   beforeEach(async () => {
     assertExists(dsl.identityAndAccess);

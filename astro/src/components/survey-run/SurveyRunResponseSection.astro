@@ -36,15 +36,10 @@ const { surveyRunId, questionAnswers } = Astro.props;
     </div>
   </div>
 
-  <div class="card bg-base-100 shadow-xl">
-    <div class="card-body">
-      <h2 class="card-title text-xl mb-4">Your Response</h2>
-      <OpenSurveyResponseGrid
-        surveyRunId={surveyRunId}
-        questionAnswers={questionAnswers}
-      />
-    </div>
-  </div>
+  <OpenSurveyResponseGrid
+    surveyRunId={surveyRunId}
+    questionAnswers={questionAnswers}
+  />
 </div>
 
 <SurveyAnswerAlpineScript />

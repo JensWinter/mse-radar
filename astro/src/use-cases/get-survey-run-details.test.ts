@@ -266,6 +266,49 @@ suite('GetSurveyRunDetailsUseCase', () => {
     expect(result.hasOtherOpenSurveyRun).toBe(true);
   });
 
+  test('flags an open sibling for a team lead viewing a pending survey run', async () => {
+    const useCase = createUseCase({
+      surveyRunService: {
+        getSurveyRun: vi
+          .fn()
+          .mockResolvedValue(
+            SurveyRun.reconstitute(
+              'run-1',
+              'team-1',
+              'model-1',
+              'Sprint 1',
+              'pending',
+              [],
+            ),
+          ),
+        getSurveyRunsByTeam: vi
+          .fn()
+          .mockResolvedValue([
+            SurveyRun.reconstitute(
+              'run-1',
+              'team-1',
+              'model-1',
+              'Sprint 1',
+              'pending',
+              [],
+            ),
+            SurveyRun.reconstitute(
+              'run-2',
+              'team-1',
+              'model-1',
+              'Sprint 2',
+              'open',
+              [],
+            ),
+          ]),
+      },
+    });
+
+    const result = await useCase.execute('team-1', 'run-1', 'lead-1');
+
+    expect(result.hasOtherOpenSurveyRun).toBe(true);
+  });
+
   test('does not query sibling survey runs for non-leads on closed survey runs', async () => {
     const getSurveyRunsByTeam = vi.fn();
     const useCase = createUseCase({
