@@ -1,6 +1,6 @@
 # AGENTS.md
 
-MSE Radar: Team capability assessment via DORA-based surveys. Astro (SSR), TypeScript, SQLite, DaisyUI/TailwindCSS.
+MSE Radar: Team capability assessment via DORA-based surveys. Astro (SSR), TypeScript, PostgreSQL, DaisyUI/TailwindCSS.
 
 Keep your replies extremely concise and focus on conveying the key information. No unnecessary fluff, no long code snippets.
 

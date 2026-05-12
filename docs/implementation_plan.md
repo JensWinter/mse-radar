@@ -52,7 +52,7 @@ The implementation follows a phased approach aligned with MoSCoW prioritization:
 | Component          | Technology                        |
 |:-------------------|:----------------------------------|
 | Web Framework      | Astro (Server-first with Islands) |
-| Database           | SQLite (embedded, file-based)     |
+| Database           | PostgreSQL                        |
 | Language           | TypeScript                        |
 | Testing Runtime    | Deno                              |
 | Component Testing  | Vitest                            |
@@ -198,13 +198,13 @@ stages:
 |:------|:--------------------------------------------------|:-------------|
 | 0.4.1 | Document local development setup                  | -            |
 | 0.4.2 | Create environment variable templates             | -            |
-| 0.4.3 | Verify SQLite database setup for local development | -            |
+| 0.4.3 | Verify PostgreSQL database setup for local development | -            |
 
 ### Phase 0 Exit Criteria
 
 - [ ] CI pipeline runs on every push
 - [ ] Database migrations can be applied automatically
-- [ ] Acceptance tests can create isolated SQLite database files during test setup
+- [ ] Acceptance tests can create isolated PostgreSQL databases/schemas during test setup
 - [ ] Staging environment configured and accessible
 - [ ] README updated with setup instructions
 

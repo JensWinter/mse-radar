@@ -68,7 +68,7 @@ MSE Radar is a team capability assessment application that helps software develo
 | ID   | Constraint          | Rationale                                                                                       |
 |:-----|:--------------------|:------------------------------------------------------------------------------------------------|
 | TC-1 | Astro Web Framework | Project uses Astro for server-first, content-driven architecture with islands for interactivity |
-| TC-2 | SQLite Database     | Lightweight relational database for structured data with ACID compliance; file-based storage    |
+| TC-2 | PostgreSQL Database | Relational database for structured data with ACID compliance                                    |
 | TC-3 | TypeScript          | Type safety across frontend and backend code                                                    |
 | TC-4 | Deno Runtime        | Used for scripts and acceptance tests                                                           |
 | TC-5 | BDD/TDD Practices   | Acceptance Test Driven Development ensures requirements are met                                 |
@@ -143,7 +143,7 @@ flowchart LR
     
     subgraph Server["Application Server"]
         ASTRO[Astro Server<br/>SSR + API]
-        DB[(SQLite)]
+        DB[(Database)]
     end
     
     UI <-->|"HTTPS"| ASTRO
@@ -159,7 +159,7 @@ flowchart LR
 | Decision      | Technology | Rationale                                                                                                         |
 |:--------------|:-----------|:------------------------------------------------------------------------------------------------------------------|
 | Web Framework | Astro      | Server-first architecture ideal for content-driven survey application; islands provide interactivity where needed |
-| Database      | SQLite     | Lightweight embedded database with ACID compliance; simple deployment with file-based storage                     |
+| Database      | PostgreSQL | Mature relational database with ACID compliance, strong concurrency, and rich tooling                             |
 | Language      | TypeScript | Type safety reduces bugs; consistent across frontend and backend                                                  |
 | Testing       | Deno       | BDD acceptance tests ensure requirements are met; component and unit tests verify implementation                  |
 
@@ -338,7 +338,7 @@ sequenceDiagram
     participant UI as Astro UI
     participant Auth as Auth Module
     participant Teams as Teams Module
-    participant DB as SQLite
+    participant DB as Database
     
     User->>UI: Register with email/password
     UI->>Auth: POST /api/auth/register
@@ -362,7 +362,7 @@ sequenceDiagram
     actor TM as Team Member
     participant UI as Astro UI
     participant Exec as Execution Module
-    participant DB as SQLite
+    participant DB as Database
     
     TL->>UI: Create survey run
     UI->>Exec: POST /api/survey-runs
@@ -390,7 +390,7 @@ sequenceDiagram
     participant UI as Astro UI
     participant Insights as Insights Module
     participant Guidance as Guidance Module
-    participant DB as SQLite
+    participant DB as Database
     
     TM->>UI: View team results
     UI->>Insights: GET /api/survey-runs/:id/results
@@ -449,7 +449,7 @@ flowchart TB
         
         subgraph App["Application Server"]
             ASTRO[Astro Server]
-            DB[(SQLite DB)]
+            DB[(PostgreSQL)]
         end
         
         subgraph Storage["Persistent Storage"]
@@ -463,45 +463,40 @@ flowchart TB
     DB -.-> VOL
 ```
 
-**SQLite Deployment Considerations:**
+**Database Deployment Considerations:**
 
-SQLite is an embedded, file-based database. The architecture above reflects a **single-instance deployment**, which is the recommended approach for SQLite.
+PostgreSQL runs as a separate service, allowing the application server and database to scale independently. The architecture above shows a single application instance with a dedicated database instance, but supports horizontal scaling of the application tier without further changes.
 
-| Scenario                                   | Recommendation                                                                                |
-|:-------------------------------------------|:----------------------------------------------------------------------------------------------|
-| **Small teams (< 50 concurrent users)**    | Single instance with SQLite works well                                                        |
-| **Medium traffic**                         | Single instance with SQLite + WAL mode handles concurrent reads efficiently                   |
-| **High availability / horizontal scaling** | Consider migrating to PostgreSQL or using SQLite replication tools (e.g., LiteFS, Litestream) |
-
-**Why not multiple instances with SQLite?**
-- SQLite uses file-level locking; multiple servers cannot safely write to the same database file over a network
-- Each server having its own SQLite file would result in data inconsistency
-- For multi-instance deployments, a client-server database (PostgreSQL, MySQL) is more appropriate
+| Scenario                                   | Recommendation                                                                              |
+|:-------------------------------------------|:--------------------------------------------------------------------------------------------|
+| **Small teams (< 50 concurrent users)**    | Single application instance with a managed PostgreSQL instance works well                   |
+| **Medium traffic**                         | Single PostgreSQL instance with connection pooling handles concurrent reads and writes      |
+| **High availability / horizontal scaling** | Scale the application tier horizontally; use a managed PostgreSQL with replicas and failover |
 
 ### 7.2 Deployment Environments
 
 | Environment | Purpose                   | Infrastructure                                              |
 |:------------|:--------------------------|:------------------------------------------------------------|
-| Development | Local development         | Astro dev server + SQLite file (no external dependencies)   |
-| Testing     | Automated tests           | Isolated SQLite database files per test run                 |
+| Development | Local development         | Astro dev server + PostgreSQL via Docker Compose            |
+| Testing     | Automated tests           | Isolated PostgreSQL schemas/databases per test run          |
 | Staging     | Pre-production validation | Cloud-hosted, mirrors production                            |
-| Production  | Live system               | Cloud-hosted with persistent storage for SQLite database    |
+| Production  | Live system               | Cloud-hosted with managed PostgreSQL and persistent storage |
 
 ### 7.3 Component Deployment
 
 | Component       | Technology               | Deployment Target                      |
 |:----------------|:-------------------------|:---------------------------------------|
 | Web Application | Astro (Node.js adapter)  | Container / Cloud Platform             |
-| Database        | SQLite (embedded)        | Local file on persistent storage       |
+| Database        | PostgreSQL               | Managed service or container with persistent volume |
 | Static Assets   | Images, CSS, JS          | CDN                                    |
 | Secrets         | API keys, credentials    | Environment Variables / Secret Manager |
 
 ### 7.4 Assumptions
 
 - Cloud deployment on a platform supporting Node.js (e.g., AWS, GCP, Azure, Vercel, Railway)
-- Persistent storage for SQLite database file (e.g., EBS volume, persistent disk)
+- Managed PostgreSQL service or self-hosted instance with persistent storage (e.g., EBS volume, persistent disk)
 - HTTPS termination at load balancer/CDN level
-- Single-instance deployment recommended; for multi-instance, use shared storage or consider database migration
+- Application tier can scale horizontally; database is a shared, separately scaled service
 
 ---
 
@@ -537,8 +532,8 @@ SQLite is an embedded, file-based database. The architecture above reflects a **
 
 #### 8.2.1 Database Strategy
 
-- **SQLite** as primary data store for all application data (embedded, file-based)
-- **WAL Mode**: Write-Ahead Logging enabled for better concurrent read performance
+- **PostgreSQL** as primary data store for all application data
+- **Connection Pooling**: Pooled connections for efficient concurrent access
 - **Repository Pattern**: Data access encapsulated in repository classes per aggregate
 - **Transactions**: Multi-table operations wrapped in database transactions
 
@@ -743,28 +738,26 @@ Use Astro web framework with its islands architecture.
 
 ---
 
-### ADR-002: SQLite as Primary Database
+### ADR-002: PostgreSQL as Primary Database
 
-**Status:** Accepted (Updated)
+**Status:** Accepted
 
 **Context:**  
-Survey data has clear relational structure (users, teams, surveys, responses). Data integrity is critical—responses must not be lost or corrupted. The application is expected to have moderate traffic with small to medium team sizes. Simplicity of deployment and zero external dependencies are valued.
+Survey data has clear relational structure (users, teams, surveys, responses). Data integrity is critical—responses must not be lost or corrupted. The application needs to support concurrent writes, horizontal scaling of the application tier, and rich query features (arrays, JSON, aggregations).
 
 **Decision:**  
-Use SQLite as the single primary database with WAL (Write-Ahead Logging) mode enabled.
+Use PostgreSQL as the single primary database.
 
 **Consequences:**
 - (+) ACID compliance ensures data integrity
-- (+) Zero configuration—no separate database server required
-- (+) Simple deployment—single file database, easy backups
-- (+) No external dependencies—reduces operational complexity
-- (+) Fast for read-heavy workloads typical of survey applications
-- (+) Excellent for development and testing (isolated DB files per test)
-- (-) Limited concurrent write throughput (database-level locking)
-- (-) Not suitable for horizontal scaling across multiple servers without shared storage
-- (-) Less tooling compared to PostgreSQL ecosystem
+- (+) Strong concurrent write throughput via MVCC
+- (+) Application tier can scale horizontally against a shared database
+- (+) Native support for arrays, JSON/JSONB, and rich aggregation
+- (+) Mature ecosystem: managed services, tooling, drivers, migrations
+- (-) Requires a separate database service to run and operate
+- (-) More involved local setup than an embedded database (mitigated via Docker Compose)
 
-**Migration Note:** Originally PostgreSQL was chosen, but switched to SQLite to simplify deployment and reduce infrastructure requirements. Arrays are stored as JSON text.
+**History:** An earlier iteration used SQLite to minimize infrastructure. The project switched to PostgreSQL to support concurrent writes, horizontal scaling, and native array/JSON types without workarounds.
 
 ---
 

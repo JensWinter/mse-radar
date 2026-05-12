@@ -18,15 +18,15 @@ MSE Radar helps software development teams assess their engineering capabilities
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
+| Layer    | Technology                                   |
+|----------|----------------------------------------------|
 | Frontend | Astro 5, Alpine.js, TailwindCSS 4, DaisyUI 5 |
-| Backend | Astro API routes (Node runtime) |
-| Database | SQLite (better-sqlite3) |
-| Auth | better-auth |
-| Language | TypeScript |
-| Runtime | Deno (scripts & tests), npm (Astro app) |
-| Testing | Playwright (acceptance), Vitest (unit) |
+| Backend  | Astro API routes (Node runtime)              |
+| Database | PostgreSQL                                   |
+| Auth     | better-auth                                  |
+| Language | TypeScript                                   |
+| Runtime  | Deno (scripts & tests), npm (Astro app)      |
+| Testing  | Playwright (acceptance), Vitest (unit)       |
 
 ## Getting Started
 
