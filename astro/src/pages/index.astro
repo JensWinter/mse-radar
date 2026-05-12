@@ -17,39 +17,40 @@ if (user) {
   {
     user ? (
       <div class="space-y-6">
-        <h1 class="text-3xl font-bold">Home</h1>
+        <h1 class="text-3xl font-bold">Teams</h1>
 
-        <div class="card bg-base-100 shadow-md">
-          <div class="card-body">
-            <h2 class="card-title text-xl">Teams</h2>
-
-            {teams.length === 0 ? (
+        {teams.length === 0 ? (
+          <div class="card bg-base-100 shadow-md">
+            <div class="card-body">
               <EmptyState icon="team" title="No teams yet" />
-            ) : (
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {teams.map((team) => (
-                  <a
-                    href={`/teams/${team.id}`}
-                    class="card bg-base-200 hover:bg-base-300 transition-colors"
-                    data-testid={team.name}
-                  >
-                    <div class="card-body">
-                      <h3 class="card-title text-lg">{team.name}</h3>
-                      {team.description && (
-                        <p class="text-sm text-base-content/70 line-clamp-2">
-                          {team.description}
-                        </p>
-                      )}
-                    </div>
-                  </a>
-                ))}
-              </div>
-            )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div
+            data-testid="teams-grid"
+            class="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            {teams.map((team) => (
+              <a
+                href={`/teams/${team.id}`}
+                data-testid={team.name}
+                class="card bg-base-100 border border-base-100 shadow-md hover:shadow-lg hover:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+              >
+                <div class="card-body">
+                  <h2 class="card-title">{team.name}</h2>
+                  {team.description && (
+                    <p class="text-base-content/70 line-clamp-2">
+                      {team.description}
+                    </p>
+                  )}
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
       </div>
     ) : (
-      <div class="space-y-8">
+      <div class="space-y-6">
         <h1 class="sr-only">Home</h1>
 
         <div class="text-center pt-8 pb-4">
