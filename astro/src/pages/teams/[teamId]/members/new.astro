@@ -8,7 +8,9 @@ import type { TeamDto } from '@services/teams-service.ts';
 import { createTeamsService } from '@lib/composition.ts';
 
 const { user } = Astro.locals;
-assert(user, 'User must be logged in.');
+if (!user) {
+  return new Response('Unauthorized', { status: 401 });
+}
 
 const { teamId } = Astro.params as { teamId: string };
 
