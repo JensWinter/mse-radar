@@ -69,7 +69,7 @@ export class ProtocolDriver {
 
   async confirmCanAccessProtectedFeatures() {
     await this.openAccountPage();
-    const accountPageTitle = this.page.getByRole('heading', { name: 'Account Overview' });
+    const accountPageTitle = this.page.getByRole('heading', { name: 'Account', exact: true });
     await expect(accountPageTitle).toBeVisible();
   }
 
