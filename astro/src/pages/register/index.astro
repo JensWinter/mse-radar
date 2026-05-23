@@ -39,7 +39,12 @@ import Alert from '@components/ui/Alert.astro';
   </form>
 
   <div slot="actions" class="flex flex-1 justify-center">
-    <button type="submit" form="register-form" class="btn btn-primary">
+    <button
+      id="register-button"
+      type="submit"
+      form="register-form"
+      class="btn btn-primary"
+    >
       Register
     </button>
   </div>
@@ -88,6 +93,12 @@ import Alert from '@components/ui/Alert.astro';
     } else {
       successMessageContainer.classList.remove('hidden');
       registerForm.classList.add('hidden');
+      const registerButton = document.querySelector(
+        '#register-button',
+      ) as HTMLButtonElement;
+      if (registerButton) {
+        registerButton.classList.add('hidden');
+      }
     }
   };
 </script>
