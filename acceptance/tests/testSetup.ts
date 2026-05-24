@@ -7,7 +7,7 @@ import { AuthTestDatabase } from '../sut/authDatabaseSut.ts';
 const isManagedMode = Deno.env.get('ACCEPTANCE_SUT_MANAGED') === 'true';
 
 function generateTestToken(): string {
-  return crypto.randomUUID().replaceAll('-', '').slice(0, 8);
+  return crypto.randomUUID().replaceAll('-', '');
 }
 
 export function setupAcceptanceTest(): Dsl {
