@@ -6,6 +6,10 @@ import { AuthTestDatabase } from '../sut/authDatabaseSut.ts';
 
 const isManagedMode = Deno.env.get('ACCEPTANCE_SUT_MANAGED') === 'true';
 
+function generateTestToken(): string {
+  return crypto.randomUUID().replaceAll('-', '').slice(0, 8);
+}
+
 export function setupAcceptanceTest(): Dsl {
   const dsl = new Dsl();
 
@@ -19,8 +23,6 @@ function setupManagedMode(dsl: Dsl): Dsl {
   const baseUrl = Deno.env.get('ACCEPTANCE_SUT_BASE_URL')!;
   const databaseUrl = Deno.env.get('DATABASE_URL')!;
 
-  const databaseSut = TestDatabase.connectToExisting(databaseUrl);
-  const authDatabaseSut = AuthTestDatabase.connectToExisting(databaseUrl);
   const astroSut: AstroSutHandle = {
     baseUrl,
     ownsProcess: false,
@@ -37,9 +39,7 @@ function setupManagedMode(dsl: Dsl): Dsl {
   });
 
   beforeEach(async () => {
-    await databaseSut.resetData();
-    await authDatabaseSut.resetData();
-    await dsl.setUp(astroSut);
+    await dsl.setUp(astroSut, generateTestToken());
   });
 
   afterEach(async () => {
@@ -70,9 +70,7 @@ function setupStandaloneMode(dsl: Dsl): Dsl {
   });
 
   beforeEach(async () => {
-    await databaseSut.resetData();
-    await authDatabaseSut.resetData();
-    await dsl.setUp(astroSut);
+    await dsl.setUp(astroSut, generateTestToken());
   });
 
   afterEach(async () => {

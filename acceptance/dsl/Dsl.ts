@@ -23,7 +23,7 @@ export class Dsl {
     await this.browser?.close();
   }
 
-  async setUp(sut: AstroSutHandle) {
+  async setUp(sut: AstroSutHandle, token: string) {
     if (!this.browser) {
       throw new Error('Browser not set up. Call setUpBrowser() first.');
     }
@@ -33,10 +33,10 @@ export class Dsl {
     const page = await this.context.newPage();
     await page.goto('/');
     const driver = new ProtocolDriver(page);
-    this.identityAndAccess = new IdentityAndAccessDsl(driver);
-    this.teamManagement = new TeamManagementDsl(driver);
+    this.identityAndAccess = new IdentityAndAccessDsl(driver, token);
+    this.teamManagement = new TeamManagementDsl(driver, token);
     this.surveyDefinition = new SurveyDefinitionDsl(driver);
-    this.surveyExecution = new SurveyExecutionDsl(driver);
+    this.surveyExecution = new SurveyExecutionDsl(driver, token);
   }
 
   async tearDown() {

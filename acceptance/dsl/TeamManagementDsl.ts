@@ -1,4 +1,5 @@
 import { ProtocolDriver } from '../drivers/ProtocolDriver.ts';
+import { namespaceEmail, namespaceName } from './testNamespace.ts';
 
 export type CreateTeamParams = {
   name?: string;
@@ -87,28 +88,39 @@ const DEFAULT_DUMMY_TEAM_NAME = 'Road Runners';
 const DEFAULT_DUMMY_TEAM_DESCRIPTION = 'The best team in the world!';
 
 export class TeamManagementDsl {
-  constructor(private readonly driver: ProtocolDriver) {
+  constructor(
+    private readonly driver: ProtocolDriver,
+    private readonly token: string,
+  ) {
+  }
+
+  private name(name: string): string {
+    return namespaceName(name, this.token);
+  }
+
+  private email(email: string): string {
+    return namespaceEmail(email, this.token);
   }
 
   async createTeam(params?: CreateTeamParams) {
-    const name = params?.name ?? DEFAULT_DUMMY_TEAM_NAME;
+    const name = this.name(params?.name ?? DEFAULT_DUMMY_TEAM_NAME);
     const description = params?.description ?? DEFAULT_DUMMY_TEAM_DESCRIPTION;
     await this.driver.createTeam(name, description);
   }
 
   async confirmTeamCreated(params?: ConfirmTeamCreatedParams) {
-    const teamName = params?.name ?? DEFAULT_DUMMY_TEAM_NAME;
+    const teamName = this.name(params?.name ?? DEFAULT_DUMMY_TEAM_NAME);
     await this.driver.confirmTeamCreated(teamName);
   }
 
   async confirmTeamLead(params: ConfirmTeamLeadParams) {
-    const teamName = params.teamName ?? DEFAULT_DUMMY_TEAM_NAME;
-    await this.driver.confirmTeamLead(teamName, params.email);
+    const teamName = this.name(params.teamName ?? DEFAULT_DUMMY_TEAM_NAME);
+    await this.driver.confirmTeamLead(teamName, this.email(params.email));
   }
 
   async addTeamMember(params: AddTeamMemberParams) {
-    const teamName = params.teamName ?? DEFAULT_DUMMY_TEAM_NAME;
-    await this.driver.addTeamMember(teamName, params.email);
+    const teamName = this.name(params.teamName ?? DEFAULT_DUMMY_TEAM_NAME);
+    await this.driver.addTeamMember(teamName, this.email(params.email));
   }
 
   async openHomePage() {
@@ -116,33 +128,33 @@ export class TeamManagementDsl {
   }
 
   async openTeamMembers(params?: OpenTeamMembersParams) {
-    const teamName = params?.teamName ?? DEFAULT_DUMMY_TEAM_NAME;
+    const teamName = this.name(params?.teamName ?? DEFAULT_DUMMY_TEAM_NAME);
     await this.driver.openTeamMembers(teamName);
   }
 
   async confirmTeamInList(params?: ConfirmTeamInListParams) {
-    const teamName = params?.teamName ?? DEFAULT_DUMMY_TEAM_NAME;
+    const teamName = this.name(params?.teamName ?? DEFAULT_DUMMY_TEAM_NAME);
     await this.driver.confirmTeamInList(teamName);
   }
 
   async openTeamDetails(params?: OpenTeamDetailsParams) {
-    const teamName = params?.teamName ?? DEFAULT_DUMMY_TEAM_NAME;
+    const teamName = this.name(params?.teamName ?? DEFAULT_DUMMY_TEAM_NAME);
     await this.driver.openTeamDetails(teamName);
   }
 
   async confirmTeamDetails(params: ConfirmTeamDetailsParams) {
-    const teamName = params.teamName ?? DEFAULT_DUMMY_TEAM_NAME;
+    const teamName = this.name(params.teamName ?? DEFAULT_DUMMY_TEAM_NAME);
     const description = params.description ?? DEFAULT_DUMMY_TEAM_DESCRIPTION;
     const numberOfSurveyRuns = params.numberOfSurveyRuns ?? 0;
     await this.driver.confirmTeamDetails(teamName, description, numberOfSurveyRuns);
   }
 
   async confirmTeamMemberInList(params: ConfirmTeamMemberInListParams) {
-    await this.driver.confirmTeamMemberInList(params.email);
+    await this.driver.confirmTeamMemberInList(this.email(params.email));
   }
 
   async confirmTeamLeadInList(params: ConfirmTeamLeadInListParams) {
-    await this.driver.confirmTeamLeadInList(params.email);
+    await this.driver.confirmTeamLeadInList(this.email(params.email));
   }
 
   async attemptOpenTeamDetails() {
@@ -154,9 +166,9 @@ export class TeamManagementDsl {
   }
 
   async editTeamDetails(params: EditTeamDetailsParams) {
-    const teamName = params.teamName ?? DEFAULT_DUMMY_TEAM_NAME;
+    const teamName = this.name(params.teamName ?? DEFAULT_DUMMY_TEAM_NAME);
     await this.driver.openEditTeamPage(teamName);
-    await this.driver.editTeamDetails(params.newName, params.newDescription);
+    await this.driver.editTeamDetails(this.name(params.newName), params.newDescription);
   }
 
   async confirmEditButtonNotVisible() {
@@ -172,16 +184,16 @@ export class TeamManagementDsl {
   }
 
   async removeTeamMember(params: RemoveTeamMemberParams) {
-    const teamName = params.teamName ?? DEFAULT_DUMMY_TEAM_NAME;
-    await this.driver.removeTeamMember(teamName, params.email);
+    const teamName = this.name(params.teamName ?? DEFAULT_DUMMY_TEAM_NAME);
+    await this.driver.removeTeamMember(teamName, this.email(params.email));
   }
 
   async confirmTeamMemberNotInList(params: ConfirmTeamMemberInListParams) {
-    await this.driver.confirmTeamMemberNotInList(params.email);
+    await this.driver.confirmTeamMemberNotInList(this.email(params.email));
   }
 
   async confirmTeamNotInList(params?: ConfirmTeamNotInListParams) {
-    const teamName = params?.teamName ?? DEFAULT_DUMMY_TEAM_NAME;
+    const teamName = this.name(params?.teamName ?? DEFAULT_DUMMY_TEAM_NAME);
     await this.driver.confirmTeamNotInList(teamName);
   }
 
@@ -194,13 +206,13 @@ export class TeamManagementDsl {
   }
 
   async promoteMemberToTeamLead(params: PromoteMemberToTeamLeadParams) {
-    const teamName = params.teamName ?? DEFAULT_DUMMY_TEAM_NAME;
-    await this.driver.promoteMemberToTeamLead(teamName, params.email);
+    const teamName = this.name(params.teamName ?? DEFAULT_DUMMY_TEAM_NAME);
+    await this.driver.promoteMemberToTeamLead(teamName, this.email(params.email));
   }
 
   async demoteTeamLeadToMember(params: DemoteTeamLeadToMemberParams) {
-    const teamName = params.teamName ?? DEFAULT_DUMMY_TEAM_NAME;
-    await this.driver.demoteTeamLeadToMember(teamName, params.email);
+    const teamName = this.name(params.teamName ?? DEFAULT_DUMMY_TEAM_NAME);
+    await this.driver.demoteTeamLeadToMember(teamName, this.email(params.email));
   }
 
   async confirmChangeRoleErrorMessage(params: ConfirmChangeRoleErrorMessageParams) {

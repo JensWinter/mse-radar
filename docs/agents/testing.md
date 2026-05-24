@@ -13,6 +13,8 @@
 deno task test:acceptance
 ```
 
+**Parallel execution:** Specs run in parallel against one shared DB with no per-test reset. Each test gets a unique token; the DSL namespaces every email/team/survey identifier with it. Write plain literals and route all identifiers through the DSL.
+
 **Run single spec:**
 ```bash
 deno test --env-file=.env.acceptance --allow-all acceptance/tests/0001-001-user-registration.spec.ts

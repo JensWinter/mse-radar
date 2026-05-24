@@ -1,4 +1,5 @@
 import { ProtocolDriver } from '../drivers/ProtocolDriver.ts';
+import { namespaceEmail } from './testNamespace.ts';
 
 export type RegisterUserParams = {
   email?: string;
@@ -18,12 +19,19 @@ const DEFAULT_DUMMY_EMAIL = 'clara@example.com';
 const DEFAULT_DUMMY_PASSWORD = 'password123';
 
 export class IdentityAndAccessDsl {
-  constructor(private readonly driver: ProtocolDriver) {
+  constructor(
+    private readonly driver: ProtocolDriver,
+    private readonly token: string,
+  ) {
+  }
+
+  private email(email: string): string {
+    return namespaceEmail(email, this.token);
   }
 
   async registerUser(params?: RegisterUserParams) {
     await this.driver.openUserRegistrationPage();
-    const email = params?.email ?? DEFAULT_DUMMY_EMAIL;
+    const email = this.email(params?.email ?? DEFAULT_DUMMY_EMAIL);
     const password = params?.password ?? DEFAULT_DUMMY_PASSWORD;
     await this.driver.registerUser(email, password);
   }
@@ -43,13 +51,13 @@ export class IdentityAndAccessDsl {
   async signIn(params?: SignInParams) {
     await this.driver.openLoginPage();
 
-    const email = params?.email ?? DEFAULT_DUMMY_EMAIL;
+    const email = this.email(params?.email ?? DEFAULT_DUMMY_EMAIL);
     const password = params?.password ?? DEFAULT_DUMMY_PASSWORD;
     await this.driver.loginUser(email, password);
   }
 
   async confirmSuccessfulSignIn(params?: ConfirmSuccessfulSignInParams) {
-    const email = params?.email ?? DEFAULT_DUMMY_EMAIL;
+    const email = this.email(params?.email ?? DEFAULT_DUMMY_EMAIL);
     await this.driver.confirmSuccessfulSignIn(email);
   }
 
