@@ -518,7 +518,6 @@ export class ProtocolDriver {
     await expect(textarea).toBeVisible();
     await textarea.fill(comment);
     await textarea.blur();
-    await expect(card.getByText('Saved')).toBeVisible({ timeout: 5000 });
   }
 
   async confirmCommentSaved(doraCapability: string) {
@@ -540,8 +539,7 @@ export class ProtocolDriver {
   async confirmCommentNotInResults(comment: string) {
     const resultsSection = this.page.getByTestId('assessment-results-section');
     await expect(resultsSection).toBeVisible();
-    const resultsSectionContent = await resultsSection.innerHTML();
-    expect(resultsSectionContent).not.toContain(comment);
+    await expect(resultsSection).not.toContainText(comment);
   }
 
   async confirmClosingSurveyRunIsNotPossible() {

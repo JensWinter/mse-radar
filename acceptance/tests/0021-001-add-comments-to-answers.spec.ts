@@ -45,13 +45,19 @@ describe('0021-001: Add Comments to Answers', () => {
     // GIVEN
     const comment = 'This area needs more attention';
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
-    await dsl.surveyExecution.addCommentToQuestion({ capabilityName: 'Continuous integration', comment });
+    await dsl.surveyExecution.addCommentToQuestion({
+      capabilityName: 'Continuous integration',
+      comment,
+    });
 
     // WHEN
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
 
     // THEN
-    await dsl.surveyExecution.confirmMyComment({ capabilityName: 'Continuous integration', comment });
+    await dsl.surveyExecution.confirmMyComment({
+      capabilityName: 'Continuous integration',
+      comment,
+    });
   });
 
   it('should not show individual comments in aggregated team results', async () => {
@@ -63,7 +69,10 @@ describe('0021-001: Add Comments to Answers', () => {
     await dsl.identityAndAccess.signIn({ email: teamMemberEmail });
     await dsl.surveyExecution.openSurveyRunPage({ teamName });
     await dsl.surveyExecution.answerSurvey();
-    await dsl.surveyExecution.addCommentToQuestion({ capabilityName: 'Continuous integration', comment: sensitiveComment });
+    await dsl.surveyExecution.addCommentToQuestion({
+      capabilityName: 'Continuous integration',
+      comment: sensitiveComment,
+    });
 
     // WHEN — team lead closes the survey and views results
     await dsl.identityAndAccess.signIn({ email: teamLeadEmail });
