@@ -44,6 +44,24 @@ export type ConfirmMyAnswersParams = {
   answers: (number | null)[];
 };
 
+export type AddCommentToQuestionParams = {
+  capabilityName: string;
+  comment: string;
+};
+
+export type ConfirmCommentSavedParams = {
+  capabilityName: string;
+};
+
+export type ConfirmMyCommentParams = {
+  capabilityName: string;
+  comment: string;
+};
+
+export type ConfirmCommentNotInResultsParams = {
+  comment: string;
+};
+
 export type CloseSurveyRunParams = {
   teamName: string;
   title?: string;
@@ -167,6 +185,22 @@ export class SurveyExecutionDsl {
 
   async confirmMyAnswers(params: ConfirmMyAnswersParams) {
     await this.driver.confirmMyAnswers(params.answers);
+  }
+
+  async addCommentToQuestion(params: AddCommentToQuestionParams) {
+    await this.driver.addCommentToQuestion(params.capabilityName, params.comment);
+  }
+
+  async confirmCommentSaved(params: ConfirmCommentSavedParams) {
+    await this.driver.confirmCommentSaved(params.capabilityName);
+  }
+
+  async confirmMyComment(params: ConfirmMyCommentParams) {
+    await this.driver.confirmMyComment(params.capabilityName, params.comment);
+  }
+
+  async confirmCommentNotInResults(params: ConfirmCommentNotInResultsParams) {
+    await this.driver.confirmCommentNotInResults(params.comment);
   }
 
   async confirmCannotAnswerSurvey() {
