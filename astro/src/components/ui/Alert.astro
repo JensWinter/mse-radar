@@ -15,17 +15,15 @@ const alertClasses = {
 };
 
 const iconClasses = {
-  error: 'circle-alert',
-  success: 'circle-check',
-  warning: 'triangle-alert',
-  info: 'info',
+  error: 'iconify lucide--circle-alert',
+  success: 'iconify lucide--circle-check',
+  warning: 'iconify lucide--triangle-alert',
+  info: 'iconify lucide--info',
 };
-
-const icon = iconClasses[type];
 ---
 
 <div class={`alert ${alertClasses[type]} ${className}`}>
-  <span class=`iconify lucide--${icon}`></span>
+  <span class={iconClasses[type]}></span>
   <span class={messageClass}>
     <slot />
   </span>
