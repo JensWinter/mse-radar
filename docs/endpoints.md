@@ -47,7 +47,7 @@ This document defines the URL structure for MSE Radar, covering both Astro web a
 |:-------------------------------------------------|:-------------------|:----------------------------------------------------|:---------------------|
 | `/teams/[teamId]/surveys`                        | Survey Runs List   | List of all survey runs for a team                  | 0008, 0010           |
 | `/teams/[teamId]/surveys/new`                    | Create Survey Run  | Create a new survey run (Team Lead only)            | 0008                 |
-| `/teams/[teamId]/surveys/[runId]`                | Survey Run Details | View survey run status, schedule, and participation | 0009, 0020, 0024     |
+| `/teams/[teamId]/surveys/[runId]`                | Survey Run Details | View survey run status and schedule                 | 0009, 0020           |
 | `/teams/[teamId]/surveys/[runId]/respond`        | Answer Survey      | Survey response form for team members               | 0011, 0021           |
 | `/teams/[teamId]/surveys/[runId]/my-response`    | My Response        | View/edit own submitted response                    | 0011                 |
 | `/teams/[teamId]/surveys/[runId]/results`        | Survey Results     | View aggregated results and DORA capability profile | 0015, 0016, 0025     |
@@ -145,7 +145,6 @@ Survey run lifecycle and response management endpoints.
 | `POST` | `/api/teams/[teamId]/survey-runs/[runId]/open` | Open survey run for responses | 0009 |
 | `POST` | `/api/teams/[teamId]/survey-runs/[runId]/close` | Close survey run | 0009 |
 | `POST` | `/api/teams/[teamId]/survey-runs/[runId]/reopen` | Reopen a closed survey run | 0009 |
-| `GET` | `/api/teams/[teamId]/survey-runs/[runId]/participation` | Get participation stats | 0024 |
 | `POST` | `/api/teams/[teamId]/survey-runs/[runId]/responses` | Submit survey response | 0011, 0012, 0013, 0014, 0021 |
 | `GET` | `/api/teams/[teamId]/survey-runs/[runId]/responses/mine` | Get current user's response | 0011, 0023 |
 | `PUT` | `/api/teams/[teamId]/survey-runs/[runId]/responses/mine` | Update current user's response | 0011 |
@@ -258,7 +257,6 @@ Trends are at `/api/teams/[teamId]/trends` rather than nested under survey runs 
 | 0021   |    S     | Add comments to answers           | `/teams/[teamId]/surveys/[runId]/respond`        | `/api/.../survey-runs/[runId]/responses`                 |
 | 0022   |    S     | Question versioning               | -                                                | `/api/survey-models/[version]`                           |
 | 0023   |    S     | Pseudonymous responses            | -                                                | `/api/.../responses/mine` (privacy)                      |
-| 0024   |    C     | Participation tracking            | `/teams/[teamId]/surveys/[runId]`                | `/api/.../survey-runs/[runId]/participation`             |
 | 0025   |    C     | Confidence indicators             | `/teams/[teamId]/surveys/[runId]/results`        | `/api/.../survey-runs/[runId]/results/confidence`        |
 | 0026   |    C     | Export results                    | `/teams/[teamId]/surveys/[runId]/results/export` | `/api/.../survey-runs/[runId]/results/export`            |
 | 0027   |    C     | Workshop view                     | `/teams/[teamId]/surveys/[runId]/workshop`       | `/api/.../survey-runs/[runId]/results`                   |

@@ -274,7 +274,6 @@ flowchart TB
     end
     
     subgraph Could["Could Have (C)"]
-        S0024["0024-001<br/>Participation Tracking"]
         S0028["0028-001<br/>Survey Notifications"]
     end
     
@@ -299,23 +298,22 @@ flowchart TB
     style Could fill:#fff9c4
 ```
 
-| Story ID | Title | Priority | Estimate | Task |
-|:---------|:------|:--------:|:--------:|:-----|
-| 0008-001 | Create Survey Run | M | M | Manage Survey Runs |
-| 0009-001 | Open Survey Run | M | S | Control Lifecycle |
-| 0009-002 | Close Survey Run | M | S | Control Lifecycle |
-| 0009-003 | Reopen Survey Run | M | S | Control Lifecycle |
-| 0010-001 | Survey Run Isolation | M | M | Manage Survey Runs |
-| 0011-001 | Submit Survey Response | M | M | Submit Responses |
-| 0011-002 | Edit Survey Response | M | M | Submit Responses |
-| 0012-001 | Block Responses When Not Open | M | S | Enforce Rules |
-| 0013-001 | Block Non-Member Responses | M | S | Enforce Rules |
-| 0014-001 | Response Audit Trail | M | M | Enforce Rules |
-| 0020-001 | Schedule Survey Run | S | M | Control Lifecycle |
-| 0021-001 | Add Comments to Answers | S | S | Submit Responses |
-| 0023-001 | Pseudonymous Responses | S | L | Submit Responses |
-| 0024-001 | Participation Tracking | C | M | Track & Notify |
-| 0028-001 | Survey Notifications | C | M | Track & Notify |
+| Story ID | Title                         | Priority | Estimate | Task               |
+|:---------|:------------------------------|:--------:|:--------:|:-------------------|
+| 0008-001 | Create Survey Run             |    M     |    M     | Manage Survey Runs |
+| 0009-001 | Open Survey Run               |    M     |    S     | Control Lifecycle  |
+| 0009-002 | Close Survey Run              |    M     |    S     | Control Lifecycle  |
+| 0009-003 | Reopen Survey Run             |    M     |    S     | Control Lifecycle  |
+| 0010-001 | Survey Run Isolation          |    M     |    M     | Manage Survey Runs |
+| 0011-001 | Submit Survey Response        |    M     |    M     | Submit Responses   |
+| 0011-002 | Edit Survey Response          |    M     |    M     | Submit Responses   |
+| 0012-001 | Block Responses When Not Open |    M     |    S     | Enforce Rules      |
+| 0013-001 | Block Non-Member Responses    |    M     |    S     | Enforce Rules      |
+| 0014-001 | Response Audit Trail          |    M     |    M     | Enforce Rules      |
+| 0020-001 | Schedule Survey Run           |    S     |    M     | Control Lifecycle  |
+| 0021-001 | Add Comments to Answers       |    S     |    S     | Submit Responses   |
+| 0023-001 | Pseudonymous Responses        |    S     |    L     | Submit Responses   |
+| 0028-001 | Survey Notifications          |    C     |    M     | Track & Notify     |
 
 ---
 
@@ -548,7 +546,6 @@ flowchart LR
             R3_2["0029-001 Customize"]
         end
         subgraph SE["Execution"]
-            R3_3["0024-001 Participation"]
             R3_4["0028-001 Notifications"]
         end
         subgraph AI["Assessment"]
@@ -565,21 +562,20 @@ flowchart LR
     end
 ```
 
-**Total Stories: 11** | **Estimated Effort: L**
+**Total Stories: 10** | **Estimated Effort: L**
 
-| # | Story | Context | Estimate |
-|:-:|:------|:--------|:--------:|
-| 1 | 0024-001 Participation Tracking | Survey Execution | M |
-| 2 | 0025-001 Confidence and Disagreement | Assessment & Insights | M |
-| 3 | 0026-001 Export Results | Assessment & Insights | M |
-| 4 | 0027-001 Workshop View | Assessment & Insights | M |
-| 5 | 0028-001 Survey Notifications | Survey Execution | M |
-| 6 | 0029-001 Customizable Survey | Survey Definition | L |
-| 7 | 0030-001 Next Best Improvements | Improvement Guidance | M |
-| 8 | 0031-001 Chat Assistant | Improvement Guidance | L |
-| 9 | 0032-001 Project Tools Integration | Improvement Guidance | L |
-| 10 | 0033-001 Multi-Language UI | Improvement Guidance | L |
-| 11 | 0034-001 SSO Authentication | Identity & Access | L |
+| #  | Story                                | Context               | Estimate |
+|:--:|:-------------------------------------|:----------------------|:--------:|
+| 1  | 0025-001 Confidence and Disagreement | Assessment & Insights |    M     |
+| 2  | 0026-001 Export Results              | Assessment & Insights |    M     |
+| 3  | 0027-001 Workshop View               | Assessment & Insights |    M     |
+| 4  | 0028-001 Survey Notifications        | Survey Execution      |    M     |
+| 5  | 0029-001 Customizable Survey         | Survey Definition     |    L     |
+| 6  | 0030-001 Next Best Improvements      | Improvement Guidance  |    M     |
+| 7  | 0031-001 Chat Assistant              | Improvement Guidance  |    L     |
+| 8  | 0032-001 Project Tools Integration   | Improvement Guidance  |    L     |
+| 9  | 0033-001 Multi-Language UI           | Improvement Guidance  |    L     |
+| 10 | 0034-001 SSO Authentication          | Identity & Access     |    L     |
 
 ---
 
@@ -608,7 +604,7 @@ flowchart TD
     subgraph Advanced["Advanced Layer"]
         IA3[SSO<br/>0034]
         SD3[Customize<br/>0029]
-        SE3[Track/Notify<br/>0024, 0028]
+        SE3[Track/Notify<br/>0028]
         AI3[Export/Workshop<br/>0025-0027]
         IG3[AI/Integration<br/>0030-0033]
     end
@@ -639,26 +635,26 @@ flowchart TD
 
 ## Story Summary by Priority
 
-| Priority | Count | Stories |
-|:---------|:-----:|:--------|
-| **Must Have (M)** | 24 | 0001-001, 0002-001, 0002-002, 0003-001, 0003-002, 0003-003, 0004-001, 0004-002, 0005-001, 0006-001, 0007-001, 0008-001, 0009-001, 0009-002, 0009-003, 0010-001, 0011-001, 0011-002, 0012-001, 0013-001, 0014-001, 0015-001, 0016-001, 0017-001 |
-| **Should Have (S)** | 6 | 0018-001, 0019-001, 0020-001, 0021-001, 0022-001, 0023-001 |
-| **Could Have (C)** | 11 | 0024-001, 0025-001, 0026-001, 0027-001, 0028-001, 0029-001, 0030-001, 0031-001, 0032-001, 0033-001, 0034-001 |
-| **Total** | **41** | |
+| Priority            | Count  | Stories                                                                                                                                                                                                                                        |
+|:--------------------|:------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Must Have (M)**   |   24   | 0001-001, 0002-001, 0002-002, 0003-001, 0003-002, 0003-003, 0004-001, 0004-002, 0005-001, 0006-001, 0007-001, 0008-001, 0009-001, 0009-002, 0009-003, 0010-001, 0011-001, 0011-002, 0012-001, 0013-001, 0014-001, 0015-001, 0016-001, 0017-001 |
+| **Should Have (S)** |   6    | 0018-001, 0019-001, 0020-001, 0021-001, 0022-001, 0023-001                                                                                                                                                                                     |
+| **Could Have (C)**  |   10   | 0025-001, 0026-001, 0027-001, 0028-001, 0029-001, 0030-001, 0031-001, 0032-001, 0033-001, 0034-001                                                                                                                                             |
+| **Total**           | **40** |                                                                                                                                                                                                                                                |
 
 ---
 
 ## Story Summary by Bounded Context
 
-| Context | Type | Must | Should | Could | Total |
-|:--------|:-----|:----:|:------:|:-----:|:-----:|
-| Identity & Access | Generic | 3 | 0 | 1 | 4 |
-| Team Management | Supporting | 7 | 0 | 0 | 7 |
-| Survey Definition | Core | 1 | 2 | 1 | 4 |
-| Survey Execution | Core | 10 | 3 | 2 | 15 |
-| Assessment & Insights | Core | 2 | 1 | 3 | 6 |
-| Improvement Guidance | Core | 1 | 0 | 4 | 5 |
-| **Total** | | **24** | **6** | **11** | **41** |
+| Context               | Type       |  Must  | Should | Could  | Total  |
+|:----------------------|:-----------|:------:|:------:|:------:|:------:|
+| Identity & Access     | Generic    |   3    |   0    |   1    |   4    |
+| Team Management       | Supporting |   7    |   0    |   0    |   7    |
+| Survey Definition     | Core       |   1    |   2    |   1    |   4    |
+| Survey Execution      | Core       |   10   |   3    |   1    |   15   |
+| Assessment & Insights | Core       |   2    |   1    |   3    |   6    |
+| Improvement Guidance  | Core       |   1    |   0    |   4    |   5    |
+| **Total**             |            | **24** | **6**  | **10** | **41** |
 
 ---
 

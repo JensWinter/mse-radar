@@ -438,24 +438,22 @@ Open Survey → Submit Response → Close Survey → View Results
 
 Features ordered by likely business value:
 
-|  Prio | Story    | Feature                                | Estimate  |
-|------:|:---------|:---------------------------------------|:---------:|
-|     1 | 0026-001 | Export Results (CSV/JSON/PDF)          |     M     |
-|     2 | 0024-001 | Participation Tracking                 |     M     |
-|     3 | 0025-001 | Confidence and Disagreement Indicators |     M     |
-|     4 | 0027-001 | Workshop View                          |     M     |
-|     5 | 0028-001 | Survey Notifications                   |     M     |
-|     6 | 0030-001 | Next Best Improvements                 |     M     |
-|     7 | 0029-001 | Customizable Survey                    |     L     |
-|     8 | 0034-001 | SSO Authentication                     |     L     |
-|     9 | 0031-001 | Chat Assistant (LLM)                   |     L     |
-|    10 | 0032-001 | Project Tools Integration              |     L     |
-|    11 | 0033-001 | Multi-Language UI                      |     L     |
+| Prio | Story    | Feature                                | Estimate  |
+|-----:|:---------|:---------------------------------------|:---------:|
+|    1 | 0026-001 | Export Results (CSV/JSON/PDF)          |     M     |
+|    2 | 0025-001 | Confidence and Disagreement Indicators |     M     |
+|    3 | 0027-001 | Workshop View                          |     M     |
+|    4 | 0028-001 | Survey Notifications                   |     M     |
+|    5 | 0030-001 | Next Best Improvements                 |     M     |
+|    6 | 0029-001 | Customizable Survey                    |     L     |
+|    7 | 0034-001 | SSO Authentication                     |     L     |
+|    8 | 0031-001 | Chat Assistant (LLM)                   |     L     |
+|    9 | 0032-001 | Project Tools Integration              |     L     |
+|   10 | 0033-001 | Multi-Language UI                      |     L     |
 
 ### 4.2 Implementation Notes
 
 - **Export Results (0026-001):** High value for enterprise users; implement CSV first, then JSON, then PDF
-- **Participation Tracking (0024-001):** Enables Team Leads to follow up with non-respondents
 - **SSO (0034-001):** Critical for enterprise adoption; defer until core features stable
 - **Chat Assistant (0031-001):** Depends on LLM API selection; design integration point first
 
