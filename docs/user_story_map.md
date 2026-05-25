@@ -290,7 +290,6 @@ flowchart TB
     T4 --> S0012
     T4 --> S0013
     T4 --> S0014
-    T5 --> S0024
     T5 --> S0028
     
     style Must fill:#c8e6c9
