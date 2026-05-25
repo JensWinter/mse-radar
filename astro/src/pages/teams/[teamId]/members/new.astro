@@ -54,7 +54,9 @@ try {
       <>
         {addTeamMemberResult?.error && (
           <Alert type="error" messageClass="error-message">
-            {addTeamMemberResult.error?.code === 'BAD_REQUEST' ? 'Invalid input' : addTeamMemberResult.error.message}
+            {addTeamMemberResult.error.fields
+              ? 'Please enter a valid email address.'
+              : (addTeamMemberResult.error.message ?? 'Invalid input')}
           </Alert>
         )}
 
