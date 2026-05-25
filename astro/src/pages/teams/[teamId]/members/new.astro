@@ -1,7 +1,7 @@
 ---
 import ModalLayout from '@layouts/ModalLayout.astro';
 import Alert from '@components/ui/Alert.astro';
-import { actions } from 'astro:actions';
+import { actions, isInputError } from 'astro:actions';
 import { AuthorizationError } from '@services/authorization-service.ts';
 import type { TeamDto } from '@services/teams-service.ts';
 import { createTeamsService } from '@lib/composition.ts';
@@ -54,7 +54,7 @@ try {
       <>
         {addTeamMemberResult?.error && (
           <Alert type="error" messageClass="error-message">
-            {addTeamMemberResult.error.fields
+            {isInputError(addTeamMemberResult.error)
               ? 'Please enter a valid email address.'
               : (addTeamMemberResult.error.message ?? 'Invalid input')}
           </Alert>
