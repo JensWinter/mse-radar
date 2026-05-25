@@ -21,6 +21,7 @@ async function main() {
         'test',
         '--permit-no-files',
         '--allow-all',
+        '--parallel',
         '--junit-path=./acceptance-tests-report.xml',
         'acceptance/tests/*.spec.ts',
       ],
@@ -29,6 +30,7 @@ async function main() {
       stderr: 'inherit',
       env: {
         ...Deno.env.toObject(),
+        DENO_JOBS: Deno.env.get('DENO_JOBS') || '4',
         ACCEPTANCE_SUT_MANAGED: 'true',
         ACCEPTANCE_SUT_BASE_URL: astroSut.baseUrl,
         DATABASE_URL: databaseUrl,

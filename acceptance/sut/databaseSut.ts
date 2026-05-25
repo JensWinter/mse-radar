@@ -2,14 +2,6 @@ import postgres from 'postgres';
 import { runMigrations } from '../../deno_scripts/db/migrate.ts';
 import { seedDoraCapabilities } from '../../deno_scripts/db/seed_dora_capabilities.ts';
 
-const RESET_SCRIPT = `
-  DELETE FROM survey_responses;
-  DELETE FROM survey_runs;
-  DELETE FROM team_memberships;
-  DELETE FROM teams;
-  DELETE FROM users;
-`;
-
 interface TestDbContext {
   databaseUrl: string;
   dbName: string;
@@ -53,26 +45,6 @@ export class TestDatabase {
     const databaseUrl = getDatabaseUrlOrExit();
     await dropDatabase(databaseUrl, this.context.dbName).catch(() => {});
     this.context = null;
-  }
-
-  async resetData(): Promise<void> {
-    if (!this.context) {
-      throw new Error('Test database not set up. Call setUp() first.');
-    }
-
-    const sql = postgres(this.context.databaseUrl);
-    try {
-      await sql.unsafe(RESET_SCRIPT);
-    } finally {
-      await sql.end();
-    }
-  }
-
-  static connectToExisting(databaseUrl: string): TestDatabase {
-    const instance = new TestDatabase();
-    const url = new URL(databaseUrl);
-    instance.context = { databaseUrl, dbName: url.pathname.slice(1) };
-    return instance;
   }
 }
 

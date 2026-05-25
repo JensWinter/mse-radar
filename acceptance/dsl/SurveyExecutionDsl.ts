@@ -1,4 +1,5 @@
 import { ProtocolDriver } from '../drivers/ProtocolDriver.ts';
+import { namespaceName } from './testNamespace.ts';
 
 export type CreateSurveyRunParams = {
   teamName: string;
@@ -92,12 +93,19 @@ const DEFAULT_SURVEY_RUN_TITLE = 'Survey 1';
 const DEFAULT_SURVEY_RUN_ANSWERS = [1, 2, 3, 4, 5, 4, 3, 2, 1, 2];
 
 export class SurveyExecutionDsl {
-  constructor(private readonly driver: ProtocolDriver) {
+  constructor(
+    private readonly driver: ProtocolDriver,
+    private readonly token: string,
+  ) {
+  }
+
+  private name(name: string): string {
+    return namespaceName(name, this.token);
   }
 
   async createSurveyRun(params: CreateSurveyRunParams) {
-    const title = params.title ?? DEFAULT_SURVEY_RUN_TITLE;
-    await this.driver.createSurveyRun(params.teamName, title);
+    const title = this.name(params.title ?? DEFAULT_SURVEY_RUN_TITLE);
+    await this.driver.createSurveyRun(this.name(params.teamName), title);
   }
 
   async confirmCreatingSurveyRunNotPossible() {
@@ -105,13 +113,13 @@ export class SurveyExecutionDsl {
   }
 
   async confirmSurveyRunIsListed(params: ConfirmSurveyRunIsListedParams) {
-    const title = params.title ?? DEFAULT_SURVEY_RUN_TITLE;
-    await this.driver.confirmSurveyRunIsListed(params.teamName, title);
+    const title = this.name(params.title ?? DEFAULT_SURVEY_RUN_TITLE);
+    await this.driver.confirmSurveyRunIsListed(this.name(params.teamName), title);
   }
 
   async openSurveyRunPage(params: OpenSurveyRunPageParams) {
-    const title = params.title ?? DEFAULT_SURVEY_RUN_TITLE;
-    await this.driver.openSurveyRunPage(params.teamName, title);
+    const title = this.name(params.title ?? DEFAULT_SURVEY_RUN_TITLE);
+    await this.driver.openSurveyRunPage(this.name(params.teamName), title);
   }
 
   async confirmSurveyRunCount(params: ConfirmSurveyRunCountParams) {
@@ -124,13 +132,13 @@ export class SurveyExecutionDsl {
   }
 
   async openSurveyRun(params: OpenSurveyRunParams) {
-    const title = params.title ?? DEFAULT_SURVEY_RUN_TITLE;
-    await this.driver.openSurveyRun(params.teamName, title);
+    const title = this.name(params.title ?? DEFAULT_SURVEY_RUN_TITLE);
+    await this.driver.openSurveyRun(this.name(params.teamName), title);
   }
 
   async confirmAcceptsSurveyResponse(params: ConfirmAcceptsSurveyResponse) {
-    const title = params.title ?? DEFAULT_SURVEY_RUN_TITLE;
-    await this.driver.openSurveyRunPage(params.teamName, title);
+    const title = this.name(params.title ?? DEFAULT_SURVEY_RUN_TITLE);
+    await this.driver.openSurveyRunPage(this.name(params.teamName), title);
     await this.driver.confirmAcceptsSurveyResponse();
   }
 
@@ -144,9 +152,9 @@ export class SurveyExecutionDsl {
   }
 
   async confirmResponseSaved(params: ConfirmResponseSavedParams) {
-    const title = params.surveyTitle ?? DEFAULT_SURVEY_RUN_TITLE;
+    const title = this.name(params.surveyTitle ?? DEFAULT_SURVEY_RUN_TITLE);
     const answers = params.answers ?? DEFAULT_SURVEY_RUN_ANSWERS;
-    await this.driver.confirmResponseSaved(params.teamName, title, answers);
+    await this.driver.confirmResponseSaved(this.name(params.teamName), title, answers);
   }
 
   async confirmAllQuestionsHave5PointScale() {
@@ -168,13 +176,13 @@ export class SurveyExecutionDsl {
   // Assessment Results
 
   async closeSurveyRun(params: CloseSurveyRunParams) {
-    const title = params.title ?? DEFAULT_SURVEY_RUN_TITLE;
-    await this.driver.closeSurveyRun(params.teamName, title);
+    const title = this.name(params.title ?? DEFAULT_SURVEY_RUN_TITLE);
+    await this.driver.closeSurveyRun(this.name(params.teamName), title);
   }
 
   async reopenSurveyRun(params: ReopenSurveyRunParams) {
-    const title = params.title ?? DEFAULT_SURVEY_RUN_TITLE;
-    await this.driver.reopenSurveyRun(params.teamName, title);
+    const title = this.name(params.title ?? DEFAULT_SURVEY_RUN_TITLE);
+    await this.driver.reopenSurveyRun(this.name(params.teamName), title);
   }
 
   async confirmReopeningSurveyRunIsNotPossible() {
@@ -182,8 +190,8 @@ export class SurveyExecutionDsl {
   }
 
   async viewAssessmentResults(params: ViewAssessmentResultsParams) {
-    const title = params.surveyTitle ?? DEFAULT_SURVEY_RUN_TITLE;
-    await this.driver.openSurveyRunPage(params.teamName, title);
+    const title = this.name(params.surveyTitle ?? DEFAULT_SURVEY_RUN_TITLE);
+    await this.driver.openSurveyRunPage(this.name(params.teamName), title);
   }
 
   async confirmAssessmentResultsDisplayed() {
@@ -236,8 +244,8 @@ export class SurveyExecutionDsl {
   // Capability Profile
 
   async viewCapabilityProfile(params: ViewCapabilityProfileParams) {
-    const title = params.surveyTitle ?? DEFAULT_SURVEY_RUN_TITLE;
-    await this.driver.openSurveyRunPage(params.teamName, title);
+    const title = this.name(params.surveyTitle ?? DEFAULT_SURVEY_RUN_TITLE);
+    await this.driver.openSurveyRunPage(this.name(params.teamName), title);
   }
 
   async confirmCapabilityProfileVisualizationDisplayed() {
@@ -263,7 +271,7 @@ export class SurveyExecutionDsl {
   // Trend View
 
   async viewTrendView(params: { teamName: string }) {
-    await this.driver.openTrendView(params.teamName);
+    await this.driver.openTrendView(this.name(params.teamName));
   }
 
   async confirmTrendVisualizationDisplayed() {
@@ -275,7 +283,9 @@ export class SurveyExecutionDsl {
   }
 
   async confirmRunsInChronologicalOrder(params: { expectedTitlesInOrder: string[] }) {
-    await this.driver.confirmRunsInChronologicalOrder(params.expectedTitlesInOrder);
+    await this.driver.confirmRunsInChronologicalOrder(
+      params.expectedTitlesInOrder.map((title) => this.name(title)),
+    );
   }
 
   async confirmDoraCapabilityImproved(params: {
@@ -285,8 +295,8 @@ export class SurveyExecutionDsl {
   }) {
     await this.driver.confirmDoraCapabilityImproved(
       params.doraCapabilityName,
-      params.fromRunTitle,
-      params.toRunTitle,
+      this.name(params.fromRunTitle),
+      this.name(params.toRunTitle),
     );
   }
 
@@ -297,8 +307,8 @@ export class SurveyExecutionDsl {
   }) {
     await this.driver.confirmDoraCapabilityDeclined(
       params.doraCapabilityName,
-      params.fromRunTitle,
-      params.toRunTitle,
+      this.name(params.fromRunTitle),
+      this.name(params.toRunTitle),
     );
   }
 
@@ -309,8 +319,8 @@ export class SurveyExecutionDsl {
   }) {
     await this.driver.confirmDoraCapabilityRemainedUnchanged(
       params.doraCapabilityName,
-      params.fromRunTitle,
-      params.toRunTitle,
+      this.name(params.fromRunTitle),
+      this.name(params.toRunTitle),
     );
   }
 
