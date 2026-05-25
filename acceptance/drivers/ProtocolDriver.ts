@@ -509,6 +509,41 @@ export class ProtocolDriver {
     }
   }
 
+  async addCommentToQuestion(doraCapability: string, comment: string) {
+    const card = this.page.getByTestId('question-card').filter({
+      has: this.page.getByRole('heading', { name: doraCapability, exact: true }),
+    });
+    await card.getByRole('button', { name: 'Add comment' }).click();
+    const textarea = card.locator('textarea[placeholder="Optional comment"]');
+    await expect(textarea).toBeVisible();
+    await textarea.fill(comment);
+    await textarea.blur();
+    await expect(card.getByText('Saved')).toBeVisible({ timeout: 5000 });
+  }
+
+  async confirmCommentSaved(doraCapability: string) {
+    const card = this.page.getByTestId('question-card').filter({
+      has: this.page.getByRole('heading', { name: doraCapability, exact: true }),
+    });
+    await expect(card.getByText('Saved')).toBeVisible({ timeout: 5000 });
+  }
+
+  async confirmMyComment(doraCapability: string, comment: string) {
+    const card = this.page.getByTestId('question-card').filter({
+      has: this.page.getByRole('heading', { name: doraCapability, exact: true }),
+    });
+    const textarea = card.locator('textarea[placeholder="Optional comment"]');
+    await expect(textarea).toBeVisible();
+    await expect(textarea).toHaveValue(comment);
+  }
+
+  async confirmCommentNotInResults(comment: string) {
+    const resultsSection = this.page.getByTestId('assessment-results-section');
+    await expect(resultsSection).toBeVisible();
+    const resultsSectionContent = await resultsSection.innerHTML();
+    expect(resultsSectionContent).not.toContain(comment);
+  }
+
   async confirmClosingSurveyRunIsNotPossible() {
     const closeButton = this.page.getByRole('button', { name: 'Close' });
     await expect(closeButton).not.toBeVisible();
