@@ -11,7 +11,7 @@ export type CompleteSurveyRunParams = {
   title: string;
   leadEmail: string;
   memberEmail: string;
-  answers: (number | null)[];
+  answers: string;
 };
 
 export class Dsl {

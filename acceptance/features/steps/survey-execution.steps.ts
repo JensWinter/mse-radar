@@ -9,14 +9,6 @@ import { McRadarWorld } from '../support/world.ts';
  * unanswered question (e.g. "1,2,null,4").
  */
 
-function parseAnswers(csv: string): (number | null)[] {
-  return csv.split(',').map((raw) => {
-    const value = raw.trim();
-    if (value === '' || value.toLowerCase() === 'null') return null;
-    return Number(value);
-  });
-}
-
 // --- Survey run lifecycle ---------------------------------------------------
 
 Given(
@@ -34,7 +26,7 @@ Given(
       title,
       leadEmail,
       memberEmail,
-      answers: parseAnswers(csv),
+      answers: csv,
     });
   },
 );
@@ -115,7 +107,7 @@ When('I answer the survey', async function (this: McRadarWorld) {
 });
 
 When('I answer the survey with {string}', async function (this: McRadarWorld, csv: string) {
-  await this.dsl.surveyExecution.answerSurvey({ answers: parseAnswers(csv) });
+  await this.dsl.surveyExecution.answerSurvey({ answers: csv });
 });
 
 When(
@@ -243,12 +235,12 @@ Then(
 Then(
   'my response with answers {string} is saved for team {string}',
   async function (this: McRadarWorld, csv: string, teamName: string) {
-    await this.dsl.surveyExecution.confirmResponseSaved({ teamName, answers: parseAnswers(csv) });
+    await this.dsl.surveyExecution.confirmResponseSaved({ teamName, answers: csv });
   },
 );
 
 Then('my answers are {string}', async function (this: McRadarWorld, csv: string) {
-  await this.dsl.surveyExecution.confirmMyAnswers({ answers: parseAnswers(csv) });
+  await this.dsl.surveyExecution.confirmMyAnswers({ answers: csv });
 });
 
 Then('every question has a 5-point scale', async function (this: McRadarWorld) {
