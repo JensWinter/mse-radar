@@ -6,6 +6,14 @@ import { TeamManagementDsl } from './TeamManagementDsl.ts';
 import { SurveyDefinitionDsl } from './SurveyDefinitionDsl.ts';
 import { SurveyExecutionDsl } from './SurveyExecutionDsl.ts';
 
+export type CompleteSurveyRunParams = {
+  teamName: string;
+  title: string;
+  leadEmail: string;
+  memberEmail: string;
+  answers: (number | null)[];
+};
+
 export class Dsl {
   private browser: Browser | undefined;
   private context: BrowserContext | undefined;
@@ -61,5 +69,22 @@ export class Dsl {
 
   async tearDown() {
     await this.context?.close();
+  }
+
+  /**
+   * Cross-context orchestration of a full survey-run lifecycle: team lead creates
+   * and opens a survey, a member answers it, then the lead closes it. Leaves the
+   * lead signed in.
+   */
+  async completeSurveyRun(params: CompleteSurveyRunParams) {
+    const run = { teamName: params.teamName, title: params.title };
+    await this.identityAndAccess.signIn({ email: params.leadEmail });
+    await this.surveyExecution.createSurveyRun(run);
+    await this.surveyExecution.openSurveyRun(run);
+    await this.identityAndAccess.signIn({ email: params.memberEmail });
+    await this.surveyExecution.openSurveyRunPage(run);
+    await this.surveyExecution.answerSurvey({ answers: params.answers });
+    await this.identityAndAccess.signIn({ email: params.leadEmail });
+    await this.surveyExecution.closeSurveyRun(run);
   }
 }

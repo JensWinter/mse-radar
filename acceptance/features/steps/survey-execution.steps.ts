@@ -1,4 +1,4 @@
-import { Then, When } from '@cucumber/cucumber';
+import { Given, Then, When } from '@cucumber/cucumber';
 import { McRadarWorld } from '../support/world.ts';
 
 /**
@@ -18,6 +18,26 @@ function parseAnswers(csv: string): (number | null)[] {
 }
 
 // --- Survey run lifecycle ---------------------------------------------------
+
+Given(
+  'a completed survey run {string} for team {string} led by {string} answered by {string} with {string}',
+  async function (
+    this: McRadarWorld,
+    title: string,
+    teamName: string,
+    leadEmail: string,
+    memberEmail: string,
+    csv: string,
+  ) {
+    await this.dsl.completeSurveyRun({
+      teamName,
+      title,
+      leadEmail,
+      memberEmail,
+      answers: parseAnswers(csv),
+    });
+  },
+);
 
 When(
   'I create a survey run for team {string}',
