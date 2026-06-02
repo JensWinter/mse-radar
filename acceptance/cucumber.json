@@ -1,0 +1,13 @@
+{
+  "default": {
+    "paths": ["acceptance/features/**/*.feature"],
+    "import": ["acceptance/features/**/*.ts"],
+    "format": ["progress"],
+    "formatOptions": { "snippetInterface": "async-await" }
+  },
+  "single": {
+    "import": ["acceptance/features/**/*.ts"],
+    "format": ["progress"],
+    "formatOptions": { "snippetInterface": "async-await" }
+  }
+}

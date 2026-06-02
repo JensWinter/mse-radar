@@ -2,22 +2,34 @@
 
 ## Acceptance Tests (ATDD)
 
-**Four Layer Model:** Test Cases → DSL → Protocol Drivers → SUT
+**Four Layer Model:** Test Cases (classic Gherkin `.feature` files) → DSL → Protocol Drivers → SUT
 
-- **Style:** BDD with Given/When/Then
-- **DSL classes** correspond to bounded contexts (e.g., `IdentityAndAccessDsl`, `TeamManagementDsl`)
-- **Location:** `acceptance/tests/`
+- **Test-case layer** = `.feature` files + step definitions. Steps are thin wrappers over the DSL — **no logic in steps**.
+- **DSL classes** correspond to bounded contexts (e.g., `IdentityAndAccessDsl`, `TeamManagementDsl`).
+
+**Layout:**
+```
+acceptance/features/
+  <bounded-context>/NNNN-NNN-title.feature    # one feature per story
+  steps/<bounded-context>.steps.ts            # one steps file per bounded context
+  support/world.ts                            # custom World exposing the shared Dsl
+  support/hooks.ts                            # Before/After/BeforeAll/AfterAll (SUT + browser)
+acceptance/cucumber.json                      # default profile (runs all features) and "single" profile (for running one feature)
+acceptance/runAllFeatures.ts                  # managed-mode orchestrator
+```
 
 **Run all acceptance tests:**
 ```bash
 deno task test:acceptance
 ```
 
-**Parallel execution:** Specs run in parallel against one shared DB with no per-test reset. Each test gets a unique token; the DSL namespaces every email/team/survey identifier with it. Write plain literals and route all identifiers through the DSL.
+**Parallel execution:** Cucumber runs scenarios in parallel workers against one shared DB/SUT (started once by `runAllFeatures.ts`, passed via env) with no per-test reset. Each scenario gets a unique token; the DSL namespaces every email/team/survey identifier with it. Write plain literals in `.feature` files and route all identifiers through the DSL.
 
-**Run single spec:**
+**Run a single feature:** (standalone mode self-starts the SUT). Use `--profile single` — it omits `paths` so the feature-path argument controls selection:
 ```bash
-deno test --env-file=.env.acceptance --allow-all acceptance/tests/0001-001-user-registration.spec.ts
+deno run -A --env-file=.env.acceptance npm:@cucumber/cucumber@^11 \
+  --config acceptance/cucumber.json --profile single \
+  acceptance/features/identity-and-access/0001-001-user-registration.feature
 ```
 
 ## Unit Tests
@@ -41,7 +53,7 @@ cd astro && npm run test -- src/services/users-service.test.ts  # Single file
 
 ```
 acceptance/
-  ├── tests/        # Test cases (Given/When/Then)
+  ├── features/     # Gherkin test cases (.feature) + steps/ + support/
   ├── dsl/          # Domain-Specific Language layer
   ├── drivers/      # Protocol drivers
   └── sut/          # System Under Test setup

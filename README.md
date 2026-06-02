@@ -68,6 +68,17 @@ deno task test:astro:unit    # Unit & component tests (Vitest)
 deno task test:astro:e2e     # End-to-end tests (Playwright)
 ```
 
+### Debugging Acceptance Test
+
+1. Run WebStorm "Attach to Node.js/Chrome" debugger
+2. Set breakpoints
+3. Run
+```
+deno run --inspect-wait -A --env-file=.env.acceptance \
+  --config acceptance/cucumber.json --profile single \
+  acceptance/features/<context>/<title>.feature
+```
+
 ## Documentation
 
 | Document                                              | Description                                     |
