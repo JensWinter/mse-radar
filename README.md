@@ -75,6 +75,7 @@ deno task test:astro:e2e     # End-to-end tests (Playwright)
 3. Run
 ```
 deno run --inspect-wait -A --env-file=.env.acceptance \
+  npm:@cucumber/cucumber@^11 \
   --config acceptance/cucumber.json --profile single \
   acceptance/features/<context>/<title>.feature
 ```
