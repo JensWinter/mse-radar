@@ -9,27 +9,27 @@ import { McRadarWorld } from '../support/world.ts';
  */
 
 When('I open the survey model', async function (this: McRadarWorld) {
-  await this.dsl.surveyDefinition!.openSurveyModel();
+  await this.dsl.surveyDefinition.openSurveyModel();
 });
 
 When('I read the survey questions', async function (this: McRadarWorld) {
-  this.surveyQuestions = await this.dsl.surveyDefinition!.readSurveyQuestions();
+  this.surveyQuestions = await this.dsl.surveyDefinition.readSurveyQuestions();
 });
 
 Then('each question maps to a DORA capability', async function (this: McRadarWorld) {
-  await this.dsl.surveyDefinition!.confirmQuestionsMapToDoraCapabilities({
+  await this.dsl.surveyDefinition.confirmQuestionsMapToDoraCapabilities({
     questions: this.surveyQuestions,
   });
 });
 
 Then('each question shows its DORA capability name', async function (this: McRadarWorld) {
-  await this.dsl.surveyDefinition!.confirmQuestionsShowDoraCapabilityName({
+  await this.dsl.surveyDefinition.confirmQuestionsShowDoraCapabilityName({
     questions: this.surveyQuestions,
   });
 });
 
 Then('all DORA capabilities are covered', async function (this: McRadarWorld) {
-  await this.dsl.surveyDefinition!.confirmAllDoraCapabilitiesAreCovered({
+  await this.dsl.surveyDefinition.confirmAllDoraCapabilitiesAreCovered({
     questions: this.surveyQuestions,
   });
 });

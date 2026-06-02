@@ -10,10 +10,30 @@ export class Dsl {
   private browser: Browser | undefined;
   private context: BrowserContext | undefined;
 
-  public identityAndAccess: IdentityAndAccessDsl | undefined;
-  public teamManagement: TeamManagementDsl | undefined;
-  public surveyDefinition: SurveyDefinitionDsl | undefined;
-  public surveyExecution: SurveyExecutionDsl | undefined;
+  private _identityAndAccess?: IdentityAndAccessDsl;
+  private _teamManagement?: TeamManagementDsl;
+  private _surveyDefinition?: SurveyDefinitionDsl;
+  private _surveyExecution?: SurveyExecutionDsl;
+
+  get identityAndAccess(): IdentityAndAccessDsl {
+    if (!this._identityAndAccess) throw new Error('Dsl not set up — Before hook missing?');
+    return this._identityAndAccess;
+  }
+
+  get teamManagement(): TeamManagementDsl {
+    if (!this._teamManagement) throw new Error('Dsl not set up — Before hook missing?');
+    return this._teamManagement;
+  }
+
+  get surveyDefinition(): SurveyDefinitionDsl {
+    if (!this._surveyDefinition) throw new Error('Dsl not set up — Before hook missing?');
+    return this._surveyDefinition;
+  }
+
+  get surveyExecution(): SurveyExecutionDsl {
+    if (!this._surveyExecution) throw new Error('Dsl not set up — Before hook missing?');
+    return this._surveyExecution;
+  }
 
   async setUpBrowser() {
     this.browser = await chromium.launch({ timeout: 30000 });
@@ -33,10 +53,10 @@ export class Dsl {
     const page = await this.context.newPage();
     await page.goto('/');
     const driver = new ProtocolDriver(page);
-    this.identityAndAccess = new IdentityAndAccessDsl(driver, token);
-    this.teamManagement = new TeamManagementDsl(driver, token);
-    this.surveyDefinition = new SurveyDefinitionDsl(driver);
-    this.surveyExecution = new SurveyExecutionDsl(driver, token);
+    this._identityAndAccess = new IdentityAndAccessDsl(driver, token);
+    this._teamManagement = new TeamManagementDsl(driver, token);
+    this._surveyDefinition = new SurveyDefinitionDsl(driver);
+    this._surveyExecution = new SurveyExecutionDsl(driver, token);
   }
 
   async tearDown() {
