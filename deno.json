@@ -5,7 +5,7 @@
     "test:astro:unit": "cd astro && npm run test",
     "test:astro:e2e": "cd astro && npm run test:e2e",
     "test:unit": "deno test deno_scripts/ --permit-no-files",
-    "test:acceptance": "deno run --allow-all --env-file=.env.acceptance acceptance/runAllSuites.ts",
+    "test:acceptance": "deno run --allow-all --env-file=.env.acceptance acceptance/runAllFeatures.ts",
     "db:migrate": "deno run --allow-env --allow-read --allow-net --env-file=.env.local deno_scripts/db/migrate.ts",
     "db:migrate-better-auth": "deno run --allow-env --allow-read --allow-net --env-file=.env.local deno_scripts/db_better-auth/migrate.ts",
     "db:seed": "deno run --allow-env --allow-read --allow-net --env-file=.env.local deno_scripts/db/seed_dora_capabilities.ts",
@@ -16,6 +16,7 @@
     "@std/expect": "jsr:@std/expect@1",
     "@std/path": "jsr:@std/path",
     "@std/testing": "jsr:@std/testing@^1.0.16",
+    "@cucumber/cucumber": "npm:@cucumber/cucumber@^11",
     "playwright": "npm:playwright@^1.57.0",
     "postgres": "npm:postgres@^3.4.7"
   },

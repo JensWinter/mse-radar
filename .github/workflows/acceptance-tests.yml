@@ -139,9 +139,10 @@ jobs:
 
       - name: Run acceptance tests
         run: |
-          deno test --permit-no-files --allow-all \
-            --junit-path=./acceptance-tests-report.xml \
-            'acceptance/tests/*.spec.ts'
+          deno run --allow-all npm:@cucumber/cucumber@^11 \
+            --config acceptance/cucumber.json \
+            --parallel "${DENO_JOBS:-4}" \
+            --format junit:./acceptance-tests-report.xml
         env:
           ACCEPTANCE_SUT_MANAGED: 'true'
           ACCEPTANCE_SUT_BASE_URL: http://localhost:4322

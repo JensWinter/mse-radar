@@ -10,8 +10,8 @@ Keep your replies extremely concise and focus on conveying the key information. 
 docker compose up -d                                                                       # Start PostgreSQL
 deno task db:setup                                                                         # Run migrations + seed
 deno task run:astro:dev                                                                    # Dev server (http://localhost:4321)
-deno task test:acceptance                                                                  # Run all acceptance tests
-deno test --env-file=.env.acceptance --allow-all acceptance/tests/aaaa-bbb-<title>.spec.ts # Run a single acceptance test
+deno task test:acceptance                                                                  # Run all acceptance tests (Gherkin / Cucumber.js)
+deno run -A --env-file=.env.acceptance npm:@cucumber/cucumber@^11 --config acceptance/cucumber.json --profile single acceptance/features/<context>/<title>.feature # Run a single feature
 deno task test:astro:unit                                                                  # Run unit tests
 ```
 

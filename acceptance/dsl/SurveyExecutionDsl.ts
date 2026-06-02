@@ -31,17 +31,17 @@ export type ConfirmAcceptsSurveyResponse = {
 };
 
 export type AnswerSurveyParams = {
-  answers?: (number | null)[];
+  answers?: string;
 };
 
 export type ConfirmResponseSavedParams = {
   teamName: string;
   surveyTitle?: string;
-  answers?: (number | null)[];
+  answers?: string;
 };
 
 export type ConfirmMyAnswersParams = {
-  answers: (number | null)[];
+  answers: string;
 };
 
 export type AddCommentToQuestionParams = {
@@ -110,6 +110,18 @@ export type ConfirmSurveyRunCountParams = {
 const DEFAULT_SURVEY_RUN_TITLE = 'Survey 1';
 const DEFAULT_SURVEY_RUN_ANSWERS = [1, 2, 3, 4, 5, 4, 3, 2, 1, 2];
 
+/**
+ * Parses the comma-separated answer vocabulary used in features (e.g. "5,4,3").
+ * The literal `null` (or an empty entry) denotes an unanswered question.
+ */
+function parseAnswers(csv: string): (number | null)[] {
+  return csv.split(',').map((raw) => {
+    const value = raw.trim();
+    if (value === '' || value.toLowerCase() === 'null') return null;
+    return Number(value);
+  });
+}
+
 export class SurveyExecutionDsl {
   constructor(
     private readonly driver: ProtocolDriver,
@@ -165,13 +177,13 @@ export class SurveyExecutionDsl {
   }
 
   async answerSurvey(params?: AnswerSurveyParams) {
-    const answers = params?.answers ?? DEFAULT_SURVEY_RUN_ANSWERS;
+    const answers = params?.answers ? parseAnswers(params.answers) : DEFAULT_SURVEY_RUN_ANSWERS;
     await this.driver.answerSurvey(answers);
   }
 
   async confirmResponseSaved(params: ConfirmResponseSavedParams) {
     const title = this.name(params.surveyTitle ?? DEFAULT_SURVEY_RUN_TITLE);
-    const answers = params.answers ?? DEFAULT_SURVEY_RUN_ANSWERS;
+    const answers = params.answers ? parseAnswers(params.answers) : DEFAULT_SURVEY_RUN_ANSWERS;
     await this.driver.confirmResponseSaved(this.name(params.teamName), title, answers);
   }
 
@@ -184,7 +196,7 @@ export class SurveyExecutionDsl {
   }
 
   async confirmMyAnswers(params: ConfirmMyAnswersParams) {
-    await this.driver.confirmMyAnswers(params.answers);
+    await this.driver.confirmMyAnswers(parseAnswers(params.answers));
   }
 
   async addCommentToQuestion(params: AddCommentToQuestionParams) {
